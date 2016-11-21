@@ -1,0 +1,114 @@
+**COMPOUND TRANSFORMATIONS**
+KONJ,KONJ,...:HD,conj,... --> First KONJ becomes head
+[PRED,,N*],[PRED-MOD,SIMPX,]:[PRED,,N*],acl - 261
+[PRED,,],[PRED-MOD,SIMPX,]:[PRED,,],advcl
+
+***CHECK SENTENCE 146***
+[HD,,(V*PASSIV,PTKZU_PASS)],PRED,OV(HD):auxpass,xcomp,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],PRED,VC-HD:auxpass,xcomp,HD
+HD,PRED,OV,[OV(HD),,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,auxpass
+HD,PRED,OV,[VC-HD,,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,auxpass
+[HD,,(V*PASSIV,PTKZU_PASS)],OV:auxpass,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],VC-HD:auxpass,HD
+HD,PRED,[(ON-MOD, OS-MOD),,PPER],OV(HD):aux,xcomp,expl,HD
+HD,PRED,[(ON-MOD, OS-MOD),,PPER],VC-HD:aux,xcomp,expl,HD
+HD,PRED,[(ON-MOD, OS-MOD),,PPER]:HD,xcomp,expl
+HD,PRED,OA,OV(HD):aux,xcomp,dobj,HD --> take care to only convert the leftmost OV
+HD,PRED,OA,VC-HD:aux,xcomp,dobj,HD
+HD,PRED,OA:HD,xcomp,dobj
+HD,[PRED,PX,],OV(HD):aux,nmod,HD --> take care to only convert the leftmost OV
+HD,[PRED,PX,]:HD,nmod
+HD,PRED,OV,[OV,,PTKZU]:HD,xcomp,cop,aux
+HD,PRED,[OV,,PTKZU]:HD,xcomp,cop
+HD,PRED,OV(HD):aux,HD,cop --> take care to only convert the leftmost OV
+HD,PRED:cop,HD
+HD,[VC-HD,,(LASSEN,PTKZU_LASS)],OV:aux,xcomp,HD
+[HD,,(LASSEN,PTKZU_LASS)],OV:HD,xcomp
+HD,[OV,,(PTKZU,VVIZU)]:HD,xcomp - 150
+HD,OV:aux,HD
+HD,VC-HD:aux,HD
+
+[,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)],[,WORD,V*INF]:aux,HD
+[PRED-KOKOM,,KOKOM],[HD,,N*]:HD,nmod
+[PRED-KOKOM,,KOKOM],[HD,,ADJ*]:HD,amod
+(APPR,APPO),HD:case,HD
+(APPR,APPO),[,NX,]:case,HD
+[HD,,(ADV,ADJD,ADJA)],[,NX,]:HD,nmod
+
+** - try to distinguish "name" from "compound"
+** - mwe - "nach wie vor", "darüber hinaus", etc.
+** - KOKOM where a preposition is already present - cc?
+* - need punctuation strategy
+
+** = nice to have
+
+**ONE-TO-ONE TRANSFORMATIONS**
+HD:HD
+[,WORD,KON]:cc
+KONJ2:conj
+GEN:det
+[VC-HD,,(LASSEN,PTKZU_LASS)]:xcomp
+[VC-HD,,(V*PASSIV,PTKZU_PASS)]:auxpass
+VC-HD:aux
+[OS,,(VVIZU, VVINF)]:xcomp
+OS:ccomp
+[ON,SIMPX,]:csubj
+[(ON-MOD, OA-MOD, OD-MOD, OG-MOD),SIMPX,]:acl
+[MOD*,SIMPX,]:advcl
+[,R-SIMPX,]:acl:relcl
+[,WORD,(KOUS, KOUI)]:mark
+[,PX,]:nmod
+NMOD:nmod
+[,,KOKOM]:case
+[,,PTKNEG]:neg
+NEG:neg
+[,ADVX,]:advmod
+[,WORD,PTKA]:advmod
+[HD,ADJX,]:HD
+[V-MOD,ADJX,]:advmod
+[,ADJX,CARD]:nummod
+[,ADJX,]:amod
+[,DP,]:det
+[,WORD,ART]:det
+[,WORD,PPOSAT]:poss
+[,WORD,APZR]:mwe
+VPT:mark
+ES:expl
+[(ON-MOD, OS-MOD),,PPER]:expl
+[ONK,OAK,ODK,...]:conj
+[,P-SIMPX,]:parataxis
+PARA:parataxis
+[,WORD,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
+[-,,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
+[MOD*,NX,]:nmod
+MOD*:advmod
+PUNCT:punct
+KONJ2:conj
+KONJ:HD
+ON:subj
+OA:dobj
+OD:iobj
+OG:iobj
+[OV,,(V*PASSIV,PTKZU_PASS)]:auxpass
+[OV,,(LASSEN,PTKZU_LASS)]:xcomp
+OV:aux
+[,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)]:aux
+
+**Leftovers**
+HD,[,,FM],[,,FM],...:HD,foreign,foreign,...
+[,,FM],[,,FM],...:HD,foreign,...
+[HD,,N*],[,SIMPX,]:acl
+[,SIMPX,]:advcl
+APP,...:HD,(appos,...)
+[,,NE],...:HD,(name,...)
+[,,N*]:appos
+[,NX,]:appos
+
+**Automatic Leftovers**
+
+Check 944
+Check 910
+1194 - limitation
+Check 2723 (lassen)
+
+*** - to do
