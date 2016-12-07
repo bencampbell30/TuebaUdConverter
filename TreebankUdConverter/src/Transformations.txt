@@ -10,9 +10,9 @@ HD,PRED,OV,[OV(HD),,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,auxpass
 HD,PRED,OV,[VC-HD,,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,auxpass
 [HD,,(V*PASSIV,PTKZU_PASS)],OV:auxpass,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],VC-HD:auxpass,HD
-HD,PRED,[(ON-MOD, OS-MOD),,PPER],OV(HD):aux,xcomp,expl,HD
-HD,PRED,[(ON-MOD, OS-MOD),,PPER],VC-HD:aux,xcomp,expl,HD
-HD,PRED,[(ON-MOD, OS-MOD),,PPER]:HD,xcomp,expl
+HD,PRED,[OS-MOD,,PPER],OV(HD):aux,xcomp,expl,HD
+HD,PRED,[OS-MOD,,PPER],VC-HD:aux,xcomp,expl,HD
+HD,PRED,[OS-MOD,,PPER]:HD,xcomp,expl
 HD,PRED,OA,OV(HD):aux,xcomp,dobj,HD --> take care to only convert the leftmost OV
 HD,PRED,OA,VC-HD:aux,xcomp,dobj,HD
 HD,PRED,OA:HD,xcomp,dobj
@@ -24,21 +24,22 @@ HD,PRED,OV(HD):aux,HD,cop --> take care to only convert the leftmost OV
 HD,PRED:cop,HD
 HD,[VC-HD,,(LASSEN,PTKZU_LASS)],OV:aux,xcomp,HD
 [HD,,(LASSEN,PTKZU_LASS)],OV:HD,xcomp
-HD,[OV,,(PTKZU,VVIZU)]:HD,xcomp - 150
+HD,[OV,,(PTKZU,VVIZU)]:HD,xcomp
 HD,OV:aux,HD
 HD,VC-HD:aux,HD
 
 [,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)],[,WORD,V*INF]:aux,HD
+[,WORD,PTKZU],[,WORD,ADJ*]:aux,HD
 [PRED-KOKOM,,KOKOM],[HD,,N*]:HD,nmod
 [PRED-KOKOM,,KOKOM],[HD,,ADJ*]:HD,amod
 (APPR,APPO),HD:case,HD
 (APPR,APPO),[,NX,]:case,HD
 [HD,,(ADV,ADJD,ADJA)],[,NX,]:HD,nmod
 
-** - try to distinguish "name" from "compound"
+** - try to distinguish "flat" from "compound"
 ** - mwe - "nach wie vor", "darüber hinaus", etc.
 ** - KOKOM where a preposition is already present - cc?
-* - need punctuation strategy
+** - not appos if first element
 
 ** = nice to have
 
@@ -46,31 +47,45 @@ HD,VC-HD:aux,HD
 HD:HD
 [,WORD,KON]:cc
 KONJ2:conj
-GEN:det
+KONJ:HD
+[ON,SIMPX,]:csubj
+ON:subj
+OA:dobj
+OD:iobj
+OG:iobj
+[OV,,(V*PASSIV,PTKZU_PASS)]:auxpass
+[OV,,(LASSEN,PTKZU_LASS)]:xcomp
+OV:aux
+[,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)]:aux
+GEN:nmod:poss
 [VC-HD,,(LASSEN,PTKZU_LASS)]:xcomp
 [VC-HD,,(V*PASSIV,PTKZU_PASS)]:auxpass
 VC-HD:aux
-[OS,,(VVIZU, VVINF)]:xcomp
-OS:ccomp
-[ON,SIMPX,]:csubj
+OSC:ccomp
+OS:xcomp
 [(ON-MOD, OA-MOD, OD-MOD, OG-MOD),SIMPX,]:acl
 [MOD*,SIMPX,]:advcl
 [,R-SIMPX,]:acl:relcl
 [,WORD,(KOUS, KOUI)]:mark
+[,PX,PROP]:advmod
 [,PX,]:nmod
 NMOD:nmod
-[,,KOKOM]:case
-[,,PTKNEG]:neg
-NEG:neg
+[,WORD,KOKOM]:case
+[,,PTKNEG]:advmod:neg
+NEG_DET:advmod:neg
+NEG_ADV:det:neg
+[,ADVX,ADV_NEG]:advmod
 [,ADVX,]:advmod
 [,WORD,PTKA]:advmod
 [HD,ADJX,]:HD
 [V-MOD,ADJX,]:advmod
 [,ADJX,CARD]:nummod
+[,WORD,CARD]:nummod
+[,ADJX,PTKZU]:acl
 [,ADJX,]:amod
 [,DP,]:det
 [,WORD,ART]:det
-[,WORD,PPOSAT]:poss
+[,WORD,PPOSAT]:nmod:poss
 [,WORD,APZR]:mwe
 VPT:mark
 ES:expl
@@ -84,31 +99,22 @@ PARA:parataxis
 MOD*:advmod
 PUNCT:punct
 KONJ2:conj
-KONJ:HD
-ON:subj
-OA:dobj
-OD:iobj
-OG:iobj
-[OV,,(V*PASSIV,PTKZU_PASS)]:auxpass
-[OV,,(LASSEN,PTKZU_LASS)]:xcomp
-OV:aux
-[,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)]:aux
-
 **Leftovers**
-HD,[,,FM],[,,FM],...:HD,foreign,foreign,...
-[,,FM],[,,FM],...:HD,foreign,...
+HD,[,WORD,FM],[,WORD,FM],...:HD,foreign,foreign,...
+[,WORD,FM],[,WORD,FM],...:HD,foreign,...
+[,WORD,FM]:foreign
+[-,FX,]:foreign
 [HD,,N*],[,SIMPX,]:acl
 [,SIMPX,]:advcl
 APP,...:HD,(appos,...)
-[,,NE],...:HD,(name,...)
+[,WORD,NE],...:HD,(name,...)
 [,,N*]:appos
 [,NX,]:appos
 
 **Automatic Leftovers**
 
-Check 944
-Check 910
 1194 - limitation
 Check 2723 (lassen)
+What to do about "neg" dependency
 
 *** - to do

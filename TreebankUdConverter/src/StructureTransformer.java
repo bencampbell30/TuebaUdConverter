@@ -236,7 +236,7 @@ public class StructureTransformer
 			}
 		}
 		
-		//[,SIMPX,]:advcl ***
+		//[,SIMPX,]:advcl
 		// *****************************************************
 		currentTemplate = instance.getN_SIMPX_acl();
 		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
@@ -250,7 +250,7 @@ public class StructureTransformer
 		
 		//[,,NE],...:HD,(name,...)
 		// *****************************************************
-		currentTemplate = instance.getNE_HDname();
+		currentTemplate = instance.getNE_HDflat();
 		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
 
 		if (testEquivalence) 
@@ -267,7 +267,7 @@ public class StructureTransformer
 					} 
 					else 
 					{
-						newDependencies.set(i, "name");
+						newDependencies.set(i, "flat");
 					}
 				}
 			}
@@ -312,6 +312,30 @@ public class StructureTransformer
 						newDependencies.set(k, "appos");
 					}
 				}
+			}
+		}
+		
+		//[,WORD,FM]:foreign
+		// *****************************************************
+		currentTemplate = instance.getFM_foreign();
+		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
+		for (int i = 0; i < deps.size(); i++) 
+		{
+			if (isMatch(deps.get(i), currentTemplate.get(0)) && newDependencies.get(i).equals("REPLACEME")) 
+			{
+				newDependencies.set(i, "foreign");
+			}
+		}
+		
+		//[-,FX,]:foreign
+		// *****************************************************
+		currentTemplate = instance.getFX_foreign();
+		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
+		for (int i = 0; i < deps.size(); i++) 
+		{
+			if (isMatch(deps.get(i), currentTemplate.get(0)) && newDependencies.get(i).equals("REPLACEME")) 
+			{
+				newDependencies.set(i, "foreign");
 			}
 		}
 		

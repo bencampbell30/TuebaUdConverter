@@ -11,10 +11,10 @@ public class TreeNode implements Serializable
 	private static final long serialVersionUID = -6915228480907274901L;
 	private ArrayList<TreeNode> subNodes;
 	private ArrayList<TreeWord> words;
-	String line = null;
+	private String line = null;
 	private HashMap<String, String> nodeData = new HashMap<String, String>();
-	String dependency = null;
-	String category = null;
+	private String dependency = null;
+	private String category = null;
 	
 	public TreeNode(String wWord) 
 	{

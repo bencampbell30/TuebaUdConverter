@@ -4,11 +4,14 @@ import java.util.StringTokenizer;
 
 public class TreeWord implements Serializable
 {	
+	private static final long serialVersionUID = 7756858844217202501L;
 	private HashMap<String, String> wordData = new HashMap<String, String>();
 	private DependencyNode depNode = null;
-	String line = null;
-	String dependency = null;
+	private String line = null;
+	private String dependency = null;
 	private String pos = "";
+	private String lemma = "";
+	private int wordNumber = 0;
 	
 	public TreeWord(String wLine) 
 	{
@@ -39,9 +42,14 @@ public class TreeWord implements Serializable
 	    {
 	    	this.pos = pos + "_PASS";
 	    }
-	    else if (lemma != null && (lemma.startsWith("kein") || lemma.startsWith("Kein")) && pos.equals("PIAT"))
+	    else if (lemma != null && (lemma.startsWith("kein") || lemma.startsWith("Kein")) && (pos.equals("PIAT")))
 	    {
-	    	dependency = "NEG";
+	    	dependency = "NEG_DET";
+	    }
+	    else if (lemma != null && (lemma.startsWith("kein") || lemma.startsWith("Kein")) && pos.equals("ADV"))
+	    {
+	    	dependency = "NEG_ADV";
+	    	this.pos = "ADV_NEG";
 	    }
 	    else if (lemma != null && (lemma.equals("lassen") || lemma.equals("bekommen")))
 	    {
@@ -51,6 +59,19 @@ public class TreeWord implements Serializable
 	    {
 	    	lemma = wordData.get("form");
 	    }
+	    this.lemma = lemma;
+	    String number[] = wordData.get("xml:id").split("_");
+	    wordNumber = Integer.parseInt(number[1]);
+	}
+	
+	public void setWordNumber(int wordNumber) 
+	{
+		this.wordNumber = wordNumber;
+	}
+
+	public int getWordNumber() 
+	{
+		return wordNumber;
 	}
 	
 	public void setDependency(String dep)

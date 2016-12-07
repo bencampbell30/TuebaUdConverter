@@ -10,7 +10,7 @@ public class DependencyNode implements Serializable
 	 */
 	private static final long serialVersionUID = 6119428969091924401L;
 	private ArrayList<DependencyNode> dependents;
-	String line = null;
+	private String line = null;
 	private HashMap<String, String> nodeData = new HashMap<String, String>();
 	private String rel = ""; //relation to head
 	private DependencyNode head;
@@ -109,6 +109,10 @@ public class DependencyNode implements Serializable
 	    else if (lemma != null && (lemma.equals("lassen") || lemma.equals("bekommen")))
 	    {
 	    	this.pos = pos + "_LASSEN";
+	    }
+	    else if (lemma != null && (lemma.startsWith("kein") || lemma.startsWith("Kein")) && pos.equals("ADV"))
+	    {
+	    	this.pos = "ADV_NEG";
 	    }
 	    else if (lemma == null)
 	    {
