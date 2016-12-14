@@ -1109,12 +1109,12 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		// [HD,,(ADV,ADJD,ADJA)],[,NX,]:HD,nmod
+		// [HD,,(ADV,ADJD,ADJA)],[,NX,]:HD,obl
 		currentTemplate.add(templateHdAdjAdv);
 		currentTemplate.add(templateNX);
 				
 		currentNewRelations.add("HD");
-		currentNewRelations.add("nmod");
+		currentNewRelations.add("obl");
 				
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 				
@@ -1653,10 +1653,10 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[MOD*,NX,]:nmod
+		//[MOD*,NX,]:obl
 		currentTemplate.add(templateAllModNx);
 						
-		currentNewRelations.add("nmod");
+		currentNewRelations.add("obl");
 						
 		autoProcessedSingleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 						

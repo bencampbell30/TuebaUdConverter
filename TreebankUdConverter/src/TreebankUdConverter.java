@@ -29,9 +29,9 @@ public class TreebankUdConverter
 	{
 		for (int i=0; i<10; i++)
 		{
-			//chunkedProcess(i*10000+1, (i+1)*10000);
+			chunkedProcess(i*10000+1, (i+1)*10000);
 		}
-		chunkedProcess(1, 1000);
+		//chunkedProcess(1, 1000);
 	}
 	
 	private static void chunkedProcess (int start, int end)
@@ -508,6 +508,7 @@ public class TreebankUdConverter
 					for (int j=0; j<subWords.size(); j++)
 					{
 						TreeWord currentWord = subWords.get(j);
+						System.out.println(currentWord.getPos());
 						if (currentWord.getPos().equals("KOKOM"))
 						{
 							hasKokom = true;
