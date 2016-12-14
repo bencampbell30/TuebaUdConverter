@@ -1066,7 +1066,7 @@ public class Transformations
 		currentTemplate.add(templateHdN);
 				
 		currentNewRelations.add("HD");
-		currentNewRelations.add("obl");
+		currentNewRelations.add("nmod");
 				
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 				
@@ -1373,7 +1373,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[,PX,]:nmod
+		//[,PX,]:obl
 		currentTemplate.add(templatePX);
 		
 		currentNewRelations.add("obl");

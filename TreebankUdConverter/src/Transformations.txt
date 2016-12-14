@@ -17,7 +17,7 @@ HD,PRED,OA,OV(HD):aux,xcomp,dobj,HD --> take care to only convert the leftmost O
 HD,PRED,OA,VC-HD:aux,xcomp,dobj,HD
 HD,PRED,OA:HD,xcomp,dobj
 HD,[PRED,PX,],OV(HD):aux,obl,HD --> take care to only convert the leftmost OV
-HD,[PRED,PX,]:HD,nmod
+HD,[PRED,PX,]:HD,obl
 HD,PRED,OV,[OV,,PTKZU]:HD,xcomp,cop,aux
 HD,PRED,[OV,,PTKZU]:HD,xcomp,cop
 HD,PRED,OV(HD):aux,HD,cop --> take care to only convert the leftmost OV
@@ -119,6 +119,7 @@ APP,...:HD,(appos,...)
 
 **Automatic Leftovers**
 
+25 - Should "als" phrases be "obl" or remain "nmod"?
 1194 - limitation with FKONJ
 2723 - "Aber" - dependency for cc when first word of sentence
 2897 - Weird annotation in source
