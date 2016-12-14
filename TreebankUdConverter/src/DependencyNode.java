@@ -90,6 +90,8 @@ public class DependencyNode implements Serializable
 		line = line.replace("<", "");
 		line = line.replace("/>", "");
 		line = line.replace(">", "");
+		line = line.replace("\"=\"", "\"EQUALS_SIGN\"");
+		line = line.replaceFirst("(comment=)\"(.*)\"", "");
 		StringTokenizer st = new StringTokenizer(line);
 		st.nextToken(); //get rid of node/sentence marker
 	    while (st.hasMoreTokens()) 
@@ -97,7 +99,7 @@ public class DependencyNode implements Serializable
 	    	String current = st.nextToken();
 	    	String[] keyValue = current.split("=");
 	    	keyValue[1] = keyValue[1].substring(1, keyValue[1].length()-1);
-			nodeData.put(keyValue[0], keyValue[1]);
+			nodeData.put(keyValue[0], keyValue[1].replace("EQUALS_SIGN", "="));
 	    }
 	    String lemma = nodeData.get("lemma");
 	    String pos = nodeData.get("pos");

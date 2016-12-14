@@ -14,7 +14,7 @@ public class TreebankUdConverter
 {
 	private static ArrayList<DependencyNode> dependencySentences;
 	private static ArrayList<ArrayList<String>> treebankLines;
-	private static String path = "/Users/bcmpbell/Documents/TestSentence.txt";
+	private static String path = "/Users/bcmpbell/Documents/tuebadz-10.0-exportXML-v2.xml";
 	private static ArrayList<TreeNode> sentenceNodes;
 	private static ArrayList<TreeNode> sentenceNodesFieldModified;
 	private static ArrayList<TreeNode> sentenceNodesClipped;
@@ -27,7 +27,16 @@ public class TreebankUdConverter
 	
 	public static void main(String[] args) 
 	{
-		treebankLines = readExportFile(path);
+		for (int i=0; i<10; i++)
+		{
+			chunkedProcess(i*10000+1, (i+1)*10000);
+		}
+		//chunkedProcess(1361, 1361);
+	}
+	
+	private static void chunkedProcess (int start, int end)
+	{
+		treebankLines = readExportFile(path, start, end);
 		sentenceNodes = new ArrayList<TreeNode>();
 		sentenceNodesFieldModified = new ArrayList<TreeNode>();
 		sentenceNodesClipped = new ArrayList<TreeNode>();
@@ -43,23 +52,30 @@ public class TreebankUdConverter
 			sentenceIndex = 0;
 			TreeNode currentSentence = treeBuilder(treebankLines.get(i), i);
 			sentenceNodes.add(currentSentence);
+			System.out.println(i);
 		}
+		
+		System.out.println("STAGE 1");
 		
 		sentenceIndex = 0;
 		
 		for (int i=0; i<sentenceNodes.size(); i++)
 		{
-			TreeNode currentNode = makeDeepCopy(sentenceNodes.get(i));
-			TreeNode fKoordModNode = topoFieldModifier(currentNode);
+			//TreeNode currentNode = makeDeepCopy(sentenceNodes.get(i));
+			TreeNode fKoordModNode = topoFieldModifier(sentenceNodes.get(i));
 			sentenceNodesFieldModified.add(fKoordModNode);
 		}
 		
+		System.out.println("STAGE 2");
+		
 		for (int i=0; i<sentenceNodesFieldModified.size(); i++)
 		{
-			TreeNode currentNode = makeDeepCopy(sentenceNodesFieldModified.get(i));
-			TreeNode clippedNode = clipTree(currentNode);
+			//TreeNode currentNode = makeDeepCopy(sentenceNodesFieldModified.get(i));
+			TreeNode clippedNode = clipTree(sentenceNodesFieldModified.get(i));
 			sentenceNodesClipped.add(clippedNode);
 		}
+		
+		System.out.println("STAGE 3");
 		
 		for (int i=0; i<sentenceNodesClipped.size(); i++)
 		{
@@ -67,34 +83,39 @@ public class TreebankUdConverter
 			zuLabeler(currentNode);
 		}
 		
+		System.out.println("STAGE 5");
+		
 		for (int i=0; i<sentenceNodesClipped.size(); i++)
 		{
-			TreeNode currentNode = makeDeepCopy(sentenceNodesClipped.get(i));
-			sentenceNodesFunctionDetermined.add(functionDeterminer(currentNode));
-		}
-		
-		TreeNode test = sentenceNodes.get(0);
-		TreeNode test1 = sentenceNodesFieldModified.get(0);
-		TreeNode test2 = sentenceNodesClipped.get(0);
-		TreeNode test4 = sentenceNodesFunctionDetermined.get(0);
-		
-		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
-		{
-			TreeNode currentNode = sentenceNodesFunctionDetermined.get(i);
+			TreeNode currentNode = sentenceNodesClipped.get(i);
 			transformFKONJ(currentNode);
 		}
 		
-		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
+		System.out.println("STAGE 6");
+		
+		for (int i=0; i<sentenceNodesClipped.size(); i++)
 		{
-			TreeNode currentNode = sentenceNodesFunctionDetermined.get(i);
+			TreeNode currentNode = sentenceNodesClipped.get(i);
 			removeKonj1(currentNode);
 		}
 		
-		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
+		System.out.println("STAGE 7");
+		
+		for (int i=0; i<sentenceNodesClipped.size(); i++)
 		{
-			TreeNode currentNode = sentenceNodesFunctionDetermined.get(i);
+			TreeNode currentNode = sentenceNodesClipped.get(i);
 			setKonj2Head(currentNode);
 		}
+		
+		System.out.println("STAGE 4");
+		
+		for (int i=0; i<sentenceNodesClipped.size(); i++)
+		{
+			//TreeNode currentNode = makeDeepCopy(sentenceNodesClipped.get(i));
+			sentenceNodesFunctionDetermined.add(functionDeterminer(sentenceNodesClipped.get(i)));
+		}
+		
+		System.out.println("STAGE 8");
 		
 		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
 		{
@@ -105,20 +126,34 @@ public class TreebankUdConverter
 		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
 		{
 			TreeNode currentNode = sentenceNodesFunctionDetermined.get(i);
-			identifyCCompXComp(currentNode);
+			setMod(currentNode);
 		}
+		
+		System.out.println("STAGE 9");
 		
 		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
 		{
-			TreeNode currentNode = makeDeepCopy(sentenceNodesFunctionDetermined.get(i));
-			sentenceNodesTransformed.add(transformDependencies(currentNode, true));
+			TreeNode currentNode = sentenceNodesFunctionDetermined.get(i);
+			identifyCCompXComp(currentNode);
 		}
+		
+		System.out.println("STAGE 10");
+		
+		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
+		{
+			//TreeNode currentNode = makeDeepCopy(sentenceNodesFunctionDetermined.get(i));
+			sentenceNodesTransformed.add(transformDependencies(sentenceNodesFunctionDetermined.get(i), true));
+		}
+		
+		System.out.println("STAGE 11");
 		
 		for (int i=0; i<sentenceNodesTransformed.size(); i++)
 		{
-			TreeNode currentNode = makeDeepCopy(sentenceNodesTransformed.get(i));
-			dependencySentences.add(extractDepStructure(currentNode, true, null));
+			//TreeNode currentNode = makeDeepCopy(sentenceNodesTransformed.get(i));
+			dependencySentences.add(extractDepStructure(sentenceNodesTransformed.get(i), true, null));
 		}
+		
+		System.out.println("STAGE 12");
 		
 		for (int i=0; i<dependencySentences.size(); i++)
 		{
@@ -126,11 +161,15 @@ public class TreebankUdConverter
 			convertPos(currentNode);
 		}
 		
+		System.out.println("STAGE 13");
+		
 		for (int i=0; i<dependencySentences.size(); i++)
 		{
 			DependencyNode currentNode = dependencySentences.get(i);
 			setHead(currentNode);
 		}
+		
+		System.out.println("STAGE 14");
 		
 		ArrayList<HashMap<Integer, DependencyNode>> orderedSentences = new ArrayList<HashMap<Integer, DependencyNode>>();
 		for (int i=0; i<dependencySentences.size(); i++)
@@ -140,6 +179,8 @@ public class TreebankUdConverter
 			currentSentence = putNodesInOrder(currentNode, currentSentence);
 			orderedSentences.add(currentSentence);
 		}
+		
+		System.out.println("STAGE 15");
 		
 		ArrayList<ArrayList<DependencyNode>> arrayOrderedSentences = new ArrayList<ArrayList<DependencyNode>>();
 		for (int i=0; i<orderedSentences.size(); i++)
@@ -154,12 +195,15 @@ public class TreebankUdConverter
 			arrayOrderedSentences.add(currentSentenceNew);
 		}
 		
+		System.out.println("STAGE 16");
+		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
 		{
 			ArrayList<DependencyNode> currentSentence = arrayOrderedSentences.get(i);
-			System.out.println(i);
 			breakUpApprArt(currentSentence);
 		}
+		
+		System.out.println("STAGE 17");
 		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
 		{
@@ -170,6 +214,8 @@ public class TreebankUdConverter
 				currentNode.setWordNumber(j);
 			}
 		}
+		
+		System.out.println("STAGE 18");
 		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
 		{
@@ -192,11 +238,15 @@ public class TreebankUdConverter
 			}
 		}
 		
+		System.out.println("STAGE 19");
+		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
 		{
 			ArrayList<DependencyNode> currentSentence = arrayOrderedSentences.get(i);
 			setPunctuationDependencies(currentSentence, currentSentence.get(0));
 		}
+		
+		System.out.println("STAGE 20");
 		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
 		{
@@ -205,8 +255,10 @@ public class TreebankUdConverter
 			conllSentences.add(sentence);
 		}
 		
+		System.out.println("STAGE 21");
+		
 		String directory = "/Users/bcmpbell/Documents";
-		printSentences(directory);
+		printSentences(directory, start);
 		
 		DependencyNode test5 = dependencySentences.get(0);
 		System.out.println("Finished");
@@ -341,7 +393,7 @@ public class TreebankUdConverter
 		
 		if (convertedNode.getCategory() != null && convertedNode.getCategory().equals("VXINF"))
 		{
-			if (!(subWords.isEmpty()) && subWords.get(0).getWordData().get("pos").equals("PTKZU"))
+			if ((subWords.size() > 1) && subWords.get(0).getWordData().get("pos").equals("PTKZU"))
 			{
 				if (subWords.get(1).getWordData().get("lemma").equals("lassen"))
 				{
@@ -420,8 +472,10 @@ public class TreebankUdConverter
 			{
 				if (trunc != null)
 					trunc.setDependency("HD");
-				else if (lastAdj != null)
+				else if (lastAdj != null && !lastAdj.getDependency().equals("--"))
+				{
 					lastAdj.setDependency("HD");
+				}
 			}
 		}
 		
@@ -440,7 +494,6 @@ public class TreebankUdConverter
 			}
 			else if (funcAddedNode.getCategory() != null && currentFunction.equals("--"))
 			{
-				System.out.println("PARATAXIS");
 				currentSubNode.setDependency("PARA");
 			}
 			else if ((currentFunction.equals("-") || currentFunction.equals("--")) && !(currentSubNode.getCategory().equals("SIMPX") || currentSubNode.getCategory().equals("R-SIMPX") || currentSubNode.getCategory().equals("P-SIMPX")))
@@ -499,7 +552,6 @@ public class TreebankUdConverter
 					{
 						currentSubNodeWord.setDependency("PRED-KOKOM");
 						hasKokom = true;
-						System.out.println("HASKOKOM");
 					}
 				}
 				if (hasKokom)
@@ -726,7 +778,20 @@ public class TreebankUdConverter
 						}
 						if (!foundPred)
 						{
-							subSubNodes.get(subSubNodes.size()-1).setDependency("HD");
+							boolean foundKonj = false;
+							for (int j=0; j<subSubNodes.size(); j++)
+							{
+								TreeNode currentSubSub = subSubNodes.get(j);
+								if (currentSubSub.getDependency().equals("KONJ"))
+								{
+									foundKonj = true;
+									break;
+								}
+							}
+							if (!foundKonj && !subSubNodes.isEmpty())
+							{
+								subSubNodes.get(subSubNodes.size()-1).setDependency("HD");
+							}
 						}
 					}
 				}
@@ -749,67 +814,67 @@ public class TreebankUdConverter
 		boolean foundONK = false;
 		
 		TreeNode onNode = null;
-		TreeNode onkNode = null;
+		ArrayList<TreeNode> onkNode = new ArrayList<TreeNode>();
 		
 		boolean foundOA = false;
 		boolean foundOAK = false;
 		
 		TreeNode oaNode = null;
-		TreeNode oakNode = null;
+		ArrayList<TreeNode> oakNode = new ArrayList<TreeNode>();
 		
 		boolean foundOD = false;
 		boolean foundODK = false;
 		
 		TreeNode odNode = null;
-		TreeNode odkNode = null;
+		ArrayList<TreeNode> odkNode = new ArrayList<TreeNode>();
 		
 		boolean foundOG = false;
 		boolean foundOGK = false;
 		
 		TreeNode ogNode = null;
-		TreeNode ogkNode = null;
+		ArrayList<TreeNode> ogkNode = new ArrayList<TreeNode>();
 		
 		boolean foundOpp = false;
 		boolean foundOppK = false;
 		
 		TreeNode oppNode = null;
-		TreeNode oppKNode = null;
+		ArrayList<TreeNode> oppKNode = new ArrayList<TreeNode>();
 		
 		boolean foundFopp = false;
 		boolean foundFoppK = false;
 		
 		TreeNode foppNode = null;
-		TreeNode foppKNode = null;
+		ArrayList<TreeNode> foppKNode = new ArrayList<TreeNode>();
 		
 		boolean foundOs = false;
 		boolean foundOsK = false;
 		
 		TreeNode osNode = null;
-		TreeNode osKNode = null;
+		ArrayList<TreeNode> osKNode = new ArrayList<TreeNode>();
 		
 		boolean foundOadvp = false;
 		boolean foundOadvpK = false;
 		
 		TreeNode oadvpNode = null;
-		TreeNode oadvpKNode = null;
+		ArrayList<TreeNode> oadvpKNode = new ArrayList<TreeNode>();
 		
 		boolean foundOaMod = false;
 		boolean foundOaModK = false;
 		
 		TreeNode oaModNode = null;
-		TreeNode oaModKNode = null;
+		ArrayList<TreeNode> oaModKNode = new ArrayList<TreeNode>();
 		
 		boolean foundVMod = false;
 		boolean foundVModK = false;
 		
 		TreeNode vModNode = null;
-		TreeNode vModKNode = null;
+		ArrayList<TreeNode> vModKNode = new ArrayList<TreeNode>();
 		
 		boolean foundMod = false;
 		boolean foundModK = false;
 		
 		TreeNode modNode = null;
-		TreeNode modKNode = null;
+		ArrayList<TreeNode> modKNode = new ArrayList<TreeNode>();
 		
 		for (int i=0; i<subNodes.size(); i++)
 		{
@@ -822,7 +887,7 @@ public class TreebankUdConverter
 			else if (currentSubNode.getDependency().equals("ONK"))
 			{
 				foundONK = true;
-				onkNode = currentSubNode;
+				onkNode.add(currentSubNode);
 			}
 			else if (currentSubNode.getDependency().equals("OA"))
 			{
@@ -832,7 +897,7 @@ public class TreebankUdConverter
 			else if (currentSubNode.getDependency().equals("OAK"))
 			{
 				foundOAK = true;
-				oakNode = currentSubNode;
+				oakNode.add(currentSubNode);
 			}
 			else if (currentSubNode.getDependency().equals("OD"))
 			{
@@ -842,7 +907,7 @@ public class TreebankUdConverter
 			else if (currentSubNode.getDependency().equals("ODK"))
 			{
 				foundODK = true;
-				odkNode = currentSubNode;
+				odkNode.add(currentSubNode);
 			}
 			else if (currentSubNode.getDependency().equals("OG"))
 			{
@@ -852,7 +917,7 @@ public class TreebankUdConverter
 			else if (currentSubNode.getDependency().equals("OGK"))
 			{
 				foundOGK = true;
-				ogkNode = currentSubNode;
+				ogkNode.add(currentSubNode);
 			}
 			else if (currentSubNode.getDependency().equals("OS"))
 			{
@@ -862,7 +927,7 @@ public class TreebankUdConverter
 			else if (currentSubNode.getDependency().equals("OSK"))
 			{
 				foundOsK = true;
-				osKNode = currentSubNode;
+				osKNode.add(currentSubNode);
 			}
 			else if (currentSubNode.getDependency().equals("OPP"))
 			{
@@ -872,7 +937,7 @@ public class TreebankUdConverter
 			else if (currentSubNode.getDependency().equals("OPPK"))
 			{
 				foundOppK = true;
-				oppKNode = currentSubNode;
+				oppKNode.add(currentSubNode);
 			}
 			else if (currentSubNode.getDependency().equals("FOPP"))
 			{
@@ -882,7 +947,7 @@ public class TreebankUdConverter
 			else if (currentSubNode.getDependency().equals("FOPPK"))
 			{
 				foundFoppK = true;
-				foppKNode = currentSubNode;
+				foppKNode.add(currentSubNode);
 			}
 			else if (currentSubNode.getDependency().equals("OADVP"))
 			{
@@ -892,7 +957,7 @@ public class TreebankUdConverter
 			else if (currentSubNode.getDependency().equals("OADVPK"))
 			{
 				foundOadvpK = true;
-				oadvpKNode = currentSubNode;
+				oadvpKNode.add(currentSubNode);
 			}
 			else if (currentSubNode.getDependency().equals("OA-MOD"))
 			{
@@ -902,7 +967,7 @@ public class TreebankUdConverter
 			else if (currentSubNode.getDependency().equals("OA-MODK"))
 			{
 				foundOaModK = true;
-				oaModKNode = currentSubNode;
+				oaModKNode.add(currentSubNode);
 			}
 			else if (currentSubNode.getDependency().equals("V-MOD"))
 			{
@@ -912,7 +977,7 @@ public class TreebankUdConverter
 			else if (currentSubNode.getDependency().equals("V-MODK"))
 			{
 				foundVModK = true;
-				vModKNode = currentSubNode;
+				vModKNode.add(currentSubNode);
 			}
 			else if (currentSubNode.getDependency().equals("MOD"))
 			{
@@ -922,79 +987,324 @@ public class TreebankUdConverter
 			else if (currentSubNode.getDependency().equals("MODK"))
 			{
 				foundModK = true;
-				modKNode = currentSubNode;
+				modKNode.add(currentSubNode);
 			}
 		}
 		
 		if (foundON && foundONK)
 		{
-			onNode.addSubNode(onkNode);
-			subNodes.remove(onkNode);
+			for (int i=0; i<onkNode.size(); i++)
+			{
+				TreeNode current = onkNode.get(i);
+				onNode.addSubNode(current);
+				subNodes.remove(current);
+			}
 		}
 		
 		if (foundOA && foundOAK)
 		{
-			oaNode.addSubNode(oakNode);
-			subNodes.remove(oakNode);
+			for (int i=0; i<oakNode.size(); i++)
+			{
+				TreeNode current = oakNode.get(i);
+				oaNode.addSubNode(current);
+				subNodes.remove(current);
+			}
 		}
 		
 		if (foundOD && foundODK)
 		{
-			odNode.addSubNode(odkNode);
-			subNodes.remove(odkNode);
+			for (int i=0; i<odkNode.size(); i++)
+			{
+				TreeNode current = odkNode.get(i);
+				odNode.addSubNode(current);
+				subNodes.remove(current);
+			}
 		}
 		
 		if (foundOG && foundOGK)
 		{
-			ogNode.addSubNode(ogkNode);
-			subNodes.remove(ogkNode);
+			for (int i=0; i<ogkNode.size(); i++)
+			{
+				TreeNode current = ogkNode.get(i);
+				ogNode.addSubNode(current);
+				subNodes.remove(current);
+			}
 		}
 		
 		if (foundOpp && foundOppK)
 		{
-			oppNode.addSubNode(oppKNode);
-			subNodes.remove(oppKNode);
+			for (int i=0; i<oppKNode.size(); i++)
+			{
+				TreeNode current = oppKNode.get(i);
+				oppNode.addSubNode(current);
+				subNodes.remove(current);
+			}
 		}
 		
 		if (foundFopp && foundFoppK)
 		{
-			foppNode.addSubNode(foppKNode);
-			subNodes.remove(foppKNode);
+			for (int i=0; i<foppKNode.size(); i++)
+			{
+				TreeNode current = foppKNode.get(i);
+				foppNode.addSubNode(current);
+				subNodes.remove(current);
+			}
 		}
 		
 		if (foundOs && foundOsK)
 		{
-			osNode.addSubNode(osKNode);
-			subNodes.remove(osKNode);
+			for (int i=0; i<osKNode.size(); i++)
+			{
+				TreeNode current = osKNode.get(i);
+				osNode.addSubNode(current);
+				subNodes.remove(current);
+			}
 		}
 		
 		if (foundOadvp && foundOadvpK)
 		{
-			oadvpNode.addSubNode(oadvpKNode);
-			subNodes.remove(oadvpKNode);
+			for (int i=0; i<oadvpKNode.size(); i++)
+			{
+				TreeNode current = oadvpKNode.get(i);
+				oadvpNode.addSubNode(current);
+				subNodes.remove(current);
+			}
 		}
 		
 		if (foundOaMod && foundOaModK)
 		{
-			oaModNode.addSubNode(oaModKNode);
-			subNodes.remove(oaModKNode);
+			for (int i=0; i<oaModKNode.size(); i++)
+			{
+				TreeNode current = oaModKNode.get(i);
+				oaModNode.addSubNode(current);
+				subNodes.remove(current);
+			}
 		}
 		
 		if (foundMod && foundModK)
 		{
-			modNode.addSubNode(modKNode);
-			subNodes.remove(modKNode);
+			for (int i=0; i<modKNode.size(); i++)
+			{
+				TreeNode current = modKNode.get(i);
+				modNode.addSubNode(current);
+				subNodes.remove(current);
+			}
 		}
 		
 		if (foundVMod && foundVModK)
 		{
-			vModNode.addSubNode(vModKNode);
-			subNodes.remove(vModKNode);
+			for (int i=0; i<vModKNode.size(); i++)
+			{
+				TreeNode current = vModKNode.get(i);
+				vModNode.addSubNode(current);
+				subNodes.remove(current);
+			}
 		}
 		
 		for (int i=0; i<subNodes.size(); i++)
 		{
 			setConjunct(subNodes.get(i));
+		}
+		
+		return transformedNode;
+	}
+	
+	// Add ON-MOD as child of ON, etc.
+	private static TreeNode setMod(TreeNode node)
+	{
+		TreeNode transformedNode = node;
+		ArrayList<TreeNode> subNodes = node.getSubNodes();
+		
+		boolean foundON = false;
+		boolean foundONMOD = false;
+		
+		TreeNode onNode = null;
+		ArrayList<TreeNode> onmodNode = new ArrayList<TreeNode>();
+		
+		boolean foundOA = false;
+		boolean foundOAMOD = false;
+		
+		TreeNode oaNode = null;
+		ArrayList<TreeNode> oamodNode = new ArrayList<TreeNode>();
+		
+		boolean foundOD = false;
+		boolean foundODMOD = false;
+		
+		TreeNode odNode = null;
+		ArrayList<TreeNode> odmodNode = new ArrayList<TreeNode>();
+		
+		boolean foundOG = false;
+		boolean foundOGMOD = false;
+		
+		TreeNode ogNode = null;
+		ArrayList<TreeNode> ogmodNode = new ArrayList<TreeNode>();
+		
+		boolean foundPred = false;
+		boolean foundPredMOD = false;
+		
+		TreeNode predNode = null;
+		ArrayList<TreeNode> predmodNode = new ArrayList<TreeNode>();
+		
+		boolean foundOadjp = false;
+		boolean foundOadjpMOD = false;
+		
+		TreeNode oadjpNode = null;
+		ArrayList<TreeNode> oadjpmodNode = new ArrayList<TreeNode>();
+		
+		boolean foundOadvp = false;
+		boolean foundOadvpMOD = false;
+		
+		TreeNode oadvpNode = null;
+		ArrayList<TreeNode> oadvpmodNode = new ArrayList<TreeNode>();
+		
+		for (int i=0; i<subNodes.size(); i++)
+		{
+			TreeNode currentSubNode = subNodes.get(i);
+			if (currentSubNode.getDependency().equals("ON"))
+			{
+				foundON = true;
+				onNode = currentSubNode;
+			}
+			else if (currentSubNode.getDependency().equals("ON-MOD"))
+			{
+				foundONMOD = true;
+				onmodNode.add(currentSubNode);
+			}
+			else if (currentSubNode.getDependency().equals("OA"))
+			{
+				foundOA = true;
+				oaNode = currentSubNode;
+			}
+			else if (currentSubNode.getDependency().equals("OA-MOD"))
+			{
+				foundOAMOD = true;
+				oamodNode.add(currentSubNode);
+			}
+			else if (currentSubNode.getDependency().equals("OD"))
+			{
+				foundOD = true;
+				odNode = currentSubNode;
+			}
+			else if (currentSubNode.getDependency().equals("OD-MOD"))
+			{
+				foundODMOD = true;
+				odmodNode.add(currentSubNode);
+			}
+			else if (currentSubNode.getDependency().equals("OG"))
+			{
+				foundOG = true;
+				ogNode = currentSubNode;
+			}
+			else if (currentSubNode.getDependency().equals("OG-MOD"))
+			{
+				foundOGMOD = true;
+				ogmodNode.add(currentSubNode);
+			}
+			else if (currentSubNode.getDependency().equals("PRED"))
+			{
+				foundPred = true;
+				predNode = currentSubNode;
+			}
+			else if (currentSubNode.getDependency().equals("PRED-MOD"))
+			{
+				foundPredMOD = true;
+				predmodNode.add(currentSubNode);
+			}
+			else if (currentSubNode.getDependency().equals("OADVP"))
+			{
+				foundOadvp = true;
+				oadvpNode = currentSubNode;
+			}
+			else if (currentSubNode.getDependency().equals("OADVP-MO"))
+			{
+				foundOadvpMOD = true;
+				oadvpmodNode.add(currentSubNode);
+			}
+			else if (currentSubNode.getDependency().equals("OADJP"))
+			{
+				foundOadjp = true;
+				oadjpNode = currentSubNode;
+			}
+			else if (currentSubNode.getDependency().equals("OADJP-MO"))
+			{
+				foundOadjpMOD = true;
+				oadjpmodNode.add(currentSubNode);
+			}
+		}
+		
+		if (foundON && foundONMOD)
+		{
+			for (int i=0; i<onmodNode.size(); i++)
+			{
+				TreeNode current = onmodNode.get(i);
+				onNode.addSubNode(current);
+				subNodes.remove(current);
+			}
+		}
+		
+		if (foundOA && foundOAMOD)
+		{
+			for (int i=0; i<oamodNode.size(); i++)
+			{
+				TreeNode current = oamodNode.get(i);
+				oaNode.addSubNode(current);
+				subNodes.remove(current);
+			}
+		}
+		
+		if (foundOD && foundODMOD)
+		{
+			for (int i=0; i<odmodNode.size(); i++)
+			{
+				TreeNode current = odmodNode.get(i);
+				odNode.addSubNode(current);
+				subNodes.remove(current);
+			}
+		}
+		
+		if (foundOG && foundOGMOD)
+		{
+			for (int i=0; i<ogmodNode.size(); i++)
+			{
+				TreeNode current = ogmodNode.get(i);
+				ogNode.addSubNode(current);
+				subNodes.remove(current);
+			}
+		}
+		
+		if (foundPred && foundPredMOD)
+		{
+			for (int i=0; i<predmodNode.size(); i++)
+			{
+				TreeNode current = predmodNode.get(i);
+				predNode.addSubNode(current);
+				subNodes.remove(current);
+			}
+		}
+		
+		if (foundOadvp && foundOadvpMOD)
+		{
+			for (int i=0; i<oadvpmodNode.size(); i++)
+			{
+				TreeNode current = oadvpmodNode.get(i);
+				oadvpNode.addSubNode(current);
+				subNodes.remove(current);
+			}
+		}
+		
+		if (foundOadjp && foundOadjpMOD)
+		{
+			for (int i=0; i<oadjpmodNode.size(); i++)
+			{
+				TreeNode current = oadjpmodNode.get(i);
+				oadjpNode.addSubNode(current);
+				subNodes.remove(current);
+			}
+		}
+		
+		for (int i=0; i<subNodes.size(); i++)
+		{
+			setMod(subNodes.get(i));
 		}
 		
 		return transformedNode;
@@ -1206,32 +1516,6 @@ public class TreebankUdConverter
 			ArrayList<DependencyNode> heads = headWordFinder(treeNode);
 			if (heads.size() > 1)
 			{
-				/*current = headNode;
-				for (int i=0; i<heads.size(); i++)
-				{
-					if ((!(current.getSubNodes().contains(heads.get(i)))) && (!(current.equals(heads.get(i)))))
-					{
-						current.addDependent(heads.get(i));
-					}
-				}
-				for (int i=0; i<subNodes.size(); i++)
-				{
-					TreeNode currentSubNode = subNodes.get(i);
-					extractDepStructure(currentSubNode, false, current);
-				}
-				for (int i=0; i<words.size(); i++)
-				{
-					TreeWord currentWord = words.get(i);
-					DependencyNode currentWordDepNode = currentWord.getDepNode();
-					if (currentWordDepNode.getRel().equals(""))
-					{
-						currentWordDepNode.setRel(currentWord.getDependency());
-					}
-					if((!(heads.get(0).getSubNodes().contains(currentWordDepNode))) && (!(heads.get(0).equals(currentWordDepNode))) && (!(heads.contains(currentWordDepNode))))
-					{
-						heads.get(0).addDependent(currentWordDepNode);
-					}
-				}*/
 				System.out.println("MULTPLE HEAD ERROR");
 			}
 			else if (heads.size() == 1)
@@ -1327,6 +1611,8 @@ public class TreebankUdConverter
 				String prep = currentNode.getNodeData().get("lemma");
 				String art = null;
 				String artLemma = null;
+				boolean canBeBrokenUp = false;
+				
 				if (form.endsWith("m"))
 				{
 					art = "dem";
@@ -1339,37 +1625,49 @@ public class TreebankUdConverter
 					{
 						artLemma = "der";
 					}
+					canBeBrokenUp = true;
 				}
 				else if (form.endsWith("r"))
 				{
 					art = "der";
 					artLemma = "die";
+					canBeBrokenUp = true;
 				}
 				else if (form.endsWith("s"))
 				{
 					art = "das";
 					artLemma = "das";
+					canBeBrokenUp = true;
 				}
 				else if (form.endsWith("n"))
 				{
 					art = "den";
 					artLemma = "der";
+					canBeBrokenUp = true;
 				}
-				DependencyNode nodeArt = new DependencyNode(currentNode.getLine(), currentNode.getHead(), "det", null);
-				nodeArt.getNodeData().put("lemma", artLemma);
-				nodeArt.setLemma(artLemma);
-				nodeArt.getNodeData().put("form", art);
-				nodeArt.setPos("ART");
-				nodeArt.getNodeData().put("pos", "ART");
+				else
+				{
+					currentNode.setRel("case");
+				}
 				
-				nodeArt.getHead().addDependent(nodeArt);
-				
-				currentNode.getNodeData().put("form", prep);
-				currentNode.setRel("case");
-				currentNode.setPos("ADP");
-				currentNode.getNodeData().put("pos", "APPR");
-				
-				newSentence.add(i+1, nodeArt);
+				if (canBeBrokenUp)
+				{
+					DependencyNode nodeArt = new DependencyNode(currentNode.getLine(), currentNode.getHead(), "det", null);
+					nodeArt.getNodeData().put("lemma", artLemma);
+					nodeArt.setLemma(artLemma);
+					nodeArt.getNodeData().put("form", art);
+					nodeArt.setPos("ART");
+					nodeArt.getNodeData().put("pos", "ART");
+					
+					nodeArt.getHead().addDependent(nodeArt);
+					
+					currentNode.getNodeData().put("form", prep);
+					currentNode.setRel("case");
+					currentNode.setPos("ADP");
+					currentNode.getNodeData().put("pos", "APPR");
+					
+					newSentence.add(i+1, nodeArt);
+				}
 			}
 		}
 	}
@@ -1668,6 +1966,10 @@ public class TreebankUdConverter
 		while (sentence.get(leftExtreme).getNodeData().get("pos").contains("$"))
 		{
 			leftExtreme++;
+			if (leftExtreme >= sentence.size())
+			{
+				return(sentence.get(rightExtreme - 1));
+			}
 		}
 		
 		DependencyNode test = sentence.get(leftExtreme);
@@ -1716,6 +2018,13 @@ public class TreebankUdConverter
 				head = Integer.toString(node.getHead().getWordNumber());
 			}
 			String depRel = node.getRel();
+			
+			//Comment out to see where program could not determine dependencies
+			if (depRel != null && (depRel.equals("HD") || depRel.equals("REPLACEME")))
+			{
+				depRel = "dep";
+			}
+			
 			String deps = "_";
 			String misc = "_";
 			
@@ -1736,19 +2045,20 @@ public class TreebankUdConverter
 		return lines;
 	}
 	
-	private static void printSentences(String directory)
+	private static void printSentences(String directory, int start)
 	{
 		String fileName = directory + "/convertedSentences.txt";
 		
 		BufferedWriter writer = null;
 		try
 		{
-		    writer = new BufferedWriter(new FileWriter(fileName));
+		    writer = new BufferedWriter(new FileWriter(fileName, (start > 1)));
 		    
 		    for (int i=0; i<conllSentences.size(); i++)
 		    {
 		    	ArrayList<ArrayList<String>> currentSentence = conllSentences.get(i);
-		    	writer.write(Integer.toString(i + 1));
+		    	writer.write(Integer.toString(i + start));
+		    	System.out.println(Integer.toString(i + start));
 		    	writer.write("\n");
 		    	writer.write("\n");
 		    	for (int j=1; j<currentSentence.size(); j++)
@@ -1862,7 +2172,7 @@ public class TreebankUdConverter
 		return heads;
 	}
 	
-	private static ArrayList<ArrayList<String>> readExportFile(String path)
+	private static ArrayList<ArrayList<String>> readExportFile(String path, int start, int end)
 	{
 		BufferedReader br = null;
 		ArrayList<ArrayList<String>> sentences = new ArrayList<ArrayList<String>>();
@@ -1875,11 +2185,19 @@ public class TreebankUdConverter
 			br = new BufferedReader(new FileReader(path));
 			ArrayList<String> currentSentence = new ArrayList<String>();
 			
-			while (!((sCurrentLine = br.readLine()).contains("<body")));
+			if (start == 1)
+			{
+				while (!((sCurrentLine = br.readLine()).contains("<body")));
+			}
+			else
+			{
+				while (!((sCurrentLine = br.readLine()).contains("<sentence xml:id=\"s" + Integer.toString(start) + "\">")));
+				currentSentence.add(sCurrentLine);
+			}
 			
 			while ((sCurrentLine = br.readLine()) != null) 
 			{
-				if (sCurrentLine.contains("</body>"))
+				if (sCurrentLine.contains("</body>") || sCurrentLine.contains("<sentence xml:id=\"s" + Integer.toString(end + 1) + "\">"))
 				{
 					break;
 				}

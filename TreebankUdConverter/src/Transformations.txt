@@ -16,12 +16,13 @@ HD,PRED,[OS-MOD,,PPER]:HD,xcomp,expl
 HD,PRED,OA,OV(HD):aux,xcomp,dobj,HD --> take care to only convert the leftmost OV
 HD,PRED,OA,VC-HD:aux,xcomp,dobj,HD
 HD,PRED,OA:HD,xcomp,dobj
-HD,[PRED,PX,],OV(HD):aux,nmod,HD --> take care to only convert the leftmost OV
+HD,[PRED,PX,],OV(HD):aux,obl,HD --> take care to only convert the leftmost OV
 HD,[PRED,PX,]:HD,nmod
 HD,PRED,OV,[OV,,PTKZU]:HD,xcomp,cop,aux
 HD,PRED,[OV,,PTKZU]:HD,xcomp,cop
 HD,PRED,OV(HD):aux,HD,cop --> take care to only convert the leftmost OV
 HD,PRED:cop,HD
+HD,[OV,,(LASSEN,PTKZU_LASS)],OV:aux,xcomp,HD
 HD,[VC-HD,,(LASSEN,PTKZU_LASS)],OV:aux,xcomp,HD
 [HD,,(LASSEN,PTKZU_LASS)],OV:HD,xcomp
 HD,[OV,,(PTKZU,VVIZU)]:HD,xcomp
@@ -29,6 +30,7 @@ HD,OV:aux,HD
 HD,VC-HD:aux,HD
 
 [,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)],[,WORD,V*INF]:aux,HD
+[,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)],[,VXINF,]:aux,HD
 [,WORD,PTKZU],[,WORD,ADJ*]:aux,HD
 [PRED-KOKOM,,KOKOM],[HD,,N*]:HD,nmod
 [PRED-KOKOM,,KOKOM],[HD,,ADJ*]:HD,amod
@@ -45,6 +47,7 @@ HD,VC-HD:aux,HD
 
 **ONE-TO-ONE TRANSFORMATIONS**
 HD:HD
+PARA:parataxis
 [,WORD,KON]:cc
 KONJ2:conj
 KONJ:HD
@@ -68,7 +71,7 @@ OS:xcomp
 [,R-SIMPX,]:acl:relcl
 [,WORD,(KOUS, KOUI)]:mark
 [,PX,PROP]:advmod
-[,PX,]:nmod
+[,PX,]:obl
 NMOD:nmod
 [,WORD,KOKOM]:case
 [,,PTKNEG]:advmod:neg
@@ -83,16 +86,19 @@ NEG_ADV:det:neg
 [,WORD,CARD]:nummod
 [,ADJX,PTKZU]:acl
 [,ADJX,]:amod
+[-,WORD,amod]:amod
 [,DP,]:det
 [,WORD,ART]:det
 [,WORD,PPOSAT]:nmod:poss
 [,WORD,APZR]:mwe
 VPT:mark
+[,WORD,PTKVZ]:mark
 ES:expl
 [(ON-MOD, OS-MOD),,PPER]:expl
 [ONK,OAK,ODK,...]:conj
 [,P-SIMPX,]:parataxis
-PARA:parataxis
+[,DM,]:discourse
+[,WORD,(PTKANT, INTJ)]:discourse
 [,WORD,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
 [-,,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
 [MOD*,NX,]:nmod
@@ -113,8 +119,12 @@ APP,...:HD,(appos,...)
 
 **Automatic Leftovers**
 
-1194 - limitation
-Check 2723 (lassen)
-What to do about "neg" dependency
+1194 - limitation with FKONJ
+2723 - "Aber" - dependency for cc when first word of sentence
+2897 - Weird annotation in source
+9361 - ended - what dependency?
+79955 - error in source annotation, shouldn't be PTKZU
+50884 - error in source annotation, "gegen", others with similar errors
+90079 - error in source annotation, "Das" should be attributive, not substituting pronoun
 
 *** - to do

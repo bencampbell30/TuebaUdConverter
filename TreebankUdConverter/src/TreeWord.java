@@ -25,6 +25,8 @@ public class TreeWord implements Serializable
 		line = line.replace("<", "");
 		line = line.replace("/>", "");
 		line = line.replace(">", "");
+		line = line.replace("\"=\"", "\"EQUALS_SIGN\"");
+		line = line.replaceFirst("(comment=)\"(.*)\"", "");
 		StringTokenizer st = new StringTokenizer(line);
 		st.nextToken(); //get rid of node/sentence marker
 	    while (st.hasMoreTokens()) 
@@ -32,7 +34,7 @@ public class TreeWord implements Serializable
 	    	String current = st.nextToken();
 	    	String[] keyValue = current.split("=");
 	    	keyValue[1] = keyValue[1].substring(1, keyValue[1].length()-1);
-			wordData.put(keyValue[0], keyValue[1]);
+			wordData.put(keyValue[0], keyValue[1].replace("EQUALS_SIGN", "="));
 	    }
 	    dependency = wordData.get("func");
 	    String lemma = wordData.get("lemma");
