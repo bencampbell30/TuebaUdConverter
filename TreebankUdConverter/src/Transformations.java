@@ -79,8 +79,8 @@ public class Transformations
 		arrayListPredKokomFun.add("PRED-KOKOM");
 		
 		// fun NMOD
-		ArrayList<String> arrayListNModFun = new ArrayList<String>();
-		arrayListNModFun.add("NMOD");
+		ArrayList<String> arrayListOblFun = new ArrayList<String>();
+		arrayListOblFun.add("OBL");
 
 		// fun HD
 		ArrayList<String> arrayListHdFun = new ArrayList<String>();
@@ -434,7 +434,7 @@ public class Transformations
 		// PRED-KOKOM
 		RelationTemplate templatePredKokom = new RelationTemplate(arrayListPredKokomFun, null, arrayListKokomPos, true, false, true);
 		// PRED-KOKOM
-		RelationTemplate templateNMod = new RelationTemplate(arrayListNModFun, null, null, true, false, false);
+		RelationTemplate templateObl = new RelationTemplate(arrayListOblFun, null, null, true, false, false);
 		// [PRED,,N*]
 		RelationTemplate templatePredN = new RelationTemplate(arrayListPredFun, null, arrayListNPos, true, false,
 				true);
@@ -1066,7 +1066,7 @@ public class Transformations
 		currentTemplate.add(templateHdN);
 				
 		currentNewRelations.add("HD");
-		currentNewRelations.add("nmod");
+		currentNewRelations.add("obl");
 				
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 				
@@ -1383,10 +1383,10 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//NMOD:nmod
-		currentTemplate.add(templateNMod);
+		//OBL:obl
+		currentTemplate.add(templateObl);
 				
-		currentNewRelations.add("nmod");
+		currentNewRelations.add("obl");
 				
 		autoProcessedSingleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 				

@@ -516,7 +516,7 @@ public class TreebankUdConverter
 					}
 					if (hasKokom)
 					{
-						currentSubNode.setDependency("NMOD");
+						currentSubNode.setDependency("OBL");
 					}
 					else if (morph != null)
 					{
