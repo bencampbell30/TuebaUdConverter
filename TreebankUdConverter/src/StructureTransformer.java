@@ -121,7 +121,7 @@ public class StructureTransformer
 			TransformationPair currentPair = transformationMultiplePairs.get(i);
 			currentTemplate = currentPair.getOldRelation();
 			ArrayList<String> newDeps = currentPair.getNewDependencies();
-			testEquivalence = checkStructureEquivalence(deps, currentTemplate);
+			testEquivalence = checkStructureEquivalenceNonDuplicate(deps, currentTemplate);
 			boolean headSet = false; // Make sure head is only set once
 
 			if (testEquivalence) 
@@ -136,9 +136,12 @@ public class StructureTransformer
 								&& newDependencies.get(k).equals("REPLACEME")) 
 						{
 							if (!(newDeps.get(j).equals("HD")) || !headSet)
+							{
 								newDependencies.set(k, newDeps.get(j));
-							if (newDeps.get(j).equals("HD"))
-								headSet = true;
+								if (newDeps.get(j).equals("HD"))
+									headSet = true;
+								break;
+							}
 						}
 					}
 				}
@@ -376,6 +379,41 @@ public class StructureTransformer
 		return isEquivalent;
 	}
 	
+	private boolean checkStructureEquivalenceNonDuplicate(ArrayList<RelationTriplet> treeNodes, ArrayList<RelationTemplate> treeStructureCompare)
+	{
+		boolean isEquivalent = true;
+		HashMap<Integer, Integer> structureCount = new HashMap<Integer, Integer>(); //count the number of equivalent relations
+		ArrayList<Integer> accountedFor = new ArrayList<Integer>(); //Make sure things don't get counted twice
+		for (int i=0; i<treeStructureCompare.size(); i++)
+		{
+			RelationTemplate currentRelTemplate = treeStructureCompare.get(i);
+			int currentCount = 0;
+			{
+				for (int j=0; j<treeStructureCompare.size(); j++)
+				{
+					RelationTemplate currentRelTemplateCompare = treeStructureCompare.get(j);
+					if (currentRelTemplate.equals(currentRelTemplateCompare))
+					{
+						currentCount++;
+					}
+				}
+			}
+			structureCount.put(i, currentCount);
+		}
+		
+		for (int i=0; i<treeStructureCompare.size(); i++)
+		{
+			RelationTemplate currentRelTemplate = treeStructureCompare.get(i);
+			ArrayList<RelationTriplet> containedRelations = containsNonDuplicate(treeNodes, currentRelTemplate, accountedFor);
+			if (containedRelations.size() < structureCount.get(i))
+			{
+				isEquivalent = false;
+				break;
+			}
+		}
+		return isEquivalent;
+	}
+	
 	private ArrayList<RelationTriplet> contains(ArrayList<RelationTriplet> relations, RelationTemplate relCompare)
 	{
 		ArrayList<RelationTriplet> containedRelations = new ArrayList<RelationTriplet>();
@@ -385,6 +423,21 @@ public class StructureTransformer
 			if (isMatch(currRel, relCompare))
 			{
 				containedRelations.add(currRel);
+			}
+		}
+		return containedRelations;
+	}
+	
+	private ArrayList<RelationTriplet> containsNonDuplicate(ArrayList<RelationTriplet> relations, RelationTemplate relCompare, ArrayList<Integer> accountedFor)
+	{
+		ArrayList<RelationTriplet> containedRelations = new ArrayList<RelationTriplet>();
+		for (int i=0; i<relations.size(); i++)
+		{
+			RelationTriplet currRel = relations.get(i);
+			if (isMatch(currRel, relCompare) && !accountedFor.contains(i))
+			{
+				containedRelations.add(currRel);
+				accountedFor.add(i);
 			}
 		}
 		return containedRelations;

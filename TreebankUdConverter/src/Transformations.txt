@@ -6,25 +6,39 @@ KONJ,KONJ,...:HD,conj,... --> First KONJ becomes head
 ***CHECK SENTENCE 146***
 [HD,,(V*PASSIV,PTKZU_PASS)],PRED,OV(HD):auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],PRED,VC-HD:auxpass,xcomp,HD
-HD,PRED,OV,[OV(HD),,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,auxpass
+[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[OV,,VMAIN]:auxpass,xcomp,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[VC-HD,,VMAIN]:auxpass,xcomp,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[OV,,VMAIN]:auxpass,xcomp,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[VC-HD,,VMAIN]:auxpass,xcomp,HD
+HD,PRED,[OV(HD),,(V*PASSIV,PTKZU_PASS)],OV:aux,xcomp,HD,auxpass
 HD,PRED,OV,[VC-HD,,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,auxpass
-[HD,,(V*PASSIV,PTKZU_PASS)],OV:auxpass,HD
-[HD,,(V*PASSIV,PTKZU_PASS)],VC-HD:auxpass,HD
+[HD,,(V*PASSIV,PTKZU-PASS)],OV:auxpass,HD
+[HD,,(V*PASSIV,PTKZU-PASS)],VC-HD:auxpass,HD
 HD,PRED,[OS-MOD,,PPER],OV(HD):aux,xcomp,expl,HD
 HD,PRED,[OS-MOD,,PPER],VC-HD:aux,xcomp,expl,HD
 HD,PRED,[OS-MOD,,PPER]:HD,xcomp,expl
 HD,PRED,OA,OV(HD):aux,xcomp,dobj,HD --> take care to only convert the leftmost OV
 HD,PRED,OA,VC-HD:aux,xcomp,dobj,HD
 HD,PRED,OA:HD,xcomp,dobj
-HD,[PRED,PX,],OV(HD):aux,obl,HD --> take care to only convert the leftmost OV
+HD,[PRED,PX,],OV(HD):aux,obl,HD
+HD,[PRED,PX,],VC-HD:aux,obl,HD
 HD,[PRED,PX,]:HD,obl
-HD,PRED,OV,[OV,,PTKZU]:HD,xcomp,cop,aux
+HD,PREDWITHKOKOM,OV(HD):aux,obl,HD ***
+HD,PREDWITHKOKOM,VC-HD:aux,obl,HD ***
+HD,PREDWITHKOKOM:HD,obl ***
+HD,PRED,[OV,,PTKZU],OV:HD,xcomp,cop,aux --> Confirm this construction, doesn't seem to make sense
 HD,PRED,[OV,,PTKZU]:HD,xcomp,cop
 HD,PRED,OV(HD):aux,HD,cop --> take care to only convert the leftmost OV
 HD,PRED:cop,HD
+HD,[OV,,VMAIN],[OV,,VMAIN]:aux,xcomp,HD
+HD,[OV,,VMAIN],[VC-HD,,VMAIN]:aux,xcomp,HD
+HD,[OV,,(PTKZU,VVIZU)],[OV,,VMAIN]:aux,xcomp,HD
+HD,[OV,,(PTKZU,VVIZU)],[VC-HD,,VMAIN]:aux,xcomp,HD
 HD,[OV,,(LASSEN,PTKZU_LASS)],OV:aux,xcomp,HD
 HD,[VC-HD,,(LASSEN,PTKZU_LASS)],OV:aux,xcomp,HD
 [HD,,(LASSEN,PTKZU_LASS)],OV:HD,xcomp
+[HD,,(V*PASSIV,PTKZU_PASS)],OV:auxpass,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],VC-HD:auxpass,HD
 HD,[OV,,(PTKZU,VVIZU)]:HD,xcomp
 HD,OV:aux,HD
 HD,VC-HD:aux,HD
@@ -38,10 +52,12 @@ HD,VC-HD:aux,HD
 (APPR,APPO),[,NX,]:case,HD
 [HD,,(ADV,ADJD,ADJA)],[,NX,]:HD,obl
 
-** - try to distinguish "flat" from "compound"
-** - mwe - "nach wie vor", "darüber hinaus", etc.
+** - try to distinguish "flat" from "compound" and "appos"
+** - fixed - "nach wie vor", "darüber hinaus", etc.
 ** - KOKOM where a preposition is already present - cc?
 ** - not appos if first element
+** - reduce incorrect "cop" verbs
+* - Experiment with changing "HD" to "conj"
 
 ** = nice to have
 
@@ -58,12 +74,15 @@ OD:iobj
 OG:iobj
 [OV,,(V*PASSIV,PTKZU_PASS)]:auxpass
 [OV,,(LASSEN,PTKZU_LASS)]:xcomp
+[OV,,(PTKZU,VVIZU)]:xcomp
 OV:aux
 [,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)]:aux
 GEN:nmod:poss
 [VC-HD,,(LASSEN,PTKZU_LASS)]:xcomp
 [VC-HD,,(V*PASSIV,PTKZU_PASS)]:auxpass
-VC-HD:aux
+[VC-HD,,VMAIN]:xcomp
+[VC-HD,,(PTKZU,VVIZU)]:xcomp
+[VC-HD,,]:aux
 OSC:ccomp
 OS:xcomp
 [(ON-MOD, OA-MOD, OD-MOD, OG-MOD),SIMPX,]:acl
@@ -113,7 +132,7 @@ HD,[,WORD,FM],[,WORD,FM],...:HD,foreign,foreign,...
 [HD,,N*],[,SIMPX,]:acl
 [,SIMPX,]:advcl
 APP,...:HD,(appos,...)
-[,WORD,NE],...:HD,(name,...)
+[,WORD,NE],...:HD,(flat,...)
 [,,N*]:appos
 [,NX,]:appos
 

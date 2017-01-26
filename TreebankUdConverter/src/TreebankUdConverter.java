@@ -31,7 +31,7 @@ public class TreebankUdConverter
 		{
 			chunkedProcess(i*10000+1, (i+1)*10000);
 		}
-		//chunkedProcess(1, 1000);
+		//chunkedProcess(1, 10000);
 	}
 	
 	private static void chunkedProcess (int start, int end)
@@ -40,7 +40,7 @@ public class TreebankUdConverter
 		sentenceNodes = new ArrayList<TreeNode>();
 		sentenceNodesFieldModified = new ArrayList<TreeNode>();
 		sentenceNodesClipped = new ArrayList<TreeNode>();
-		sentenceNodesFunctionDetermined = new ArrayList<TreeNode>(); //*
+		sentenceNodesFunctionDetermined = new ArrayList<TreeNode>();
 		sentenceNodesTransformed = new ArrayList<TreeNode>();
 		dependencySentences = new ArrayList<DependencyNode>();
 		conllSentences = new ArrayList<ArrayList<ArrayList<String>>>();
@@ -61,7 +61,6 @@ public class TreebankUdConverter
 		
 		for (int i=0; i<sentenceNodes.size(); i++)
 		{
-			//TreeNode currentNode = makeDeepCopy(sentenceNodes.get(i));
 			TreeNode fKoordModNode = topoFieldModifier(sentenceNodes.get(i));
 			sentenceNodesFieldModified.add(fKoordModNode);
 		}
@@ -70,7 +69,6 @@ public class TreebankUdConverter
 		
 		for (int i=0; i<sentenceNodesFieldModified.size(); i++)
 		{
-			//TreeNode currentNode = makeDeepCopy(sentenceNodesFieldModified.get(i));
 			TreeNode clippedNode = clipTree(sentenceNodesFieldModified.get(i));
 			sentenceNodesClipped.add(clippedNode);
 		}
@@ -111,7 +109,6 @@ public class TreebankUdConverter
 		
 		for (int i=0; i<sentenceNodesClipped.size(); i++)
 		{
-			//TreeNode currentNode = makeDeepCopy(sentenceNodesClipped.get(i));
 			sentenceNodesFunctionDetermined.add(functionDeterminer(sentenceNodesClipped.get(i)));
 		}
 		
@@ -141,7 +138,6 @@ public class TreebankUdConverter
 		
 		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
 		{
-			//TreeNode currentNode = makeDeepCopy(sentenceNodesFunctionDetermined.get(i));
 			sentenceNodesTransformed.add(transformDependencies(sentenceNodesFunctionDetermined.get(i), true));
 		}
 		
@@ -149,7 +145,6 @@ public class TreebankUdConverter
 		
 		for (int i=0; i<sentenceNodesTransformed.size(); i++)
 		{
-			//TreeNode currentNode = makeDeepCopy(sentenceNodesTransformed.get(i));
 			dependencySentences.add(extractDepStructure(sentenceNodesTransformed.get(i), true, null));
 		}
 		
@@ -260,7 +255,6 @@ public class TreebankUdConverter
 		String directory = "/Users/bcmpbell/Documents";
 		printSentences(directory, start);
 		
-		DependencyNode test5 = dependencySentences.get(0);
 		System.out.println("Finished");
 	}
 	
@@ -508,7 +502,6 @@ public class TreebankUdConverter
 					for (int j=0; j<subWords.size(); j++)
 					{
 						TreeWord currentWord = subWords.get(j);
-						System.out.println(currentWord.getPos());
 						if (currentWord.getPos().equals("KOKOM"))
 						{
 							hasKokom = true;
@@ -2023,7 +2016,7 @@ public class TreebankUdConverter
 			//Comment out to see where program could not determine dependencies
 			if (depRel != null && (depRel.equals("HD") || depRel.equals("REPLACEME")))
 			{
-				depRel = "dep";
+				//depRel = "dep";
 			}
 			
 			String deps = "_";
