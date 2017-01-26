@@ -31,7 +31,7 @@ public class TreebankUdConverter
 		{
 			chunkedProcess(i*10000+1, (i+1)*10000);
 		}
-		//chunkedProcess(1, 10000);
+		//chunkedProcess(1, 1000);
 	}
 	
 	private static void chunkedProcess (int start, int end)

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class StructureTransformer 
 {
@@ -121,7 +122,7 @@ public class StructureTransformer
 			TransformationPair currentPair = transformationMultiplePairs.get(i);
 			currentTemplate = currentPair.getOldRelation();
 			ArrayList<String> newDeps = currentPair.getNewDependencies();
-			testEquivalence = checkStructureEquivalenceNonDuplicate(deps, currentTemplate);
+			testEquivalence = checkStructureEquivalence(deps, currentTemplate);
 			boolean headSet = false; // Make sure head is only set once
 
 			if (testEquivalence) 
@@ -348,41 +349,7 @@ public class StructureTransformer
 	private boolean checkStructureEquivalence(ArrayList<RelationTriplet> treeNodes, ArrayList<RelationTemplate> treeStructureCompare)
 	{
 		boolean isEquivalent = true;
-		HashMap<Integer, Integer> structureCount = new HashMap<Integer, Integer>(); //count the number of equivalent relations
-		for (int i=0; i<treeStructureCompare.size(); i++)
-		{
-			RelationTemplate currentRelTemplate = treeStructureCompare.get(i);
-			int currentCount = 0;
-			{
-				for (int j=0; j<treeStructureCompare.size(); j++)
-				{
-					RelationTemplate currentRelTemplateCompare = treeStructureCompare.get(j);
-					if (currentRelTemplate.equals(currentRelTemplateCompare))
-					{
-						currentCount++;
-					}
-				}
-			}
-			structureCount.put(i, currentCount);
-		}
-		
-		for (int i=0; i<treeStructureCompare.size(); i++)
-		{
-			RelationTemplate currentRelTemplate = treeStructureCompare.get(i);
-			ArrayList<RelationTriplet> containedRelations = contains(treeNodes, currentRelTemplate);
-			if (containedRelations.size() < structureCount.get(i))
-			{
-				isEquivalent = false;
-				break;
-			}
-		}
-		return isEquivalent;
-	}
-	
-	private boolean checkStructureEquivalenceNonDuplicate(ArrayList<RelationTriplet> treeNodes, ArrayList<RelationTemplate> treeStructureCompare)
-	{
-		boolean isEquivalent = true;
-		HashMap<Integer, Integer> structureCount = new HashMap<Integer, Integer>(); //count the number of equivalent relations
+		HashMap<RelationTemplate, Integer> structureCount = new HashMap<RelationTemplate, Integer>(); //count the number of equivalent relations
 		ArrayList<Integer> accountedFor = new ArrayList<Integer>(); //Make sure things don't get counted twice
 		for (int i=0; i<treeStructureCompare.size(); i++)
 		{
@@ -398,37 +365,26 @@ public class StructureTransformer
 					}
 				}
 			}
-			structureCount.put(i, currentCount);
+			structureCount.put(currentRelTemplate, currentCount);
 		}
 		
-		for (int i=0; i<treeStructureCompare.size(); i++)
-		{
-			RelationTemplate currentRelTemplate = treeStructureCompare.get(i);
-			ArrayList<RelationTriplet> containedRelations = containsNonDuplicate(treeNodes, currentRelTemplate, accountedFor);
-			if (containedRelations.size() < structureCount.get(i))
+		Iterator it = structureCount.entrySet().iterator();
+	    while (it.hasNext()) 
+	    {
+	        HashMap.Entry pair = (HashMap.Entry)it.next();
+	        RelationTemplate currentRelTemplate = (RelationTemplate)pair.getKey();
+	        ArrayList<RelationTriplet> containedRelations = contains(treeNodes, currentRelTemplate, accountedFor);
+			if (containedRelations.size() < structureCount.get(currentRelTemplate))
 			{
 				isEquivalent = false;
 				break;
 			}
-		}
+	    }
+	    
 		return isEquivalent;
 	}
 	
-	private ArrayList<RelationTriplet> contains(ArrayList<RelationTriplet> relations, RelationTemplate relCompare)
-	{
-		ArrayList<RelationTriplet> containedRelations = new ArrayList<RelationTriplet>();
-		for (int i=0; i<relations.size(); i++)
-		{
-			RelationTriplet currRel = relations.get(i);
-			if (isMatch(currRel, relCompare))
-			{
-				containedRelations.add(currRel);
-			}
-		}
-		return containedRelations;
-	}
-	
-	private ArrayList<RelationTriplet> containsNonDuplicate(ArrayList<RelationTriplet> relations, RelationTemplate relCompare, ArrayList<Integer> accountedFor)
+	private ArrayList<RelationTriplet> contains(ArrayList<RelationTriplet> relations, RelationTemplate relCompare, ArrayList<Integer> accountedFor)
 	{
 		ArrayList<RelationTriplet> containedRelations = new ArrayList<RelationTriplet>();
 		for (int i=0; i<relations.size(); i++)
