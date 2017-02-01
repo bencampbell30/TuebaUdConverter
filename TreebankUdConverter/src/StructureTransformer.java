@@ -183,7 +183,7 @@ public class StructureTransformer
 		
 		//IF ALL ELSE FAILS
 		
-		//HD,[,,FM],[,,FM],...:HD,foreign,foreign,...
+		//HD,[,,FM],[,,FM],...:HD,flat:foreign,flat:foreign,...
 		// *****************************************************
 		currentTemplate = instance.getHDFM_HDforeign();
 		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
@@ -198,12 +198,12 @@ public class StructureTransformer
 				}
 				else if (isMatch(deps.get(i), currentTemplate.get(1)) && newDependencies.get(i).equals("REPLACEME")) 
 				{
-					newDependencies.set(i, "foreign");
+					newDependencies.set(i, "flat:foreign");
 				}
 			}
 		}
 		
-		//[,,FM],[,,FM],...:HD,foreign,...
+		//[,,FM],[,,FM],...:HD,flat:foreign,...
 		// *****************************************************
 		currentTemplate = instance.getFMFM_HDforeign();
 		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
@@ -222,7 +222,7 @@ public class StructureTransformer
 					} 
 					else 
 					{
-						newDependencies.set(i, "foreign");
+						newDependencies.set(i, "flat:foreign");
 					}
 				}
 			}
@@ -319,7 +319,7 @@ public class StructureTransformer
 			}
 		}
 		
-		//[,WORD,FM]:foreign
+		//[,WORD,FM]:flat:foreign
 		// *****************************************************
 		currentTemplate = instance.getFM_foreign();
 		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
@@ -327,11 +327,11 @@ public class StructureTransformer
 		{
 			if (isMatch(deps.get(i), currentTemplate.get(0)) && newDependencies.get(i).equals("REPLACEME")) 
 			{
-				newDependencies.set(i, "foreign");
+				newDependencies.set(i, "flat:foreign");
 			}
 		}
 		
-		//[-,FX,]:foreign
+		//[-,FX,]:flat:foreign
 		// *****************************************************
 		currentTemplate = instance.getFX_foreign();
 		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
@@ -339,7 +339,7 @@ public class StructureTransformer
 		{
 			if (isMatch(deps.get(i), currentTemplate.get(0)) && newDependencies.get(i).equals("REPLACEME")) 
 			{
-				newDependencies.set(i, "foreign");
+				newDependencies.set(i, "flat:foreign");
 			}
 		}
 		

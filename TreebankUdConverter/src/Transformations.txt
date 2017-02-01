@@ -50,20 +50,22 @@ HD,VC-HD:aux,HD
 [PRED-KOKOM,,KOKOM],[HD,,ADJ*]:HD,amod
 (APPR,APPO),HD:case,HD
 (APPR,APPO),[,NX,]:case,HD
-[HD,,(ADV,ADJD,ADJA)],[,NX,]:HD,obl
+[HD,,(ADV,ADJD,ADJA)],[-,NX,]:HD,nmod
 
 ** - try to distinguish "flat" from "compound" and "appos"
 ** - fixed - "nach wie vor", "darüber hinaus", etc.
 ** - KOKOM where a preposition is already present - cc?
 ** - not appos if first element
 ** - reduce incorrect "cop" verbs
-* - Experiment with changing "HD" to "conj"
+** - features?
+** - nsubj:pass, csubj:pass
 
 ** = nice to have
 
 **ONE-TO-ONE TRANSFORMATIONS**
 HD:HD
 PARA:parataxis
+[,DM,]:discourse
 [,WORD,KON]:cc
 KONJ2:conj
 KONJ:HD
@@ -78,16 +80,16 @@ OG:iobj
 OV:aux
 [,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)]:aux
 GEN:nmod:poss
-[VC-HD,,(LASSEN,PTKZU_LASS)]:xcomp
 [VC-HD,,(V*PASSIV,PTKZU_PASS)]:auxpass
-[VC-HD,,VMAIN]:xcomp
+[VC-HD,,(LASSEN,PTKZU_LASS)]:xcomp
 [VC-HD,,(PTKZU,VVIZU)]:xcomp
+[VC-HD,,VMAIN]:xcomp
 [VC-HD,,]:aux
 OSC:ccomp
 OS:xcomp
 [(ON-MOD, OA-MOD, OD-MOD, OG-MOD),SIMPX,]:acl
 [MOD*,SIMPX,]:advcl
-[,R-SIMPX,]:acl:relcl
+[MOD*,R-SIMPX,]:acl:relcl
 [,WORD,(KOUS, KOUI)]:mark
 [,PX,PROP]:advmod
 [,PX,]:obl
@@ -98,8 +100,6 @@ NEG_DET:advmod:neg
 NEG_ADV:det:neg
 [,ADVX,ADV_NEG]:advmod
 [,ADVX,]:advmod
-[,WORD,PTKA]:advmod
-[HD,ADJX,]:HD
 [V-MOD,ADJX,]:advmod
 [,ADJX,CARD]:nummod
 [,WORD,CARD]:nummod
@@ -109,21 +109,23 @@ NEG_ADV:det:neg
 [,DP,]:det
 [,WORD,ART]:det
 [,WORD,PPOSAT]:nmod:poss
+[,WORD,PTKA]:advmod
 [,WORD,APZR]:mwe
 VPT:mark
 [,WORD,PTKVZ]:mark
 ES:expl
 [(ON-MOD, OS-MOD),,PPER]:expl
-[ONK,OAK,ODK,...]:conj
-[,P-SIMPX,]:parataxis
-[,DM,]:discourse
-[,WORD,(PTKANT, INTJ)]:discourse
 [,WORD,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
 [-,,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
+[ONK,OAK,ODK,...]:conj
+[,P-SIMPX,]:parataxis
 [MOD*,NX,]:obl
+[,WORD,TRUNC]:advmod
+[,WORD,(PTKANT,ITJ)]:discourse
+[OAD*,,]:advmod
+[*OPP,,]:obl
 MOD*:advmod
-PUNCT:punct
-KONJ2:conj
+
 **Leftovers**
 HD,[,WORD,FM],[,WORD,FM],...:HD,foreign,foreign,...
 [,WORD,FM],[,WORD,FM],...:HD,foreign,...
@@ -138,11 +140,11 @@ APP,...:HD,(appos,...)
 
 **Automatic Leftovers**
 
-25,66,72 - Should "als" phrases be "obl" or remain "nmod"?
+25,72 - Should "als" phrases be "obl" or remain "nmod"?
 1194 - limitation with FKONJ
 2723 - "Aber" - dependency for cc when first word of sentence
 2897 - Weird annotation in source
-9361 - ended - what dependency?
+9361 - "enden" - what dependency?
 79955 - error in source annotation, shouldn't be PTKZU
 50884 - error in source annotation, "gegen", others with similar errors
 90079 - error in source annotation, "Das" should be attributive, not substituting pronoun

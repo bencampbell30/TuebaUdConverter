@@ -514,19 +514,7 @@ public class TreebankUdConverter
 					}
 					else if (morph != null)
 					{
-						if (morph.substring(0, 1).equals("n"))
-						{
-							currentSubNode.setDependency("NOM");
-						}
-						else if (morph.substring(0, 1).equals("a"))
-						{
-							currentSubNode.setDependency("ACC");
-						}
-						else if (morph.substring(0, 1).equals("d"))
-						{
-							currentSubNode.setDependency("DAT");
-						}
-						else if (morph.substring(0, 1).equals("g"))
+						if (morph.substring(0, 1).equals("g"))
 						{
 							currentSubNode.setDependency("GEN");
 						}
@@ -2016,7 +2004,7 @@ public class TreebankUdConverter
 			//Comment out to see where program could not determine dependencies
 			if (depRel != null && (depRel.equals("HD") || depRel.equals("REPLACEME")))
 			{
-				//depRel = "dep";
+				depRel = "dep";
 			}
 			
 			String deps = "_";

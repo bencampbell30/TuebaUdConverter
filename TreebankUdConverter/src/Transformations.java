@@ -78,7 +78,7 @@ public class Transformations
 		ArrayList<String> arrayListPredKokomFun = new ArrayList<String>();
 		arrayListPredKokomFun.add("PRED-KOKOM");
 		
-		// fun NMOD
+		// fun OBL
 		ArrayList<String> arrayListOblFun = new ArrayList<String>();
 		arrayListOblFun.add("OBL");
 
@@ -181,10 +181,6 @@ public class Transformations
 		// fun NEG_ADV
 		ArrayList<String> arrayListNegAdvFun = new ArrayList<String>();
 		arrayListNegAdvFun.add("NEG_ADV");
-
-		// fun PUNCT
-		ArrayList<String> arrayListPunctFun = new ArrayList<String>();
-		arrayListPunctFun.add("PUNCT");
 		
 		// fun OAD
 		ArrayList<String> arrayListOadFun = new ArrayList<String>();
@@ -453,7 +449,7 @@ public class Transformations
 		RelationTemplate templatePredKokom = new RelationTemplate(arrayListPredKokomFun, null, arrayListKokomPos, true, false, true);
 		// PREDWITHKOKOM
 		RelationTemplate templatePredWithKokom = new RelationTemplate(arrayListPredFun, null, arrayListKokomPos, true, false, true);
-		// PRED-KOKOM
+		// OBL
 		RelationTemplate templateObl = new RelationTemplate(arrayListOblFun, null, null, true, false, false);
 		// [PRED,,N*]
 		RelationTemplate templatePredN = new RelationTemplate(arrayListPredFun, null, arrayListNPos, true, false,
@@ -610,8 +606,10 @@ public class Transformations
 		RelationTemplate templateHdAdjX = new RelationTemplate(arrayListHdFun, arrayListAdjxNode, null, true, true, false);
 		// [MOD*,NX,]
 		RelationTemplate templateAllModNx = new RelationTemplate(arrayListAllModFun, arrayListNxNode, null, true, true, false);
-		// [MOD*,NX,]
+		// [,NX,]
 		RelationTemplate templateNX = new RelationTemplate(null, arrayListNxNode, null, false, true, false);
+		// [-,NX,]
+		RelationTemplate templateBlankNX = new RelationTemplate(arrayListBlank, arrayListNxNode, null, true, true, false);
 		// [MOD*,,]
 		RelationTemplate templateAllMod = new RelationTemplate(arrayListAllModFun, null, null, true, false, false);
 		// [OAD*,,]
@@ -721,12 +719,12 @@ public class Transformations
 		ArrayList<RelationTemplate> currentTemplate = new ArrayList<RelationTemplate>();
 		ArrayList<String> currentNewRelations = new ArrayList<String>();
 		
-		//[HD,,(V*PASSIV,PTKZU-PASS)],PRED,OV(HD):auxpass,xcomp,HD --> take care to only convert the leftmost OV
+		//[HD,,(V*PASSIV,PTKZU-PASS)],PRED,OV(HD):aux:pass,xcomp,HD --> take care to only convert the leftmost OV
 		currentTemplate.add(templateHdPass);
 		currentTemplate.add(templatePred);
 		currentTemplate.add(templateOV);
 		
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		currentNewRelations.add("xcomp");
 		currentNewRelations.add("HD");
 		
@@ -735,12 +733,12 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 	
-		//[HD,,(V*PASSIV,PTKZU-PASS)],PRED,VC-HD:auxpass,xcomp,HD
+		//[HD,,(V*PASSIV,PTKZU-PASS)],PRED,VC-HD:aux:pass,xcomp,HD
 		currentTemplate.add(templateHdPass);
 		currentTemplate.add(templatePred);
 		currentTemplate.add(templateVcHD);
 		
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		currentNewRelations.add("xcomp");
 		currentNewRelations.add("HD");
 		
@@ -749,12 +747,12 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[OV,,VMAIN]:auxpass,xcomp,HD
+		//[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[OV,,VMAIN]:aux:pass,xcomp,HD
 		currentTemplate.add(templateHdPass);
 		currentTemplate.add(templateOvMain);
 		currentTemplate.add(templateOvMain);
 						
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		currentNewRelations.add("xcomp");
 		currentNewRelations.add("HD");
 						
@@ -763,12 +761,12 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[VC-HD,,VMAIN]:auxpass,xcomp,HD
+		//[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[VC-HD,,VMAIN]:aux:pass,xcomp,HD
 		currentTemplate.add(templateHdPass);
 		currentTemplate.add(templateOvMain);
 		currentTemplate.add(templateVcHdMain);
 						
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		currentNewRelations.add("xcomp");
 		currentNewRelations.add("HD");
 						
@@ -777,12 +775,12 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[OV,,VMAIN]:auxpass,xcomp,HD
+		//[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[OV,,VMAIN]:aux:pass,xcomp,HD
 		currentTemplate.add(templateHdPass);
 		currentTemplate.add(templateOVZu);
 		currentTemplate.add(templateOvMain);
 						
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		currentNewRelations.add("xcomp");
 		currentNewRelations.add("HD");
 						
@@ -791,12 +789,12 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[VC-HD,,VMAIN]:auxpass,xcomp,HD
+		//[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[VC-HD,,VMAIN]:aux:pass,xcomp,HD
 		currentTemplate.add(templateHdPass);
 		currentTemplate.add(templateOVZu);
 		currentTemplate.add(templateVcHdMain);
 						
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		currentNewRelations.add("xcomp");
 		currentNewRelations.add("HD");
 						
@@ -805,7 +803,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,OV,[OV(HD),,(V*PASSIV,PTKZU-PASS)]:aux,xcomp,HD,auxpass
+		//HD,PRED,OV,[OV(HD),,(V*PASSIV,PTKZU-PASS)]:aux,xcomp,HD,aux:pass
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePred);
 		currentTemplate.add(templateOvPass);
@@ -813,7 +811,7 @@ public class Transformations
 		
 		currentNewRelations.add("aux");
 		currentNewRelations.add("xcomp");
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		currentNewRelations.add("HD");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
@@ -821,7 +819,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,OV,[VC-HD,,(V*PASSIV,PTKZU-PASS)]:aux,xcomp,HD,auxpass
+		//HD,PRED,OV,[VC-HD,,(V*PASSIV,PTKZU-PASS)]:aux,xcomp,HD,aux:pass
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePred);
 		currentTemplate.add(templateOV);
@@ -830,18 +828,18 @@ public class Transformations
 		currentNewRelations.add("aux");
 		currentNewRelations.add("xcomp");
 		currentNewRelations.add("HD");
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 		
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[HD,,(V*PASSIV,PTKZU-PASS)],OV:auxpass,HD
+		//[HD,,(V*PASSIV,PTKZU-PASS)],OV:aux:pass,HD
 		currentTemplate.add(templateHdPass);
 		currentTemplate.add(templateOV);
 		
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		currentNewRelations.add("HD");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
@@ -849,11 +847,11 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[HD,,(V*PASSIV,PTKZU-PASS)],VC-HD:auxpass,HD
+		//[HD,,(V*PASSIV,PTKZU-PASS)],VC-HD:aux:pass,HD
 		currentTemplate.add(templateHdPass);
 		currentTemplate.add(templateVcHD);
 		
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		currentNewRelations.add("HD");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
@@ -907,7 +905,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,OA,OV(HD):aux,xcomp,dobj,HD --> take care to only convert the leftmost OV
+		//HD,PRED,OA,OV(HD):aux,xcomp,obj,HD --> take care to only convert the leftmost OV
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePred);
 		currentTemplate.add(templateOA);
@@ -915,7 +913,7 @@ public class Transformations
 		
 		currentNewRelations.add("aux");
 		currentNewRelations.add("xcomp");
-		currentNewRelations.add("dobj");
+		currentNewRelations.add("obj");
 		currentNewRelations.add("HD");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
@@ -923,7 +921,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,OA,VC-HD:aux,xcomp,dobj,HD - *
+		//HD,PRED,OA,VC-HD:aux,xcomp,obj,HD - *
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePred);
 		currentTemplate.add(templateOA);
@@ -931,7 +929,7 @@ public class Transformations
 		
 		currentNewRelations.add("aux");
 		currentNewRelations.add("xcomp");
-		currentNewRelations.add("dobj");
+		currentNewRelations.add("obj");
 		currentNewRelations.add("HD");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
@@ -939,14 +937,14 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,OA:HD,xcomp,dobj - *
+		//HD,PRED,OA:HD,xcomp,obj - *
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePred);
 		currentTemplate.add(templateOA);
 		
 		currentNewRelations.add("HD");
 		currentNewRelations.add("xcomp");
-		currentNewRelations.add("dobj");
+		currentNewRelations.add("obj");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 		
@@ -967,6 +965,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
+		//FINDME
 		//HD,[PRED,PX,],VC-HD:aux,obl,HD
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePredPx);
@@ -1031,7 +1030,7 @@ public class Transformations
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 						
 		currentTemplate.clear();
-		currentNewRelations.clear();
+		currentNewRelations.clear(); 
 		
 		//HD,PRED,OV,[OV,,PTKZU]:aux,xcomp,HD,cop
 		currentTemplate.add(templateHD);
@@ -1225,11 +1224,11 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[HD,,(V*PASSIV,PTKZU_PASS)],OV:auxpass,HD
+		//[HD,,(V*PASSIV,PTKZU_PASS)],OV:aux:pass,HD
 		currentTemplate.add(templateHdPass);
 		currentTemplate.add(templateOV);
 		
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		currentNewRelations.add("HD");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
@@ -1237,11 +1236,11 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[HD,,(V*PASSIV,PTKZU_PASS)],VC-HD:auxpass,HD
+		//[HD,,(V*PASSIV,PTKZU_PASS)],VC-HD:aux:pass,HD
 		currentTemplate.add(templateHdPass);
 		currentTemplate.add(templateVcHD);
 		
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		currentNewRelations.add("HD");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
@@ -1369,12 +1368,12 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		// [HD,,(ADV,ADJD,ADJA)],[,NX,]:HD,obl
+		// [HD,,(ADV,ADJD,ADJA)],[-,NX,]:HD,nmod
 		currentTemplate.add(templateHdAdjAdv);
-		currentTemplate.add(templateNX);
+		currentTemplate.add(templateBlankNX);
 				
 		currentNewRelations.add("HD");
-		currentNewRelations.add("obl");
+		currentNewRelations.add("nmod");
 				
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 				
@@ -1413,7 +1412,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[,,KON]:cc
+		//[,WORD,KON]:cc
 		currentTemplate.add(templateWordKON);
 		
 		currentNewRelations.add("cc");
@@ -1463,10 +1462,10 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//OA:dobj
+		//OA:obj
 		currentTemplate.add(templateOA);
 		
-		currentNewRelations.add("dobj");
+		currentNewRelations.add("obj");
 		
 		autoProcessedSingleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 		
@@ -1493,17 +1492,17 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[OV,,(V*PASSIV,PTKZU-PASS)]:auxpass
+		//[OV,,(V*PASSIV,PTKZU-PASS)]:aux:pass
 		currentTemplate.add(templateOvPass);
 		
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		
 		autoProcessedSingleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 		
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[OV,,(LASSEN,PTKZU_LASS)]
+		//[OV,,(LASSEN,PTKZU_LASS)]:xcomp
 		currentTemplate.add(templateOvLass);
 		
 		currentNewRelations.add("xcomp");
@@ -1543,7 +1542,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//GEN:det
+		//GEN:nmod:poss
 		currentTemplate.add(templateGEN);
 		
 		currentNewRelations.add("nmod:poss");
@@ -1553,10 +1552,10 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[VC-HD,,(V*PASSIV,PTKZU-PASS)]:auxpass
+		//[VC-HD,,(V*PASSIV,PTKZU-PASS)]:aux:pass
 		currentTemplate.add(templateVcHdPass);
 		
-		currentNewRelations.add("auxpass");
+		currentNewRelations.add("aux:pass");
 		
 		autoProcessedSingleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 		
@@ -1693,7 +1692,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		// [,,KOKOM]:case
+		// [,WORD,KOKOM]:case
 		currentTemplate.add(templateKOKOM);
 
 		currentNewRelations.add("case");
@@ -1713,7 +1712,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//NEG:neg
+		//NEG_DET:det:neg
 		currentTemplate.add(templateNEG_DET);
 										
 		currentNewRelations.add("det:neg");
@@ -1723,7 +1722,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//NEG:neg
+		//NEG_ADV:advmod:neg
 		currentTemplate.add(templateNEG_ADV);
 										
 		currentNewRelations.add("advmod:neg");
@@ -1750,16 +1749,6 @@ public class Transformations
 		
 		autoProcessedSingleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 		
-		currentTemplate.clear();
-		currentNewRelations.clear();
-		
-		//[HD,ADJX,]:HD
-		currentTemplate.add(templateHdAdjX);
-				
-		currentNewRelations.add("HD");
-				
-		autoProcessedSingleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
-				
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
@@ -1833,7 +1822,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[,,ART]:det
+		//[,WORD,ART]:det
 		currentTemplate.add(templateWordART);
 
 		currentNewRelations.add("det");
@@ -1863,7 +1852,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[,,APZR]:mwe
+		//[,WORD,APZR]:mwe
 		currentTemplate.add(templateWordApzr);
 								
 		currentNewRelations.add("mwe");
