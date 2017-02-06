@@ -4,31 +4,36 @@ KONJ,KONJ,...:HD,conj,... --> First KONJ becomes head
 [PRED,,],[PRED-MOD,SIMPX,]:[PRED,,],advcl
 
 ***CHECK SENTENCE 146***
-[HD,,(V*PASSIV,PTKZU_PASS)],PRED,OV(HD):auxpass,xcomp,HD
-[HD,,(V*PASSIV,PTKZU_PASS)],PRED,VC-HD:auxpass,xcomp,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),OV(HD):auxpass,xcomp,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),VC-HD:auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[OV,,VMAIN]:auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[VC-HD,,VMAIN]:auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[OV,,VMAIN]:auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[VC-HD,,VMAIN]:auxpass,xcomp,HD
-HD,PRED,[OV(HD),,(V*PASSIV,PTKZU_PASS)],OV:aux,xcomp,HD,auxpass
-HD,PRED,OV,[VC-HD,,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,auxpass
+HD,(PRED,PREDWITHKOKOM),[OV(HD),,(V*PASSIV,PTKZU_PASS)],OV:aux,xcomp,HD,auxpass
+HD,(PRED,PREDWITHKOKOM),OV,[VC-HD,,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,auxpass
 [HD,,(V*PASSIV,PTKZU-PASS)],OV:auxpass,HD
 [HD,,(V*PASSIV,PTKZU-PASS)],VC-HD:auxpass,HD
-HD,PRED,[OS-MOD,,PPER],OV(HD):aux,xcomp,expl,HD
-HD,PRED,[OS-MOD,,PPER],VC-HD:aux,xcomp,expl,HD
-HD,PRED,[OS-MOD,,PPER]:HD,xcomp,expl
-HD,PRED,OA,OV(HD):aux,xcomp,dobj,HD --> take care to only convert the leftmost OV
-HD,PRED,OA,VC-HD:aux,xcomp,dobj,HD
-HD,PRED,OA:HD,xcomp,dobj
+HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER],OV(HD):aux,xcomp,expl,HD
+HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER],VC-HD:aux,xcomp,expl,HD
+HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER]:HD,xcomp,expl
+HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC),OV(HD):aux,xcomp,dobj,HD
+HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC),VC-HD:aux,xcomp,dobj,HD
+HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC):HD,xcomp,dobj
+HD,(PRED,PREDWITHKOKOM),(OD,OG),OV(HD):aux,xcomp,iobj,HD
+HD,(PRED,PREDWITHKOKOM),(OD,OG),VC-HD:aux,xcomp,iobj,HD
+HD,(PRED,PREDWITHKOKOM),(OD,OG):HD,xcomp,iobj
 HD,[PRED,PX,],OV(HD):aux,obl,HD
 HD,[PRED,PX,],VC-HD:aux,obl,HD
 HD,[PRED,PX,]:HD,obl
-HD,PREDWITHKOKOM,OV(HD):aux,obl,HD ***
-HD,PREDWITHKOKOM,VC-HD:aux,obl,HD ***
-HD,PREDWITHKOKOM:HD,obl ***
-HD,PRED,[OV,,PTKZU],OV:HD,xcomp,cop,aux --> Confirm this construction, doesn't seem to make sense
-HD,PRED,[OV,,PTKZU]:HD,xcomp,cop
-HD,PRED,OV(HD):aux,HD,cop --> take care to only convert the leftmost OV
+HD,PREDWITHKOKOM,OV(HD):aux,obl,HD
+HD,PREDWITHKOKOM,VC-HD:aux,obl,HD
+HD,PREDWITHKOKOM:HD,obl
+HD,PRED,[OV,,PTKZU],[OV,,VVPP]:aux,xcomp,cop,HD
+[HD,,VVFIN],PRED,[OV,,PTKZU]:HD,xcomp,cop
+HD,PRED,[OV,,PTKZU],OV:aux,HD,xcomp,cop
+HD,PRED,[OV,,PTKZU]:cop,HD,xcomp
+HD,PRED,OV(HD):aux,HD,cop
 HD,PRED:cop,HD
 HD,[OV,,VMAIN],[OV,,VMAIN]:aux,xcomp,HD
 HD,[OV,,VMAIN],[VC-HD,,VMAIN]:aux,xcomp,HD

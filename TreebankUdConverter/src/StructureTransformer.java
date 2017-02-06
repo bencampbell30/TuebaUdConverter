@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class StructureTransformer 
 {
@@ -368,18 +367,22 @@ public class StructureTransformer
 			structureCount.put(currentRelTemplate, currentCount);
 		}
 		
-		Iterator it = structureCount.entrySet().iterator();
-	    while (it.hasNext()) 
-	    {
-	        HashMap.Entry pair = (HashMap.Entry)it.next();
-	        RelationTemplate currentRelTemplate = (RelationTemplate)pair.getKey();
+		ArrayList<RelationTemplate> checkedRelations = new ArrayList<RelationTemplate>();
+		
+		for (int i=0; i<treeStructureCompare.size(); i++)
+		{
+			RelationTemplate currentRelTemplate = treeStructureCompare.get(i);
 	        ArrayList<RelationTriplet> containedRelations = contains(treeNodes, currentRelTemplate, accountedFor);
-			if (containedRelations.size() < structureCount.get(currentRelTemplate))
-			{
-				isEquivalent = false;
-				break;
-			}
-	    }
+	        if (!(checkedRelations.contains(currentRelTemplate)))
+	        {
+	        	if (containedRelations.size() < structureCount.get(currentRelTemplate))
+				{
+					isEquivalent = false;
+					break;
+				}
+				checkedRelations.add(currentRelTemplate);
+	        }
+		}
 	    
 		return isEquivalent;
 	}

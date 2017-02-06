@@ -498,21 +498,16 @@ public class TreebankUdConverter
 					DependencyNode currentHead = heads.get(0);
 					String morph = currentHead.getNodeData().get("morph");
 					ArrayList<TreeWord> subWords = currentSubNode.getWords();
-					boolean hasKokom = false;
 					for (int j=0; j<subWords.size(); j++)
 					{
 						TreeWord currentWord = subWords.get(j);
 						if (currentWord.getPos().equals("KOKOM"))
 						{
-							hasKokom = true;
+							currentSubNode.setDependency("OBL");
 							break;
 						}
 					}
-					if (hasKokom)
-					{
-						currentSubNode.setDependency("OBL");
-					}
-					else if (morph != null)
+					if (morph != null)
 					{
 						if (morph.substring(0, 1).equals("g"))
 						{
@@ -534,6 +529,7 @@ public class TreebankUdConverter
 					{
 						currentSubNodeWord.setDependency("PRED-KOKOM");
 						hasKokom = true;
+						currentSubNode.setDependency("PREDWITHKOKOM");
 					}
 				}
 				if (hasKokom)
@@ -606,7 +602,7 @@ public class TreebankUdConverter
 		{
 			TreeNode currentSubNode = subNodes.get(i);
 			if (currentSubNode.getDependency().equals("HD") || currentSubNode.getDependency().equals("VC-HD")  || currentSubNode.getDependency().equals("PRED") || currentSubNode.getDependency().equals("OV") || 
-					currentSubNode.getDependency().equals("PRED-KOKOM"))
+					currentSubNode.getDependency().equals("PREDWITHKOKOM"))
 			{
 				hdFound = true;
 			}
