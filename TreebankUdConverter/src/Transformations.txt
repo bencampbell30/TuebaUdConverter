@@ -2,6 +2,8 @@
 KONJ,KONJ,...:HD,conj,... --> First KONJ becomes head
 [PRED,,N*],[PRED-MOD,SIMPX,]:[PRED,,N*],acl - 261
 [PRED,,],[PRED-MOD,SIMPX,]:[PRED,,],advcl
+[ON,SIMPX,],[(HD,OV,VC-HD),,V*PASSIV]:csubj:pass
+ON,[(HD,OV,VC-HD),,V*PASSIV]:nsubj:pass
 
 ***CHECK SENTENCE 146***
 [HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),OV(HD):auxpass,xcomp,HD

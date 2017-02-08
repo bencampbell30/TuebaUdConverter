@@ -9,6 +9,8 @@ public class Transformations
 	private ArrayList<RelationTemplate> KONJKONJ_hdconj;
 	private ArrayList<RelationTemplate> PREDPREDMOD_PREDacl;
 	private ArrayList<RelationTemplate> PREDPREDMOD_PREDadvcl;
+	private ArrayList<RelationTemplate> ONSIMPXVPASS_csubjpassVPASS;
+	private ArrayList<RelationTemplate> ONVPASS_nsubjpassVPASS;
 	private ArrayList<RelationTemplate> APPAPP_HDappos;
 	private ArrayList<RelationTemplate> NE_HDflat;
 	private ArrayList<RelationTemplate> N_APP;
@@ -141,6 +143,12 @@ public class Transformations
 		// fun OV
 		ArrayList<String> arrayListOvFun = new ArrayList<String>();
 		arrayListOvFun.add("OV");
+		
+		// fun VERB
+		ArrayList<String> arrayListVerbFun = new ArrayList<String>();
+		arrayListVerbFun.add("HD");
+		arrayListVerbFun.add("OV");
+		arrayListVerbFun.add("VC-HD");
 		
 		// fun PARA
 		ArrayList<String> arrayListParaFun = new ArrayList<String>();
@@ -546,6 +554,8 @@ public class Transformations
 		// [VC-HD,,VMAIN]
 		RelationTemplate templateVcHdZu = new RelationTemplate(arrayListVcHdFun, null, arrayListZuWordPos, true,
 				false, true);
+		RelationTemplate templateVerbPass = new RelationTemplate(arrayListVerbFun, null, arrayListVerbPassivePos, true,
+				false, true);
 		// OA
 		RelationTemplate templateOA = new RelationTemplate(arrayListOaFun, null, null, true, false, false);
 		// (OA,OS,OSC)
@@ -707,6 +717,16 @@ public class Transformations
 		PREDPREDMOD_PREDadvcl = new ArrayList<RelationTemplate>();
 		PREDPREDMOD_PREDadvcl.add(templatePred);
 		PREDPREDMOD_PREDadvcl.add(templatePredMod);
+		
+		//[ON,SIMPX,],[(HD,OV,VC-HD),,V*PASSIV]:csubjpass
+		ONSIMPXVPASS_csubjpassVPASS = new ArrayList<RelationTemplate>();
+		ONSIMPXVPASS_csubjpassVPASS.add(templateOnSimpx);
+		ONSIMPXVPASS_csubjpassVPASS.add(templateVerbPass);
+		
+		//ON,[(HD,OV,VC-HD),,V*PASSIV]:nsubjpass
+		ONVPASS_nsubjpassVPASS = new ArrayList<RelationTemplate>();
+		ONVPASS_nsubjpassVPASS.add(templateON);
+		ONVPASS_nsubjpassVPASS.add(templateVerbPass);
 		
 		//APP,...:HD,(appos,...)
 		APPAPP_HDappos = new ArrayList<RelationTemplate>();
@@ -1567,10 +1587,10 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//ON:subj
+		//ON:nsubj
 		currentTemplate.add(templateON);
 		
-		currentNewRelations.add("subj");
+		currentNewRelations.add("nsubj");
 		
 		autoProcessedSingleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 		
@@ -2196,5 +2216,15 @@ public class Transformations
 	public ArrayList<RelationTemplate> getFX_foreign() 
 	{
 		return FX_foreign;
+	}
+
+	public ArrayList<RelationTemplate> getONSIMPXVPASS_csubjpassVPASS() 
+	{
+		return ONSIMPXVPASS_csubjpassVPASS;
+	}
+
+	public ArrayList<RelationTemplate> getONVPASS_nsubjpassVPASS() 
+	{
+		return ONVPASS_nsubjpassVPASS;
 	}
 }

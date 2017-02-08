@@ -113,6 +113,37 @@ public class StructureTransformer
 			}
 		}
 		
+		// [ON,SIMPX,],[(HD,OV,VC-HD),,V*PASSIV]:csubjpass
+		//*****************************************
+		currentTemplate = instance.getONSIMPXVPASS_csubjpassVPASS();
+		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
+		
+		if (testEquivalence)
+		{
+			for (int i=0; i<deps.size(); i++)
+			{
+				if (isMatch(deps.get(i), currentTemplate.get(0)) && newDependencies.get(i).equals("REPLACEME"))
+				{
+					newDependencies.set(i, "csubj:pass");
+				}
+			}
+		}
+		
+		// ON,[(HD,OV,VC-HD),,V*PASSIV]:nsubjpass
+		currentTemplate = instance.getONVPASS_nsubjpassVPASS();
+		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
+		
+		if (testEquivalence)
+		{
+			for (int i=0; i<deps.size(); i++)
+			{
+				if (isMatch(deps.get(i), currentTemplate.get(0)) && newDependencies.get(i).equals("REPLACEME"))
+				{
+					newDependencies.set(i, "nsubj:pass");
+				}
+			}
+		}
+		
 		// AUTOMATICALLY HANDLED MULIPLE TRANSFORMATION CASES
 		ArrayList<TransformationPair> transformationMultiplePairs = instance.getAutoProcessedMultipleTemplates();
 
