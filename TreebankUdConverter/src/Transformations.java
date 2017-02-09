@@ -259,7 +259,7 @@ public class Transformations
 		
 		// node VXINF
 		ArrayList<String> arrayListVxInfNode = new ArrayList<String>();
-		arrayListAdvxNode.add("VXINF");
+		arrayListVxInfNode.add("VXINF");
 		
 		// node WORD
 		ArrayList<String> arrayListWordNode = new ArrayList<String>();

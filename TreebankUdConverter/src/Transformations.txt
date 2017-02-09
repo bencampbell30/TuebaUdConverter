@@ -65,7 +65,6 @@ HD,VC-HD:aux,HD
 ** - not appos if first element
 ** - reduce incorrect "cop" verbs
 ** - features?
-** - nsubj:pass, csubj:pass
 
 ** = nice to have
 
