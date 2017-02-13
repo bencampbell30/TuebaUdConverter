@@ -57,7 +57,8 @@ HD,VC-HD:aux,HD
 [PRED-KOKOM,,KOKOM],[HD,,ADJ*]:HD,amod
 (APPR,APPO),HD:case,HD
 (APPR,APPO),[,NX,]:case,HD
-[HD,,(ADV,ADJD,ADJA)],[-,NX,]:HD,nmod
+[HD,,(ADV,ADJD,ADJA)],[-,NX,(PDAT,PIDAT,PIS,PIAT,PWAT)]:HD,nmod
+[HD,,(ADV,ADJD,ADJA)],[-,NX,]:HD,obl
 
 ** - try to distinguish "flat" from "compound" and "appos"
 ** - fixed - "nach wie vor", "darüber hinaus", etc.
@@ -95,7 +96,7 @@ OSC:ccomp
 OS:xcomp
 [(ON-MOD, OA-MOD, OD-MOD, OG-MOD),SIMPX,]:acl
 [MOD*,SIMPX,]:advcl
-[MOD*,R-SIMPX,]:acl:relcl
+[,R-SIMPX,]:acl:relcl
 [,WORD,(KOUS, KOUI)]:mark
 [,PX,PROP]:advmod
 [,PX,]:obl
@@ -123,7 +124,7 @@ ES:expl
 [(ON-MOD, OS-MOD),,PPER]:expl
 [,WORD,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
 [-,,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
-[ONK,OAK,ODK,...]:conj
+(ONK,OAK,ODK,...):conj
 [,P-SIMPX,]:parataxis
 [MOD*,NX,]:obl
 [,WORD,TRUNC]:advmod

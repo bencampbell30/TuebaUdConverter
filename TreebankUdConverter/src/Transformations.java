@@ -329,9 +329,9 @@ public class Transformations
 		arrayListPposatPos.add("PPOSAT");
 
 		// pos KOUS
-		ArrayList<String> arrayListKousPos = new ArrayList<String>();
-		arrayListKousPos.add("KOUS");
-		arrayListKousPos.add("KOUI");
+		ArrayList<String> arrayListKouPos = new ArrayList<String>();
+		arrayListKouPos.add("KOUS");
+		arrayListKouPos.add("KOUI");
 
 		// pos FM
 		ArrayList<String> arrayListFmPos = new ArrayList<String>();
@@ -473,7 +473,7 @@ public class Transformations
 		RelationTemplate templateKONJ2 = new RelationTemplate(arrayListKONJ2, null, null, true, false, false);
 		// [,WORD,KON]
 		RelationTemplate templateWordKON = new RelationTemplate(null, arrayListWordNode, arrayListKonPos, false, true, true);
-		// KOKOM
+		// [,WORD,KOKOM]
 		RelationTemplate templateKOKOM = new RelationTemplate(null, arrayListWordNode, arrayListKokomPos, false, true, true);
 		// PRED
 		RelationTemplate templatePred = new RelationTemplate(arrayListPredFun, null, null, true, false, false);
@@ -492,7 +492,7 @@ public class Transformations
 		// [PRED,,N*]
 		RelationTemplate templatePredN = new RelationTemplate(arrayListPredWithKokomFun, null, arrayListNPos, true, false,
 				true);
-		// [,,NE]
+		// [,WORD,NE]
 		RelationTemplate templateNE = new RelationTemplate(null, arrayListWordNode, arrayListNEPos, false, true,
 		true);
 		// [,,N*]
@@ -521,10 +521,10 @@ public class Transformations
 		// [MOD*,SIMPX,]
 		RelationTemplate templateAllModSimpx = new RelationTemplate(arrayListAllModFun, arrayListSimpxNode, null, true,
 				true, false);
-		// [MOD*,R-SIMPX,]
+		// [,R-SIMPX,]
 		RelationTemplate templateAllModRSimpx = new RelationTemplate(null, arrayListRSimpxNode, null,
 				false, true, false);
-		// [ONK,OAK,ODK,...]
+		// (ONK,OAK,ODK,...)
 		RelationTemplate templateAllKMod = new RelationTemplate(arrayListAllKMod, null, null,
 				true, false, false);
 		// OV
@@ -551,9 +551,10 @@ public class Transformations
 		// [VC-HD,,VMAIN]
 		RelationTemplate templateVcHdMain = new RelationTemplate(arrayListVcHdFun, null, arrayListVerbMainPos, true,
 				false, true);
-		// [VC-HD,,VMAIN]
+		// [VC-HD,,(PTKZU,VVIZU)]
 		RelationTemplate templateVcHdZu = new RelationTemplate(arrayListVcHdFun, null, arrayListZuWordPos, true,
 				false, true);
+		// [(HD,OV,VC-HD),,(V*PASSIV,PTKZU_PASS)]
 		RelationTemplate templateVerbPass = new RelationTemplate(arrayListVerbFun, null, arrayListVerbPassivePos, true,
 				false, true);
 		// OA
@@ -584,12 +585,9 @@ public class Transformations
 		RelationTemplate templateADP = new RelationTemplate(null, arrayListWordNode, arrayListAdpPos, false, true, true);
 		//APP
 		RelationTemplate templateAPP = new RelationTemplate(arrayListAppFun, null, null, true, false, false);
-		// [OS,,(VVIZU, VVINF)]
-		RelationTemplate templateOsVinf = new RelationTemplate(arrayListOsFun, null, arrayListVInfPos, true, false,
-				true);
 		// [,WORD,V*INF]
 		RelationTemplate templateWordVInf = new RelationTemplate(null, arrayListWordNode, arrayListVInfPos, false, true, true);
-		// [,,VXINF]
+		// [,VXINF,]
 		RelationTemplate templateVxInf = new RelationTemplate(null, arrayListVxInfNode, null, false, true, false);
 		// HD
 		RelationTemplate templateHD = new RelationTemplate(arrayListHdFun, null, null, true, false, false);
@@ -622,11 +620,11 @@ public class Transformations
 		// [OV,,V*LASSEN]
 		RelationTemplate templateOvLass = new RelationTemplate(arrayListOvFun, null, arrayListVerbLassenPos, true,
 				false, true);
-		// KOUS
-		RelationTemplate templateKOUS = new RelationTemplate(null, null, arrayListKousPos, false, false, true);
+		// [,WORD,(KOUS, KOUI)]
+		RelationTemplate templateKOU = new RelationTemplate(null, null, arrayListKouPos, false, false, true);
 		// [,PX,]
 		RelationTemplate templatePX = new RelationTemplate(null, arrayListPxNode, null, false, true, false);
-		// [HD,PX,]
+		// [,PX,PROP]
 		RelationTemplate templatePxProp = new RelationTemplate(null, arrayListPxNode, arrayListPropPos, false, true, true);
 		// [-,FX,]
 		RelationTemplate templateBlankFX = new RelationTemplate(arrayListBlank, arrayListFxNode, null, true, true, false);
@@ -652,14 +650,14 @@ public class Transformations
 		RelationTemplate templateAdvX = new RelationTemplate(null, arrayListAdvxNode, null, false, true, false);
 		// [V-MOD,ADJX,]
 		RelationTemplate templateVmodAdjX = new RelationTemplate(arrayListVModFun, arrayListAdjxNode, null, true, true, false);
-		// [HD,ADJX,]
-		RelationTemplate templateHdAdjX = new RelationTemplate(arrayListHdFun, arrayListAdjxNode, null, true, true, false);
 		// [MOD*,NX,]
 		RelationTemplate templateAllModNx = new RelationTemplate(arrayListAllModFun, arrayListNxNode, null, true, true, false);
 		// [,NX,]
 		RelationTemplate templateNX = new RelationTemplate(null, arrayListNxNode, null, false, true, false);
 		// [-,NX,]
 		RelationTemplate templateBlankNX = new RelationTemplate(arrayListBlank, arrayListNxNode, null, true, true, false);
+		// [-,NX,(PDAT,PIDAT,PIS,PIAT,PWAT)]
+		RelationTemplate templateBlankNXPron = new RelationTemplate(arrayListBlank, arrayListNxNode, arrayListDetPronPos, true, true, true);
 		// [MOD*,,]
 		RelationTemplate templateAllMod = new RelationTemplate(arrayListAllModFun, null, null, true, false, false);
 		// [OAD*,,]
@@ -1419,7 +1417,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[,WORD,(PTKZU,PTKZU-LASS,PTKZU-PASS)],[,WORD,V*INF]:aux,HD 
+		//[,WORD,(PTKZU,PTKZU-LASS,PTKZU-PASS)],[,WORD,V*INF]:mark,HD 
 		currentTemplate.add(templateWordPtkZuAll);
 		currentTemplate.add(templateWordVInf);
 				
@@ -1431,7 +1429,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[,WORD,(PTKZU,PTKZU-LASS,PTKZU-PASS)],[,VXINF,]:aux,HD 
+		//[,WORD,(PTKZU,PTKZU-LASS,PTKZU-PASS)],[,VXINF,]:mark,HD 
 		currentTemplate.add(templateWordPtkZuAll);
 		currentTemplate.add(templateVxInf);
 				
@@ -1443,7 +1441,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[,WORD,PTKZU],[,WORD,ADJ*]:aux,HD 
+		//[,WORD,PTKZU],[,WORD,ADJ*]:mark,HD 
 		currentTemplate.add(templateWordPtkZuAll);
 		currentTemplate.add(templateWordADJ);
 				
@@ -1503,12 +1501,24 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		// [HD,,(ADV,ADJD,ADJA)],[-,NX,]:HD,nmod
+		// [HD,,(ADV,ADJD,ADJA)],[-,NX,ALL PRON]:HD,nmod
+		currentTemplate.add(templateHdAdjAdv);
+		currentTemplate.add(templateBlankNXPron);
+				
+		currentNewRelations.add("HD");
+		currentNewRelations.add("nmod");
+				
+		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
+				
+		currentTemplate.clear();
+		currentNewRelations.clear();
+		
+		// [HD,,(ADV,ADJD,ADJA)],[-,NX,]:HD,obl
 		currentTemplate.add(templateHdAdjAdv);
 		currentTemplate.add(templateBlankNX);
 				
 		currentNewRelations.add("HD");
-		currentNewRelations.add("nmod");
+		currentNewRelations.add("obl");
 				
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 				
@@ -1667,7 +1677,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[,WORD,(PTKZU,PTKZU-LASS,PTKZU-PASS)]:aux
+		//[,WORD,(PTKZU,PTKZU-LASS,PTKZU-PASS)]:mark
 		currentTemplate.add(templateWordPtkZuAll);
 				
 		currentNewRelations.add("mark");
@@ -1788,7 +1798,7 @@ public class Transformations
 		currentNewRelations.clear();
 		
 		//[,,(KOUS, KOUI)]:mark
-		currentTemplate.add(templateKOUS);
+		currentTemplate.add(templateKOU);
 		
 		currentNewRelations.add("mark");
 		
