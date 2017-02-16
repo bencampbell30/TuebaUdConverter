@@ -8,7 +8,6 @@ public class Transformations
 	private ArrayList<RelationTemplate> HDKONJKONJ_hdc1c2;
 	private ArrayList<RelationTemplate> KONJKONJ_hdconj;
 	private ArrayList<RelationTemplate> PREDPREDMOD_PREDacl;
-	private ArrayList<RelationTemplate> PREDPREDMOD_PREDadvcl;
 	private ArrayList<RelationTemplate> ONSIMPXVPASS_csubjpassVPASS;
 	private ArrayList<RelationTemplate> ONVPASS_nsubjpassVPASS;
 	private ArrayList<RelationTemplate> APPAPP_HDappos;
@@ -490,7 +489,7 @@ public class Transformations
 		// OBL
 		RelationTemplate templateObl = new RelationTemplate(arrayListOblFun, null, null, true, false, false);
 		// [PRED,,N*]
-		RelationTemplate templatePredN = new RelationTemplate(arrayListPredWithKokomFun, null, arrayListNPos, true, false,
+		RelationTemplate templatePredN = new RelationTemplate(arrayListPredAllFun, null, arrayListNPos, true, false,
 				true);
 		// [,WORD,NE]
 		RelationTemplate templateNE = new RelationTemplate(null, arrayListWordNode, arrayListNEPos, false, true,
@@ -710,11 +709,6 @@ public class Transformations
 		PREDPREDMOD_PREDacl = new ArrayList<RelationTemplate>();
 		PREDPREDMOD_PREDacl.add(templatePredN);
 		PREDPREDMOD_PREDacl.add(templatePredMod);
-		
-		//[PRED,,],[PRED-MOD,SIMPX,]:[PRED,,],advcl
-		PREDPREDMOD_PREDadvcl = new ArrayList<RelationTemplate>();
-		PREDPREDMOD_PREDadvcl.add(templatePred);
-		PREDPREDMOD_PREDadvcl.add(templatePredMod);
 		
 		//[ON,SIMPX,],[(HD,OV,VC-HD),,V*PASSIV]:csubjpass
 		ONSIMPXVPASS_csubjpassVPASS = new ArrayList<RelationTemplate>();
@@ -1003,52 +997,6 @@ public class Transformations
 		currentNewRelations.add("HD");
 		currentNewRelations.add("xcomp");
 		currentNewRelations.add("obj");
-		
-		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
-		
-		currentTemplate.clear();
-		currentNewRelations.clear();
-		
-		//HD,PRED,(OD,OG),OV(HD):aux,xcomp,iobj,HD --> take care to only convert the leftmost OV
-		currentTemplate.add(templateHD);
-		currentTemplate.add(templatePredAll);
-		currentTemplate.add(templateIOBJ);
-		currentTemplate.add(templateOV);
-		
-		currentNewRelations.add("aux");
-		currentNewRelations.add("xcomp");
-		currentNewRelations.add("iobj");
-		currentNewRelations.add("HD");
-		
-		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
-		
-		currentTemplate.clear();
-		currentNewRelations.clear();
-		
-		//HD,PRED,(OD,OG),VC-HD:aux,xcomp,iobj,HD - *
-		currentTemplate.add(templateHD);
-		currentTemplate.add(templatePredAll);
-		currentTemplate.add(templateIOBJ);
-		currentTemplate.add(templateVcHD);
-		
-		currentNewRelations.add("aux");
-		currentNewRelations.add("xcomp");
-		currentNewRelations.add("iobj");
-		currentNewRelations.add("HD");
-		
-		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
-		
-		currentTemplate.clear();
-		currentNewRelations.clear();
-		
-		//HD,PRED,(OD,OG):HD,xcomp,iobj - *
-		currentTemplate.add(templateHD);
-		currentTemplate.add(templatePredAll);
-		currentTemplate.add(templateIOBJ);
-		
-		currentNewRelations.add("HD");
-		currentNewRelations.add("xcomp");
-		currentNewRelations.add("iobj");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 		
@@ -2156,11 +2104,6 @@ public class Transformations
 	public ArrayList<RelationTemplate> getPREDPREDMOD_PREDacl() 
 	{
 		return PREDPREDMOD_PREDacl;
-	}
-
-	public ArrayList<RelationTemplate> getPREDPREDMOD_PREDadvcl() 
-	{
-		return PREDPREDMOD_PREDadvcl;
 	}
 
 	public ArrayList<TransformationPair> getAutoProcessedSingleTemplates() 

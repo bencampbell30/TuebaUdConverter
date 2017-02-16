@@ -73,22 +73,6 @@ public class StructureTransformer
 			}
 		}
 		
-		//[PRED,,],[PRED-MOD,SIMPX,]:[PRED,,],advcl
-		//*****************************************
-		currentTemplate = instance.getPREDPREDMOD_PREDadvcl();
-		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
-		
-		if (testEquivalence)
-		{
-			for (int i=0; i<deps.size(); i++)
-			{
-				if (isMatch(deps.get(i), currentTemplate.get(1)) && newDependencies.get(i).equals("REPLACEME"))
-				{
-					newDependencies.set(i, "advcl");
-				}
-			}
-		}
-		
 		// APP,...:HD,(appos,...)
 		// *****************************************************
 		currentTemplate = instance.getAPPAPP_HDappos();
@@ -258,7 +242,7 @@ public class StructureTransformer
 			}
 		}
 		
-		//[HD,,N*],[,SIMPX,]:acl ***
+		//[HD,,N*],[,SIMPX,]:acl
 		// *****************************************************
 		currentTemplate = instance.getN_SIMPX_acl();
 		testEquivalence = checkStructureEquivalence(deps, currentTemplate);

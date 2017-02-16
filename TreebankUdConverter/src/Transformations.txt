@@ -1,11 +1,9 @@
 **COMPOUND TRANSFORMATIONS**
 KONJ,KONJ,...:HD,conj,... --> First KONJ becomes head
 [PRED,,N*],[PRED-MOD,SIMPX,]:[PRED,,N*],acl - 261
-[PRED,,],[PRED-MOD,SIMPX,]:[PRED,,],advcl
-[ON,SIMPX,],[(HD,OV,VC-HD),,V*PASSIV]:csubj:pass
-ON,[(HD,OV,VC-HD),,V*PASSIV]:nsubj:pass
+[ON,SIMPX,],[(HD,OV,VC-HD),,V*PASSIV]:csubj:pass,[(HD,OV,VC-HD),,V*PASSIV]
+ON,[(HD,OV,VC-HD),,V*PASSIV]:nsubj:pass,[(HD,OV,VC-HD),,V*PASSIV]
 
-***CHECK SENTENCE 146***
 [HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),OV(HD):auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),VC-HD:auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[OV,,VMAIN]:auxpass,xcomp,HD
@@ -22,9 +20,6 @@ HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER]:HD,xcomp,expl
 HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC),OV(HD):aux,xcomp,dobj,HD
 HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC),VC-HD:aux,xcomp,dobj,HD
 HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC):HD,xcomp,dobj
-HD,(PRED,PREDWITHKOKOM),(OD,OG),OV(HD):aux,xcomp,iobj,HD
-HD,(PRED,PREDWITHKOKOM),(OD,OG),VC-HD:aux,xcomp,iobj,HD
-HD,(PRED,PREDWITHKOKOM),(OD,OG):HD,xcomp,iobj
 HD,[PRED,PX,],OV(HD):aux,obl,HD
 HD,[PRED,PX,],VC-HD:aux,obl,HD
 HD,[PRED,PX,]:HD,obl

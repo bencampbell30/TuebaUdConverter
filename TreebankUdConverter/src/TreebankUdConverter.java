@@ -1178,7 +1178,7 @@ public class TreebankUdConverter
 				foundOGMOD = true;
 				ogmodNode.add(currentSubNode);
 			}
-			else if (currentSubNode.getDependency().equals("PRED"))
+			/*else if (currentSubNode.getDependency().equals("PRED"))
 			{
 				foundPred = true;
 				predNode = currentSubNode;
@@ -1187,7 +1187,7 @@ public class TreebankUdConverter
 			{
 				foundPredMOD = true;
 				predmodNode.add(currentSubNode);
-			}
+			} */
 			else if (currentSubNode.getDependency().equals("OADVP"))
 			{
 				foundOadvp = true;
@@ -1246,16 +1246,6 @@ public class TreebankUdConverter
 			{
 				TreeNode current = ogmodNode.get(i);
 				ogNode.addSubNode(current);
-				subNodes.remove(current);
-			}
-		}
-		
-		if (foundPred && foundPredMOD)
-		{
-			for (int i=0; i<predmodNode.size(); i++)
-			{
-				TreeNode current = predmodNode.get(i);
-				predNode.addSubNode(current);
 				subNodes.remove(current);
 			}
 		}
