@@ -1,36 +1,39 @@
 **COMPOUND TRANSFORMATIONS**
+
+*Specially handled compound transformations*
 KONJ,KONJ,...:HD,conj,... --> First KONJ becomes head
-[PRED,,N*],[PRED-MOD,SIMPX,]:[PRED,,N*],acl - 261
+[PRED,,N*],[PRED-MOD,SIMPX,]:[PRED,,N*],acl
 [ON,SIMPX,],[(HD,OV,VC-HD),,V*PASSIV]:csubj:pass,[(HD,OV,VC-HD),,V*PASSIV]
 ON,[(HD,OV,VC-HD),,V*PASSIV]:nsubj:pass,[(HD,OV,VC-HD),,V*PASSIV]
 
-[HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),OV(HD):auxpass,xcomp,HD
+*Automatically handled compound transformations*
+[HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),OV:auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),VC-HD:auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[OV,,VMAIN]:auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[VC-HD,,VMAIN]:auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[OV,,VMAIN]:auxpass,xcomp,HD
 [HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[VC-HD,,VMAIN]:auxpass,xcomp,HD
-HD,(PRED,PREDWITHKOKOM),[OV(HD),,(V*PASSIV,PTKZU_PASS)],OV:aux,xcomp,HD,auxpass
+HD,(PRED,PREDWITHKOKOM),[OV,,(V*PASSIV,PTKZU_PASS)],OV:aux,xcomp,HD,auxpass
 HD,(PRED,PREDWITHKOKOM),OV,[VC-HD,,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,auxpass
 [HD,,(V*PASSIV,PTKZU-PASS)],OV:auxpass,HD
 [HD,,(V*PASSIV,PTKZU-PASS)],VC-HD:auxpass,HD
-HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER],OV(HD):aux,xcomp,expl,HD
+HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER],OV:aux,xcomp,expl,HD
 HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER],VC-HD:aux,xcomp,expl,HD
 HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER]:HD,xcomp,expl
-HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC),OV(HD):aux,xcomp,dobj,HD
+HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC),OV:aux,xcomp,dobj,HD
 HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC),VC-HD:aux,xcomp,dobj,HD
 HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC):HD,xcomp,dobj
-HD,[PRED,PX,],OV(HD):aux,obl,HD
+HD,[PRED,PX,],OV:aux,obl,HD
 HD,[PRED,PX,],VC-HD:aux,obl,HD
 HD,[PRED,PX,]:HD,obl
-HD,PREDWITHKOKOM,OV(HD):aux,obl,HD
+HD,PREDWITHKOKOM,OV:aux,obl,HD
 HD,PREDWITHKOKOM,VC-HD:aux,obl,HD
 HD,PREDWITHKOKOM:HD,obl
 HD,PRED,[OV,,PTKZU],[OV,,VVPP]:aux,xcomp,cop,HD
 [HD,,VVFIN],PRED,[OV,,PTKZU]:HD,xcomp,cop
 HD,PRED,[OV,,PTKZU],OV:aux,HD,xcomp,cop
 HD,PRED,[OV,,PTKZU]:cop,HD,xcomp
-HD,PRED,OV(HD):aux,HD,cop
+HD,PRED,OV:aux,HD,cop
 HD,PRED:cop,HD
 HD,[OV,,VMAIN],[OV,,VMAIN]:aux,xcomp,HD
 HD,[OV,,VMAIN],[VC-HD,,VMAIN]:aux,xcomp,HD
@@ -139,8 +142,6 @@ APP,...:HD,(appos,...)
 [,WORD,NE],...:HD,(flat,...)
 [,,N*]:appos
 [,NX,]:appos
-
-**Automatic Leftovers**
 
 25,72 - Should "als" phrases be "obl" or remain "nmod"?
 1194 - limitation with FKONJ

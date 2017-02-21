@@ -241,6 +241,14 @@ public class TreebankUdConverter
 			setPunctuationDependencies(currentSentence, currentSentence.get(0));
 		}
 		
+		System.out.println("STAGE 22");
+		
+		for (int i=0; i<arrayOrderedSentences.size(); i++)
+		{
+			ArrayList<DependencyNode> currentSentence = arrayOrderedSentences.get(i);
+			getRidOfMultipleRoots(currentSentence);
+		}
+		
 		System.out.println("STAGE 20");
 		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
@@ -1117,12 +1125,6 @@ public class TreebankUdConverter
 		TreeNode ogNode = null;
 		ArrayList<TreeNode> ogmodNode = new ArrayList<TreeNode>();
 		
-		boolean foundPred = false;
-		boolean foundPredMOD = false;
-		
-		TreeNode predNode = null;
-		ArrayList<TreeNode> predmodNode = new ArrayList<TreeNode>();
-		
 		boolean foundOadjp = false;
 		boolean foundOadjpMOD = false;
 		
@@ -1178,16 +1180,6 @@ public class TreebankUdConverter
 				foundOGMOD = true;
 				ogmodNode.add(currentSubNode);
 			}
-			/*else if (currentSubNode.getDependency().equals("PRED"))
-			{
-				foundPred = true;
-				predNode = currentSubNode;
-			}
-			else if (currentSubNode.getDependency().equals("PRED-MOD"))
-			{
-				foundPredMOD = true;
-				predmodNode.add(currentSubNode);
-			} */
 			else if (currentSubNode.getDependency().equals("OADVP"))
 			{
 				foundOadvp = true;
@@ -1459,13 +1451,13 @@ public class TreebankUdConverter
 			current.setSubNodes(headWordFinder(treeNode));
 			ArrayList<DependencyNode> rootDependents = current.getSubNodes();
 			
-			//Set dependency relation for all immediate children of the root to "ROOT"
+			//Set dependency relation for all immediate children of the root to "root"
 			for (int i=0; i<rootDependents.size(); i++)
 			{
 				DependencyNode currentDepSubNode = rootDependents.get(i);
 				if (!(currentDepSubNode.getNodeData().get("pos").contains("$")))
 				{
-					currentDepSubNode.setRel("ROOT");
+					currentDepSubNode.setRel("root");
 				}
 				else
 				{
@@ -1517,7 +1509,7 @@ public class TreebankUdConverter
 				}
 			}
 		}
-		if (!(current.getRel().equals("ROOT")))
+		if (!(current.getRel().equals("root")))
 		{
 			current.setRel(depRel);
 		}
@@ -1964,6 +1956,31 @@ public class TreebankUdConverter
 		}
 		
 		return head;
+	}
+	
+	// For sentences with multiple root dependencies, use the first root as the head, and set all other nodes with root dependences as
+	// children of this node with dependency "parataxis"
+	private static void getRidOfMultipleRoots(ArrayList<DependencyNode> sentence)
+	{
+		DependencyNode firstRoot = null;
+		
+		for (int i=1; i<sentence.size(); i++)
+		{
+			DependencyNode currentNode = sentence.get(i);
+			if (currentNode.getRel().equals("root"))
+			{
+				if (firstRoot == null)
+					firstRoot = currentNode;
+				else
+				{
+					DependencyNode currentNodeHead = currentNode.getHead();
+					currentNodeHead.getSubNodes().remove(currentNode);
+					currentNode.setHead(firstRoot);
+					firstRoot.addDependent(currentNode);
+					currentNode.setRel("parataxis");
+				}
+			}
+		}
 	}
 	
 	private static ArrayList<ArrayList<String>> convertNodesToText(ArrayList<DependencyNode> sentence)
