@@ -241,14 +241,6 @@ public class TreebankUdConverter
 			setPunctuationDependencies(currentSentence, currentSentence.get(0));
 		}
 		
-		System.out.println("STAGE 22");
-		
-		for (int i=0; i<arrayOrderedSentences.size(); i++)
-		{
-			ArrayList<DependencyNode> currentSentence = arrayOrderedSentences.get(i);
-			getRidOfMultipleRoots(currentSentence);
-		}
-		
 		System.out.println("STAGE 20");
 		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
@@ -581,9 +573,18 @@ public class TreebankUdConverter
 			if (currentFunction.equals("-") || currentFunction.equals("--"))
 			{
 				String pos = currentWord.getWordData().get("pos");
+				String morph = currentWord.getWordData().get("morph");
+				
 				if (pos.startsWith("$"))
 				{
 					currentWord.setDependency("PUNCT");
+				}
+				else if (morph != null)
+				{
+					if (morph.substring(0, 1).equals("g") && (pos.equals("PPOS") || pos.equals("PPOSAT") || pos.equals("PRELS") || pos.equals("PRELAT")))
+					{
+						currentWord.setDependency("GEN");
+					}
 				}
 			}
 		}
@@ -1820,7 +1821,7 @@ public class TreebankUdConverter
 		ArrayList<DependencyNode> subNodes = transformed.getSubNodes();
 		
 		if (node.getRel() != null && subNodes.size() > 0 && (node.getRel().equals("xcomp") || node.getRel().equals("ccomp") || node.getRel().equals("acl") || node.getRel().equals("acl:relcl") 
-				 || node.getRel().equals("advcl") || node.getRel().equals("csubj")  || node.getRel().equals("parataxis")  || node.getRel().equals("conj")))
+				 || node.getRel().equals("advcl") || node.getRel().equals("csubj")))
 		{
 			//Find subordinate clause extremities
 			int leftExtremity = node.getWordNumber();
@@ -1958,34 +1959,11 @@ public class TreebankUdConverter
 		return head;
 	}
 	
-	// For sentences with multiple root dependencies, use the first root as the head, and set all other nodes with root dependences as
-	// children of this node with dependency "parataxis"
-	private static void getRidOfMultipleRoots(ArrayList<DependencyNode> sentence)
-	{
-		DependencyNode firstRoot = null;
-		
-		for (int i=1; i<sentence.size(); i++)
-		{
-			DependencyNode currentNode = sentence.get(i);
-			if (currentNode.getRel().equals("root"))
-			{
-				if (firstRoot == null)
-					firstRoot = currentNode;
-				else
-				{
-					DependencyNode currentNodeHead = currentNode.getHead();
-					currentNodeHead.getSubNodes().remove(currentNode);
-					currentNode.setHead(firstRoot);
-					firstRoot.addDependent(currentNode);
-					currentNode.setRel("parataxis");
-				}
-			}
-		}
-	}
-	
 	private static ArrayList<ArrayList<String>> convertNodesToText(ArrayList<DependencyNode> sentence)
 	{
 		ArrayList<ArrayList<String>> lines = new ArrayList<ArrayList<String>>();
+		boolean foundFirstRoot = false;
+		String firstRootNum = "";
 		
 		for (int i=0; i<sentence.size(); i++)
 		{
@@ -2003,6 +1981,18 @@ public class TreebankUdConverter
 				head = Integer.toString(node.getHead().getWordNumber());
 			}
 			String depRel = node.getRel();
+			
+			if (depRel != null && foundFirstRoot && depRel.equals("root"))
+			{
+				depRel = "parataxis";
+				head = firstRootNum;
+			}
+			
+			if (depRel != null && depRel.equals("root"))
+			{
+				foundFirstRoot = true;
+				firstRootNum = wordIndex;
+			}
 			
 			//Comment out to see where program could not determine dependencies
 			if (depRel != null && (depRel.equals("HD") || depRel.equals("REPLACEME")))

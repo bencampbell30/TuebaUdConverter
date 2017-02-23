@@ -476,8 +476,6 @@ public class Transformations
 		RelationTemplate templateKOKOM = new RelationTemplate(null, arrayListWordNode, arrayListKokomPos, false, true, true);
 		// PRED
 		RelationTemplate templatePred = new RelationTemplate(arrayListPredFun, null, null, true, false, false);
-		// [PRED,PX,]
-		RelationTemplate templatePredPx = new RelationTemplate(arrayListPredAllFun, arrayListPxNode, null, true, true, false);
 		// PRED-MOD
 		RelationTemplate templatePredMod = new RelationTemplate(arrayListPredModFun, arrayListSimpxNode, null, true, true, false);
 		// PRED-KOKOM
@@ -535,17 +533,11 @@ public class Transformations
 		// [OV,,(V*PASSIV,PTKZU-PASS)]
 		RelationTemplate templateOvPass = new RelationTemplate(arrayListOvFun, null, arrayListVerbPassivePos, true,
 				false, true);
-		// [OV,,VAUX]
-		RelationTemplate templateOvAux = new RelationTemplate(arrayListOvFun, null, arrayListVerbAuxPos, true,
-				false, true);
 		// [OV,,VMAIN]
 		RelationTemplate templateOvMain = new RelationTemplate(arrayListOvFun, null, arrayListVerbMainPos, true,
 				false, true);
 		// [OV,,VVPP]
 		RelationTemplate templateOvVvppMain = new RelationTemplate(arrayListOvFun, null, arrayListVerbVVPPPos, true,
-				false, true);
-		// [VC-HD,,VAUX]
-		RelationTemplate templateVcHdAux = new RelationTemplate(arrayListVcHdFun, null, arrayListVerbAuxPos, true,
 				false, true);
 		// [VC-HD,,VMAIN]
 		RelationTemplate templateVcHdMain = new RelationTemplate(arrayListVcHdFun, null, arrayListVerbMainPos, true,
@@ -564,8 +556,6 @@ public class Transformations
 		RelationTemplate templateOD = new RelationTemplate(arrayListOdFun, null, null, true, false, false);
 		// OG
 		RelationTemplate templateOG = new RelationTemplate(arrayListOgFun, null, null, true, false, false);
-		// (OD,OG)
-		RelationTemplate templateIOBJ = new RelationTemplate(arrayListIobjFun, null, null, true, false, false);
 		// GEN
 		RelationTemplate templateGEN = new RelationTemplate(arrayListGenFun, null, null, true, false, false);
 		// OS
@@ -1000,46 +990,6 @@ public class Transformations
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 		
-		currentTemplate.clear();
-		currentNewRelations.clear();
-		
-		//HD,[PRED,PX,],OV(HD):aux,obl,HD
-		currentTemplate.add(templateHD);
-		currentTemplate.add(templatePredPx);
-		currentTemplate.add(templateOV);
-				
-		currentNewRelations.add("aux");
-		currentNewRelations.add("obl");
-		currentNewRelations.add("HD");
-				
-		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
-				
-		currentTemplate.clear();
-		currentNewRelations.clear();
-		
-		//HD,[PRED,PX,],VC-HD:aux,obl,HD
-		currentTemplate.add(templateHD);
-		currentTemplate.add(templatePredPx);
-		currentTemplate.add(templateVcHD);
-				
-		currentNewRelations.add("aux");
-		currentNewRelations.add("obl");
-		currentNewRelations.add("HD");
-				
-		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
-				
-		currentTemplate.clear();
-		currentNewRelations.clear();
-		
-		//HD,[PRED,PX,]:HD,obl
-		currentTemplate.add(templateHD);
-		currentTemplate.add(templatePredPx);
-						
-		currentNewRelations.add("HD");
-		currentNewRelations.add("obl");
-						
-		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
-						
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
@@ -1958,7 +1908,7 @@ public class Transformations
 		//VPT:mark
 		currentTemplate.add(templateVPT);
 						
-		currentNewRelations.add("mark");
+		currentNewRelations.add("compound:prt");
 						
 		autoProcessedSingleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 						

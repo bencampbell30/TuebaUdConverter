@@ -23,9 +23,6 @@ HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER]:HD,xcomp,expl
 HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC),OV:aux,xcomp,dobj,HD
 HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC),VC-HD:aux,xcomp,dobj,HD
 HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC):HD,xcomp,dobj
-HD,[PRED,PX,],OV:aux,obl,HD
-HD,[PRED,PX,],VC-HD:aux,obl,HD
-HD,[PRED,PX,]:HD,obl
 HD,PREDWITHKOKOM,OV:aux,obl,HD
 HD,PREDWITHKOKOM,VC-HD:aux,obl,HD
 HD,PREDWITHKOKOM:HD,obl
@@ -116,7 +113,7 @@ NEG_ADV:det:neg
 [,WORD,PPOSAT]:nmod:poss
 [,WORD,PTKA]:advmod
 [,WORD,APZR]:mwe
-VPT:mark
+VPT:compound:prt
 [,WORD,PTKVZ]:mark
 ES:expl
 [(ON-MOD, OS-MOD),,PPER]:expl
