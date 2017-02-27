@@ -121,6 +121,11 @@ public class Transformations
 		arrayListObjFun.add("OA");
 		arrayListObjFun.add("OS");
 		arrayListObjFun.add("OSC");
+		
+		// fun OS*
+		ArrayList<String> arrayListClausalObjectFun = new ArrayList<String>();
+		arrayListClausalObjectFun.add("OS");
+		arrayListClausalObjectFun.add("OSC");
 
 		// fun OD
 		ArrayList<String> arrayListOdFun = new ArrayList<String>();
@@ -537,7 +542,10 @@ public class Transformations
 		RelationTemplate templateOvMain = new RelationTemplate(arrayListOvFun, null, arrayListVerbMainPos, true,
 				false, true);
 		// [OV,,VVPP]
-		RelationTemplate templateOvVvppMain = new RelationTemplate(arrayListOvFun, null, arrayListVerbVVPPPos, true,
+		RelationTemplate templateOvVvpp = new RelationTemplate(arrayListOvFun, null, arrayListVerbVVPPPos, true,
+				false, true);
+		// [VC-HD,,VVPP]
+		RelationTemplate templateVcHdVvpp = new RelationTemplate(arrayListOvFun, null, arrayListVerbVVPPPos, true,
 				false, true);
 		// [VC-HD,,VMAIN]
 		RelationTemplate templateVcHdMain = new RelationTemplate(arrayListVcHdFun, null, arrayListVerbMainPos, true,
@@ -552,6 +560,8 @@ public class Transformations
 		RelationTemplate templateOA = new RelationTemplate(arrayListOaFun, null, null, true, false, false);
 		// (OA,OS,OSC)
 		RelationTemplate templateObject = new RelationTemplate(arrayListObjFun, null, null, true, false, false);
+		// (OS,OSC)
+		RelationTemplate templateClausalObject = new RelationTemplate(arrayListClausalObjectFun, null, null, true, false, false);
 		// OD
 		RelationTemplate templateOD = new RelationTemplate(arrayListOdFun, null, null, true, false, false);
 		// OG
@@ -585,6 +595,9 @@ public class Transformations
 				false, true);
 		// [HD,,VVFIN]
 		RelationTemplate templateHdVvfin = new RelationTemplate(arrayListHdFun, null, arrayListVerbVVFINPos, true,
+				false, true);
+		// [HD,,VMAIN]
+		RelationTemplate templateHdVMain = new RelationTemplate(arrayListHdFun, null, arrayListVerbMainPos, true,
 				false, true);
 		// [HD,,N*]
 		RelationTemplate templateHdN = new RelationTemplate(arrayListHdFun, null, arrayListNPos, true,
@@ -947,10 +960,10 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,(OA,OS,OSC),OV(HD):aux,xcomp,obj,HD --> take care to only convert the leftmost OV
+		//HD,PRED,OA,OV(HD):aux,xcomp,obj,HD
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePredAll);
-		currentTemplate.add(templateObject);
+		currentTemplate.add(templateOA);
 		currentTemplate.add(templateOV);
 		
 		currentNewRelations.add("aux");
@@ -963,10 +976,10 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,(OA,OS,OSC),VC-HD:aux,xcomp,obj,HD - *
+		//HD,PRED,OA,VC-HD:aux,xcomp,obj,HD
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePredAll);
-		currentTemplate.add(templateObject);
+		currentTemplate.add(templateOA);
 		currentTemplate.add(templateVcHD);
 		
 		currentNewRelations.add("aux");
@@ -979,10 +992,56 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,(OA,OS,OSC):HD,xcomp,obj - *
+		//HD,PRED,OA:HD,xcomp,obj
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePredAll);
-		currentTemplate.add(templateObject);
+		currentTemplate.add(templateOA);
+		
+		currentNewRelations.add("HD");
+		currentNewRelations.add("xcomp");
+		currentNewRelations.add("obj");
+		
+		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
+		
+		currentTemplate.clear();
+		currentNewRelations.clear();
+		
+		//HD,PRED,(OS,OSC),[OV,,VMAIN]:aux,xcomp,obj,HD
+		currentTemplate.add(templateHD);
+		currentTemplate.add(templatePredAll);
+		currentTemplate.add(templateClausalObject);
+		currentTemplate.add(templateOvMain);
+		
+		currentNewRelations.add("aux");
+		currentNewRelations.add("xcomp");
+		currentNewRelations.add("obj");
+		currentNewRelations.add("HD");
+		
+		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
+		
+		currentTemplate.clear();
+		currentNewRelations.clear();
+		
+		//HD,PRED,(OS,OSC),[VC-HD,,VMAIN]:aux,xcomp,obj,HD
+		currentTemplate.add(templateHD);
+		currentTemplate.add(templatePredAll);
+		currentTemplate.add(templateClausalObject);
+		currentTemplate.add(templateVcHdMain);
+		
+		currentNewRelations.add("aux");
+		currentNewRelations.add("xcomp");
+		currentNewRelations.add("obj");
+		currentNewRelations.add("HD");
+		
+		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
+		
+		currentTemplate.clear();
+		currentNewRelations.clear();
+		
+		//[HD,,VMAIN],PRED,(OS,OSC):HD,xcomp,obj
+		currentTemplate.add(templateHdVMain);
+		currentTemplate.add(templatePredAll);
+		currentTemplate.add(templateClausalObject);
 		
 		currentNewRelations.add("HD");
 		currentNewRelations.add("xcomp");
@@ -1037,7 +1096,7 @@ public class Transformations
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePred);
 		currentTemplate.add(templateOVPtkZu);
-		currentTemplate.add(templateOvVvppMain);
+		currentTemplate.add(templateOvVvpp);
 		
 		currentNewRelations.add("aux");
 		currentNewRelations.add("xcomp");

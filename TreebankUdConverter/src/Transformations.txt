@@ -20,12 +20,15 @@ HD,(PRED,PREDWITHKOKOM),OV,[VC-HD,,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,auxpass
 HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER],OV:aux,xcomp,expl,HD
 HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER],VC-HD:aux,xcomp,expl,HD
 HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER]:HD,xcomp,expl
-HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC),OV:aux,xcomp,dobj,HD
-HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC),VC-HD:aux,xcomp,dobj,HD
-HD,(PRED,PREDWITHKOKOM),(OA,OS,OSC):HD,xcomp,dobj
-HD,PREDWITHKOKOM,OV:aux,obl,HD
-HD,PREDWITHKOKOM,VC-HD:aux,obl,HD
-HD,PREDWITHKOKOM:HD,obl
+HD,(PRED,PREDWITHKOKOM),OA,OV:aux,xcomp,obj,HD
+HD,(PRED,PREDWITHKOKOM),OA,VC-HD:aux,xcomp,obj,HD
+HD,(PRED,PREDWITHKOKOM),OA:HD,xcomp,obj
+HD,(PRED,PREDWITHKOKOM),(OS,OSC),[OV,,VMAIN]:aux,xcomp,obj,HD
+HD,(PRED,PREDWITHKOKOM),(OS,OSC),[VC-HD,,VMAIN]:aux,xcomp,obj,HD
+HD,(PRED,PREDWITHKOKOM),(OS,OSC):[HD,,VMAIN],xcomp,obj
+HD,PREDWITHKOKOM,OV:aux,obl,HD *** Get rid of possibly
+HD,PREDWITHKOKOM,VC-HD:aux,obl,HD *** Get rid of possibly
+HD,PREDWITHKOKOM:HD,obl *** Get rid of possibly
 HD,PRED,[OV,,PTKZU],[OV,,VVPP]:aux,xcomp,cop,HD
 [HD,,VVFIN],PRED,[OV,,PTKZU]:HD,xcomp,cop
 HD,PRED,[OV,,PTKZU],OV:aux,HD,xcomp,cop
@@ -73,7 +76,7 @@ KONJ2:conj
 KONJ:HD
 [ON,SIMPX,]:csubj
 ON:subj
-OA:dobj
+OA:obj
 OD:iobj
 OG:iobj
 [OV,,(V*PASSIV,PTKZU_PASS)]:auxpass

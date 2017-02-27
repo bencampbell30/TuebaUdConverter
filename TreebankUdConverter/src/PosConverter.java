@@ -36,7 +36,7 @@ public class PosConverter
 		posMap.put("KOUI", "SCONJ");
 		posMap.put("KOUS", "SCONJ");
 		posMap.put("KON", "CCONJ");
-		posMap.put("KOKOM", "CCONJ");
+		posMap.put("KOKOM", "ADP");
 		posMap.put("NN", "NOUN");
 		posMap.put("NE", "PROPN");
 		posMap.put("PDS", "PRON");
@@ -57,8 +57,8 @@ public class PosConverter
 		posMap.put("PTKZU", "PART");
 		posMap.put("PTKNEG", "PART");
 		posMap.put("PTKVZ", "PART");
-		posMap.put("PTKANT", "PART");
-		posMap.put("PTKA", "PART");
+		posMap.put("PTKANT", "INTJ");
+		posMap.put("PTKA", "ADV");
 		posMap.put("TRUNC", "PART");
 		posMap.put("VVFIN", "VERB");
 		posMap.put("VVIMP", "VERB");
