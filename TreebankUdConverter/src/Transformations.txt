@@ -26,9 +26,9 @@ HD,(PRED,PREDWITHKOKOM),OA:HD,xcomp,obj
 HD,(PRED,PREDWITHKOKOM),(OS,OSC),[OV,,VMAIN]:aux,xcomp,obj,HD
 HD,(PRED,PREDWITHKOKOM),(OS,OSC),[VC-HD,,VMAIN]:aux,xcomp,obj,HD
 HD,(PRED,PREDWITHKOKOM),(OS,OSC):[HD,,VMAIN],xcomp,obj
-HD,PREDWITHKOKOM,OV:aux,obl,HD *** Get rid of possibly
-HD,PREDWITHKOKOM,VC-HD:aux,obl,HD *** Get rid of possibly
-HD,PREDWITHKOKOM:HD,obl *** Get rid of possibly
+HD,PREDWITHKOKOM,OV:aux,xcomp,HD
+HD,PREDWITHKOKOM,VC-HD:aux,xcomp,HD
+HD,PREDWITHKOKOM:HD,xcomp
 HD,PRED,[OV,,PTKZU],[OV,,VVPP]:aux,xcomp,cop,HD
 [HD,,VVFIN],PRED,[OV,,PTKZU]:HD,xcomp,cop
 HD,PRED,[OV,,PTKZU],OV:aux,HD,xcomp,cop
@@ -51,10 +51,11 @@ HD,VC-HD:aux,HD
 [,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)],[,WORD,V*INF]:aux,HD
 [,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)],[,VXINF,]:aux,HD
 [,WORD,PTKZU],[,WORD,ADJ*]:aux,HD
-[PRED-KOKOM,,KOKOM],[HD,,N*]:HD,obl
+[PRED-KOKOM,,KOKOM],[HD,,N*]:HD,nmod
 [PRED-KOKOM,,KOKOM],[HD,,ADJ*]:HD,amod
 (APPR,APPO),HD:case,HD
 (APPR,APPO),[,NX,]:case,HD
+[,PX,],[HD,,N*]:HD,nmod
 [HD,,(ADV,ADJD,ADJA)],[-,NX,(PDAT,PIDAT,PIS,PIAT,PWAT)]:HD,nmod
 [HD,,(ADV,ADJD,ADJA)],[-,NX,]:HD,obl
 

@@ -1415,7 +1415,7 @@ public class Transformations
 		currentTemplate.add(templateHdN);
 				
 		currentNewRelations.add("HD");
-		currentNewRelations.add("obl");
+		currentNewRelations.add("nmod");
 				
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 				
@@ -1451,6 +1451,18 @@ public class Transformations
 		currentTemplate.add(templateNX);
 				
 		currentNewRelations.add("case");
+		currentNewRelations.add("HD");
+				
+		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
+				
+		currentTemplate.clear();
+		currentNewRelations.clear();
+		
+		// [,PX,],[HD,,N*]:nmod,HD
+		currentTemplate.add(templatePX);
+		currentTemplate.add(templateHdN);
+				
+		currentNewRelations.add("nmod");
 		currentNewRelations.add("HD");
 				
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
