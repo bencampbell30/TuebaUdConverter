@@ -20,6 +20,7 @@ public class TreebankUdConverter
 	private static ArrayList<TreeNode> sentenceNodesClipped;
 	private static ArrayList<TreeNode> sentenceNodesFunctionDetermined;
 	private static ArrayList<TreeNode> sentenceNodesTransformed;
+	private static ArrayList<ArrayList<DependencyNode>> arrayOrderedSentences;
 	private static ArrayList<ArrayList<ArrayList<String>>> conllSentences;
 	private static StructureTransformer structureTransformerInstance;
 	private static PosConverter posConverterInstance;
@@ -177,7 +178,7 @@ public class TreebankUdConverter
 		
 		System.out.println("STAGE 15");
 		
-		ArrayList<ArrayList<DependencyNode>> arrayOrderedSentences = new ArrayList<ArrayList<DependencyNode>>();
+		arrayOrderedSentences = new ArrayList<ArrayList<DependencyNode>>();
 		for (int i=0; i<orderedSentences.size(); i++)
 		{
 			HashMap<Integer, DependencyNode> currentSentence = orderedSentences.get(i);
@@ -1613,6 +1614,9 @@ public class TreebankUdConverter
 				
 				if (canBeBrokenUp)
 				{
+					currentNode.setApprArt(true);
+					currentNode.setApprArtForm(form);
+					
 					DependencyNode nodeArt = new DependencyNode(currentNode.getLine(), currentNode.getHead(), "det", null);
 					nodeArt.getNodeData().put("lemma", artLemma);
 					nodeArt.setLemma(artLemma);
@@ -2003,6 +2007,19 @@ public class TreebankUdConverter
 			String deps = "_";
 			String misc = "_";
 			
+			if (upostag != null && upostag.equals("PUNCT"))
+			{
+				misc = "SpaceAfter=Yes";
+				/*if (!(form.equals("\"") || form.equals("'")))
+				{
+					misc = "SpaceAfter=Yes";
+				}
+				else
+				{
+					misc = "SpaceAfter=No";
+				}*/
+			}
+				
 			columns.add(wordIndex);
 			columns.add(form);
 			columns.add(lemma);
@@ -2032,9 +2049,31 @@ public class TreebankUdConverter
 		    for (int i=0; i<conllSentences.size(); i++)
 		    {
 		    	ArrayList<ArrayList<String>> currentSentence = conllSentences.get(i);
-		    	writer.write(Integer.toString(i + start));
+		    	writer.write("# sent_id = s" + Integer.toString(i + start));
 		    	System.out.println(Integer.toString(i + start));
 		    	writer.write("\n");
+		    	writer.write("# text = ");
+		    	
+		    	ArrayList<DependencyNode> currentNodeSentence = arrayOrderedSentences.get(i);
+		    	
+		    	for (int j=1; j<currentSentence.size(); j++)
+		    	{
+		    		ArrayList<String> currentWord = currentSentence.get(j);
+		    		DependencyNode currentNode = currentNodeSentence.get(j);
+		    		String word = currentWord.get(1);
+		    		if (currentNode.isApprArt())
+		    		{
+		    			word = currentNode.getApprArtForm();
+		    			j++;
+		    			currentWord = currentSentence.get(j);
+		    		}
+		    		writer.write(word);
+		    		
+		    		if (!currentWord.get(9).equals("SpaceAfter=No"))
+		    		{
+		    			writer.write(" ");
+		    		}
+		    	}
 		    	writer.write("\n");
 		    	for (int j=1; j<currentSentence.size(); j++)
 		    	{

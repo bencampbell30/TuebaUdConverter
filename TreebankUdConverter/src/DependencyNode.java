@@ -17,6 +17,24 @@ public class DependencyNode implements Serializable
 	private String pos = "";
 	private int wordNumber = 0;
 	private String lemma = "";
+	boolean apprArt = false;
+	String apprArtForm = "";
+	String pronType = "";
+	String morphCase = "";
+	String number = "";
+	String gender = "";
+	String mood = "";
+	String tense = "";
+	String person = "";
+	String verbForm = "";
+	String definite = "";
+	String polarity = "";
+	String poss = "";
+	String polite = "";
+	String foreign = "";
+	String reflex = "";
+	String voice = "";
+	String numtype = "";
 	TreeWord word;
 
 	public DependencyNode(String wLine, DependencyNode wHead, String wRel, TreeWord word) 
@@ -115,6 +133,7 @@ public class DependencyNode implements Serializable
 	    else if (lemma != null && (lemma.startsWith("kein") || lemma.startsWith("Kein")) && pos.equals("ADV"))
 	    {
 	    	this.pos = "ADV_NEG";
+	    	polarity = "negative";
 	    }
 	    else if (lemma == null)
 	    {
@@ -148,5 +167,89 @@ public class DependencyNode implements Serializable
 	public TreeWord getWord() 
 	{
 		return word;
+	}
+
+	public boolean isApprArt() 
+	{
+		return apprArt;
+	}
+
+	public void setApprArt(boolean apprArt) 
+	{
+		this.apprArt = apprArt;
+	}
+
+	public String getApprArtForm() 
+	{
+		return apprArtForm;
+	}
+
+	public void setApprArtForm(String apprArtForm) 
+	{
+		this.apprArtForm = apprArtForm;
+	}
+
+	public String getPronType() {
+		return pronType;
+	}
+
+	public String getMorphCase() {
+		return morphCase;
+	}
+
+	public String getNumber() {
+		return number;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public String getMood() {
+		return mood;
+	}
+
+	public String getTense() {
+		return tense;
+	}
+
+	public String getPerson() {
+		return person;
+	}
+
+	public String getVerbForm() {
+		return verbForm;
+	}
+
+	public String getDefinite() {
+		return definite;
+	}
+
+	public String getPolarity() {
+		return polarity;
+	}
+
+	public String getPoss() {
+		return poss;
+	}
+
+	public String getPolite() {
+		return polite;
+	}
+
+	public String getForeign() {
+		return foreign;
+	}
+
+	public String getReflex() {
+		return reflex;
+	}
+
+	public String getVoice() {
+		return voice;
+	}
+
+	public String getNumtype() {
+		return numtype;
 	}
 }

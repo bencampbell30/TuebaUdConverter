@@ -64,7 +64,6 @@ public class PosConverter
 		posMap.put("VVIMP", "VERB");
 		posMap.put("VVINF", "VERB");
 		posMap.put("VVIZU", "VERB");
-		posMap.put("VVFIN", "VERB");
 		posMap.put("VVPP", "VERB");
 		posMap.put("VAFIN", "AUX");
 		posMap.put("VAIMP", "AUX");

@@ -59,12 +59,14 @@ HD,VC-HD:aux,HD
 [HD,,(ADV,ADJD,ADJA)],[-,NX,(PDAT,PIDAT,PIS,PIAT,PWAT)]:HD,nmod
 [HD,,(ADV,ADJD,ADJA)],[-,NX,]:HD,obl
 
-** - try to distinguish "flat" from "compound" and "appos"
+** - try to distinguish "flat" from "compound", "nmod",  and "appos"
 ** - fixed - "nach wie vor", "darüber hinaus", etc.
 ** - KOKOM where a preposition is already present - cc?
 ** - not appos if first element
 ** - reduce incorrect "cop" verbs
 ** - features?
+* - dative/genitive NPs are "obj" if no accusative "NP"
+* - include morphological feature info
 
 ** = nice to have
 
@@ -116,7 +118,7 @@ NEG_ADV:det:neg
 [,WORD,ART]:det
 [,WORD,PPOSAT]:nmod:poss
 [,WORD,PTKA]:advmod
-[,WORD,APZR]:mwe
+[,WORD,APZR]:fixed
 VPT:compound:prt
 [,WORD,PTKVZ]:mark
 ES:expl

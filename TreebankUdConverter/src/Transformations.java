@@ -1966,10 +1966,10 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[,WORD,APZR]:mwe
+		//[,WORD,APZR]:fixed
 		currentTemplate.add(templateWordApzr);
 								
-		currentNewRelations.add("mwe");
+		currentNewRelations.add("fixed");
 								
 		autoProcessedSingleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 								
