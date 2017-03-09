@@ -121,10 +121,215 @@ public class DependencyNode implements Serializable
 	    }
 	    String lemma = nodeData.get("lemma");
 	    String pos = nodeData.get("pos");
+	    String morph = nodeData.get("morph");
 	    this.pos = pos;
+	    
+	    if (morph != null)
+	    {
+	    	if (pos.startsWith("V"))
+	    	{
+	    		if (pos.equals("VVFIN") || pos.equals("VMFIN")  || pos.equals("VAFIN") || pos.equals("VVIMP") || pos.equals("VAIMP"))
+	    		{
+	    			verbForm = "Fin";
+	    		}
+	    		else if (pos.equals("VVINF") || pos.equals("VVIZU")  || pos.equals("VAINF") || pos.equals("VMINF"))
+	    		{
+	    			verbForm = "Inf";
+	    		}
+	    		else if (pos.endsWith("PPP"))
+	    		{
+	    			verbForm = "Part";
+	    		}
+	    		if (pos.endsWith("IMP"))
+	    		{
+	    			mood = "Imp";
+	    		}
+	    		if (morph.length() == 1)
+	    		{
+	    			if (morph.equals("s"))
+					{
+						number = "Sing";
+					}
+		    		else if (morph.equals("p"))
+					{
+						number = "Plur";
+					}
+	    		}
+	    		else
+	    		{
+	    			if (morph.substring(0, 1).equals("1"))
+					{
+						person = "1";
+					}
+		    		else if (morph.substring(0, 1).equals("2"))
+					{
+						person = "2";
+					}
+		    		else if (morph.substring(0, 1).equals("3"))
+					{
+						person = "3";
+					}
+		    		if (morph.substring(1, 2).equals("s"))
+					{
+						number = "Sing";
+					}
+		    		else if (morph.substring(1, 2).equals("p"))
+					{
+						number = "Plur";
+					}
+		    		if (morph.substring(2, 3).equals("i"))
+					{
+						mood = "Ind";
+					}
+		    		else if (morph.substring(2, 3).equals("k"))
+					{
+						mood = "Sub";
+					}
+		    		if (morph.substring(3, 4).equals("s"))
+					{
+						tense = "Pres";
+					}
+		    		else if (morph.substring(3, 4).equals("t"))
+					{
+						tense = "Past";
+					}
+	    		}
+	    	}
+	    	if (morph.equals("s"))
+			{
+				morphCase = "Sing";
+			}
+	    	else if (morph.equals("p"))
+			{
+				morphCase = "Plur";
+			}
+	    	else if (morph.equals("n"))
+			{
+				morphCase = "Nom";
+			}
+	    	else if (morph.equals("a"))
+			{
+				morphCase = "Acc";
+			}
+	    	else if (morph.equals("d"))
+			{
+				morphCase = "Dat";
+			}
+	    	else if (morph.equals("g"))
+			{
+				morphCase = "Gen";
+			}
+	    	else if (morph.length() >= 3)
+	    	{
+	    		if (morph.substring(0, 1).equals("n"))
+				{
+					morphCase = "Nom";
+				}
+		    	else if (morph.substring(0, 1).equals("a"))
+				{
+					morphCase = "Acc";
+				}
+		    	else if (morph.substring(0, 1).equals("d"))
+				{
+					morphCase = "Dat";
+				}
+		    	else if (morph.substring(0, 1).equals("g"))
+				{
+					morphCase = "Gen";
+				}
+	    		
+	    		if (morph.substring(1, 2).equals("s"))
+				{
+					number = "Sing";
+				}
+		    	else if (morph.substring(1, 2).equals("p"))
+				{
+		    		number = "Plur";
+				}
+	    		
+		    	if (morph.substring(2, 3).equals("m"))
+				{
+					gender = "Masc";
+				}
+		    	else if (morph.substring(2, 3).equals("n"))
+				{
+		    		gender = "Fem";
+				}
+		    	else if (morph.substring(2, 3).equals("f"))
+				{
+		    		gender = "Neut";
+				}
+	    	}
+	    }
+	    
+	    if (pos != null && pos.equals("ART"))
+	    {
+	    	pronType = "Art";
+	    	if (lemma.equals("der") || lemma.equals("das") || lemma.equals("die"))
+	    		definite = "Def";
+	    	else if (lemma.equals("ein") || lemma.equals("eine"))
+	    		definite = "Ind";
+	    }
+	    
+	    if (pos != null && pos.startsWith("P") && !pos.startsWith("PT"))
+	    {
+	    	if (pos.startsWith("PI"))
+	    	{
+	    		definite = "Ind";
+	    		pronType = "Ind";
+	    	}
+	    	else if (pos.startsWith("PD"))
+	    	{
+	    		pronType = "Dem";
+	    	}
+	    	else if (pos.startsWith("PPO"))
+	    	{
+	    		poss = "Yes";
+	    	}
+	    	else if (pos.startsWith("PPE"))
+	    	{
+	    		pronType = "Prs";
+	    		if (lemma.equals("Sie") && morph.substring(3, 4).equals("2"))
+	    			polite = "Yes";
+	    	}
+	    	else if (pos.startsWith("PW"))
+	    	{
+	    		pronType = "Int";
+	    	}
+	    	else if (pos.startsWith("PRE"))
+	    	{
+	    		pronType = "Rel";
+	    	}
+	    	else if (pos.equals("PRF"))
+		    {
+		    	reflex = "Yes";
+		    	pronType = "Prs";
+		    }
+	    	if (lemma.startsWith("kein") || lemma.startsWith("Kein"))
+	    	{
+	    		pronType = "Neg";
+	    		polarity = "Neg";
+	    	}
+	    }
+	    
+	    if (pos.equals("PTKNEG"))
+	    {
+	    	polarity = "Neg";
+	    }
+	    
+	    if (pos != null && pos.equals("FM"))
+	    {
+	    	foreign = "Yes";
+	    }
+	    else if (pos != null && pos.equals("CARD"))
+	    {
+	    	numtype = "Card";
+	    }
+	    
 	    if (lemma != null && lemma.contains("%passiv"))
 	    {
 	    	this.pos = pos + "_PASS";
+	    	voice = "Pass";
 	    }
 	    else if (lemma != null && (lemma.equals("lassen") || lemma.equals("bekommen")))
 	    {
@@ -133,7 +338,7 @@ public class DependencyNode implements Serializable
 	    else if (lemma != null && (lemma.startsWith("kein") || lemma.startsWith("Kein")) && pos.equals("ADV"))
 	    {
 	    	this.pos = "ADV_NEG";
-	    	polarity = "negative";
+	    	polarity = "Neg";
 	    }
 	    else if (lemma == null)
 	    {
@@ -142,6 +347,51 @@ public class DependencyNode implements Serializable
 	    this.lemma = lemma;
 	    String number[] = nodeData.get("xml:id").split("_");
 	    wordNumber = Integer.parseInt(number[1]);
+	}
+	
+	// For broken up Apprart
+	public void setArtMorphInfo(String morph)
+	{
+		definite = "Def";
+		pronType = "Art";
+		if (morph.substring(0, 1).equals("n"))
+		{
+			morphCase = "Nom";
+		}
+    	else if (morph.substring(0, 1).equals("a"))
+		{
+			morphCase = "Acc";
+		}
+    	else if (morph.substring(0, 1).equals("d"))
+		{
+			morphCase = "Dat";
+		}
+    	else if (morph.substring(0, 1).equals("g"))
+		{
+			morphCase = "Gen";
+		}
+		
+		if (morph.substring(1, 2).equals("s"))
+		{
+			number = "Sing";
+		}
+    	else if (morph.substring(1, 2).equals("p"))
+		{
+    		number = "Plur";
+		}
+		
+    	if (morph.substring(2, 3).equals("m"))
+		{
+			gender = "Masc";
+		}
+    	else if (morph.substring(2, 3).equals("n"))
+		{
+    		gender = "Fem";
+		}
+    	else if (morph.substring(2, 3).equals("f"))
+		{
+    		gender = "Neut";
+		}
 	}
 	
 	public void setWordNumber(int wordNumber) 

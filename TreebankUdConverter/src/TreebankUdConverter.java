@@ -1623,6 +1623,8 @@ public class TreebankUdConverter
 					nodeArt.getNodeData().put("form", art);
 					nodeArt.setPos("ART");
 					nodeArt.getNodeData().put("pos", "ART");
+					nodeArt.getNodeData().put("morph", currentNode.getNodeData().get("morph"));
+					nodeArt.setArtMorphInfo(currentNode.getNodeData().get("morph"));
 					
 					nodeArt.getHead().addDependent(nodeArt);
 					
@@ -1978,8 +1980,101 @@ public class TreebankUdConverter
 			String lemma = node.getLemma();
 			String upostag = node.getPos();
 			String xpostag = node.getNodeData().get("pos");
-			String feats = "_";
+			String feats = "";
 			String head = "0";
+			
+			if (!node.getMorphCase().equals(""))
+			{
+				feats = feats + "Case=" + node.getMorphCase();
+			}
+			if (!node.getDefinite().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Definite=" + node.getDefinite();
+			}
+			if (!node.getForeign().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Foreign=" + node.getForeign();
+			}
+			if (!node.getGender().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Gender=" + node.getGender();
+			}
+			if (!node.getMood().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Mood=" + node.getMood();
+			}
+			if (!node.getNumber().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Number=" + node.getNumber();
+			}
+			if (!node.getNumtype().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "NumType=" + node.getNumtype();
+			}
+			if (!node.getPerson().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Person=" + node.getPerson();
+			}
+			if (!node.getPolarity().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Polarity=" + node.getPolarity();
+			}
+			if (!node.getPolite().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Polite=" + node.getPolite();
+			}
+			if (!node.getPronType().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "PronType=" + node.getPronType();
+			}
+			if (!node.getReflex().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Reflex=" + node.getReflex();
+			}
+			if (!node.getTense().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Tense=" + node.getTense();
+			}
+			if (!node.getVerbForm().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "VerbForm=" + node.getVerbForm();
+			}
+			if (!node.getVoice().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Voice=" + node.getVoice();
+			}
+			
+			if (feats.isEmpty())
+				feats = "_";
+			
 			if (node.getHead() != null)
 			{
 				head = Integer.toString(node.getHead().getWordNumber());
