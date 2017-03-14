@@ -12,6 +12,7 @@ public class TreeWord implements Serializable
 	private String pos = "";
 	private String lemma = "";
 	private int wordNumber = 0;
+	private String topoField = "";
 	
 	public TreeWord(String wLine) 
 	{
@@ -109,5 +110,21 @@ public class TreeWord implements Serializable
 	public HashMap<String, String> getWordData()
 	{
 		return wordData;
+	}
+
+	public String getLemma() 
+	{
+		return lemma;
+	}
+
+	public String getTopoField() 
+	{
+		return topoField;
+	}
+
+	public void setTopoField(String topoField) 
+	{
+		this.topoField = topoField;
+		depNode.setTopoField(topoField);
 	}
 }

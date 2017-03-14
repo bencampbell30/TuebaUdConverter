@@ -58,6 +58,13 @@ public class TreebankUdConverter
 		
 		System.out.println("STAGE 1");
 		
+		for (int i=0; i<sentenceNodes.size(); i++)
+		{
+			addTopoFieldInfo(sentenceNodes.get(i), "");
+		}
+		
+		System.out.println("STAGE 2");
+		
 		sentenceIndex = 0;
 		
 		for (int i=0; i<sentenceNodes.size(); i++)
@@ -66,7 +73,7 @@ public class TreebankUdConverter
 			sentenceNodesFieldModified.add(fKoordModNode);
 		}
 		
-		System.out.println("STAGE 2");
+		System.out.println("STAGE 3");
 		
 		for (int i=0; i<sentenceNodesFieldModified.size(); i++)
 		{
@@ -74,7 +81,7 @@ public class TreebankUdConverter
 			sentenceNodesClipped.add(clippedNode);
 		}
 		
-		System.out.println("STAGE 3");
+		System.out.println("STAGE 4");
 		
 		for (int i=0; i<sentenceNodesClipped.size(); i++)
 		{
@@ -106,14 +113,14 @@ public class TreebankUdConverter
 			setKonj2Head(currentNode);
 		}
 		
-		System.out.println("STAGE 4");
+		System.out.println("STAGE 8");
 		
 		for (int i=0; i<sentenceNodesClipped.size(); i++)
 		{
 			sentenceNodesFunctionDetermined.add(functionDeterminer(sentenceNodesClipped.get(i)));
 		}
 		
-		System.out.println("STAGE 8");
+		System.out.println("STAGE 9");
 		
 		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
 		{
@@ -127,7 +134,7 @@ public class TreebankUdConverter
 			setMod(currentNode);
 		}
 		
-		System.out.println("STAGE 9");
+		System.out.println("STAGE 10");
 		
 		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
 		{
@@ -135,26 +142,18 @@ public class TreebankUdConverter
 			identifyCCompXComp(currentNode);
 		}
 		
-		System.out.println("STAGE 10");
+		System.out.println("STAGE 11");
 		
 		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
 		{
 			sentenceNodesTransformed.add(transformDependencies(sentenceNodesFunctionDetermined.get(i), true));
 		}
 		
-		System.out.println("STAGE 11");
+		System.out.println("STAGE 12");
 		
 		for (int i=0; i<sentenceNodesTransformed.size(); i++)
 		{
 			dependencySentences.add(extractDepStructure(sentenceNodesTransformed.get(i), true, null));
-		}
-		
-		System.out.println("STAGE 12");
-		
-		for (int i=0; i<dependencySentences.size(); i++)
-		{
-			DependencyNode currentNode = dependencySentences.get(i);
-			convertPos(currentNode);
 		}
 		
 		System.out.println("STAGE 13");
@@ -162,10 +161,18 @@ public class TreebankUdConverter
 		for (int i=0; i<dependencySentences.size(); i++)
 		{
 			DependencyNode currentNode = dependencySentences.get(i);
-			setHead(currentNode);
+			convertPos(currentNode);
 		}
 		
 		System.out.println("STAGE 14");
+		
+		for (int i=0; i<dependencySentences.size(); i++)
+		{
+			DependencyNode currentNode = dependencySentences.get(i);
+			setHead(currentNode);
+		}
+		
+		System.out.println("STAGE 15");
 		
 		ArrayList<HashMap<Integer, DependencyNode>> orderedSentences = new ArrayList<HashMap<Integer, DependencyNode>>();
 		for (int i=0; i<dependencySentences.size(); i++)
@@ -176,7 +183,7 @@ public class TreebankUdConverter
 			orderedSentences.add(currentSentence);
 		}
 		
-		System.out.println("STAGE 15");
+		System.out.println("STAGE 16");
 		
 		arrayOrderedSentences = new ArrayList<ArrayList<DependencyNode>>();
 		for (int i=0; i<orderedSentences.size(); i++)
@@ -191,7 +198,7 @@ public class TreebankUdConverter
 			arrayOrderedSentences.add(currentSentenceNew);
 		}
 		
-		System.out.println("STAGE 16");
+		System.out.println("STAGE 17");
 		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
 		{
@@ -199,7 +206,7 @@ public class TreebankUdConverter
 			breakUpApprArt(currentSentence);
 		}
 		
-		System.out.println("STAGE 17");
+		System.out.println("STAGE 18");
 		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
 		{
@@ -211,7 +218,7 @@ public class TreebankUdConverter
 			}
 		}
 		
-		System.out.println("STAGE 18");
+		System.out.println("STAGE 19");
 		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
 		{
@@ -234,7 +241,7 @@ public class TreebankUdConverter
 			}
 		}
 		
-		System.out.println("STAGE 19");
+		System.out.println("STAGE 20");
 		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
 		{
@@ -242,7 +249,7 @@ public class TreebankUdConverter
 			setPunctuationDependencies(currentSentence, currentSentence.get(0));
 		}
 		
-		System.out.println("STAGE 20");
+		System.out.println("STAGE 21");
 		
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
 		{
@@ -251,7 +258,7 @@ public class TreebankUdConverter
 			conllSentences.add(sentence);
 		}
 		
-		System.out.println("STAGE 21");
+		System.out.println("STAGE 22");
 		
 		String directory = "/Users/bcmpbell/Documents";
 		printSentences(directory, start);
@@ -283,6 +290,35 @@ public class TreebankUdConverter
 			}
 		}
 		return current;
+	}
+	
+	//Add topo field information to word nodes
+	private static void addTopoFieldInfo(TreeNode node, String currentFieldChain)
+	{
+		ArrayList<TreeNode> subNodes = node.getSubNodes();
+		ArrayList<TreeWord> words = node.getWords();
+		
+		for (int i=0; i<words.size(); i++)
+		{
+			TreeWord currentWord = words.get(i);
+			currentWord.setTopoField(currentFieldChain);
+		}
+		for (int i=0; i<subNodes.size(); i++)
+		{
+			TreeNode currentSubNode = subNodes.get(i);
+			String nodeName = currentSubNode.getCategory();
+			String fieldChain = currentFieldChain;
+			
+			if ((nodeName.equals("VF") || nodeName.equals("LK") || nodeName.equals("MF") || nodeName.equals("MFE") || nodeName.equals("VC") || nodeName.equals("VCE") || nodeName.equals("NF")
+					 || nodeName.equals("LV") || nodeName.equals("C") || nodeName.equals("KOORD") || nodeName.equals("FKOORD") || nodeName.equals("PARORD") || nodeName.equals("FKONJ")))
+			{
+				if (!fieldChain.isEmpty())
+					fieldChain = fieldChain + "-" + nodeName;
+				else
+					fieldChain = nodeName;
+			}
+			addTopoFieldInfo(currentSubNode, fieldChain);
+		}
 	}
 	
 	/*
@@ -1625,6 +1661,7 @@ public class TreebankUdConverter
 					nodeArt.getNodeData().put("pos", "ART");
 					nodeArt.getNodeData().put("morph", currentNode.getNodeData().get("morph"));
 					nodeArt.setArtMorphInfo(currentNode.getNodeData().get("morph"));
+					nodeArt.setTopoField(currentNode.getTopoField());
 					
 					nodeArt.getHead().addDependent(nodeArt);
 					
@@ -1982,6 +2019,7 @@ public class TreebankUdConverter
 			String xpostag = node.getNodeData().get("pos");
 			String feats = "";
 			String head = "0";
+			String topoField = node.getTopoField();
 			
 			if (!node.getMorphCase().equals(""))
 			{
@@ -2102,17 +2140,17 @@ public class TreebankUdConverter
 			String deps = "_";
 			String misc = "_";
 			
-			if (upostag != null && upostag.equals("PUNCT"))
+			if (upostag != null)
 			{
-				misc = "SpaceAfter=Yes";
-				/*if (!(form.equals("\"") || form.equals("'")))
+				if(upostag.equals("PUNCT"))
 				{
 					misc = "SpaceAfter=Yes";
 				}
 				else
 				{
-					misc = "SpaceAfter=No";
-				}*/
+					if (!topoField.isEmpty())
+						misc = "TopoField=" + topoField;
+				}
 			}
 				
 			columns.add(wordIndex);

@@ -35,6 +35,7 @@ public class DependencyNode implements Serializable
 	String reflex = "";
 	String voice = "";
 	String numtype = "";
+	String topoField = "";
 	TreeWord word;
 
 	public DependencyNode(String wLine, DependencyNode wHead, String wRel, TreeWord word) 
@@ -501,5 +502,13 @@ public class DependencyNode implements Serializable
 
 	public String getNumtype() {
 		return numtype;
+	}
+
+	public String getTopoField() {
+		return topoField;
+	}
+
+	public void setTopoField(String topoField) {
+		this.topoField = topoField;
 	}
 }
