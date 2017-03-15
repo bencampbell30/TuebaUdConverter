@@ -29,7 +29,7 @@ public class PosConverter
 		posMap.put("APPRART", "ADP");
 		posMap.put("APPO", "ADP");
 		posMap.put("APZR", "ADP");
-		posMap.put("ART", "ART");
+		posMap.put("ART", "DET");
 		posMap.put("CARD", "NUM");
 		posMap.put("FM", "X");
 		posMap.put("ITJ", "INTJ");

@@ -7,16 +7,16 @@ KONJ,KONJ,...:HD,conj,... --> First KONJ becomes head
 ON,[(HD,OV,VC-HD),,V*PASSIV]:nsubj:pass,[(HD,OV,VC-HD),,V*PASSIV]
 
 *Automatically handled compound transformations*
-[HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),OV:auxpass,xcomp,HD
-[HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),VC-HD:auxpass,xcomp,HD
-[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[OV,,VMAIN]:auxpass,xcomp,HD
-[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[VC-HD,,VMAIN]:auxpass,xcomp,HD
-[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[OV,,VMAIN]:auxpass,xcomp,HD
-[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[VC-HD,,VMAIN]:auxpass,xcomp,HD
-HD,(PRED,PREDWITHKOKOM),[OV,,(V*PASSIV,PTKZU_PASS)],OV:aux,xcomp,HD,auxpass
-HD,(PRED,PREDWITHKOKOM),OV,[VC-HD,,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,auxpass
-[HD,,(V*PASSIV,PTKZU-PASS)],OV:auxpass,HD
-[HD,,(V*PASSIV,PTKZU-PASS)],VC-HD:auxpass,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),OV:aux:pass,xcomp,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],(PRED,PREDWITHKOKOM),VC-HD:aux:pass,xcomp,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[OV,,VMAIN]:aux:pass,xcomp,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,VMAIN],[VC-HD,,VMAIN]:aux:pass,xcomp,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[OV,,VMAIN]:aux:pass,xcomp,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],[OV,,(PTKZU,VVIZU)],[VC-HD,,VMAIN]:aux:pass,xcomp,HD
+HD,(PRED,PREDWITHKOKOM),[OV,,(V*PASSIV,PTKZU_PASS)],OV:aux,xcomp,HD,aux:pass
+HD,(PRED,PREDWITHKOKOM),OV,[VC-HD,,(V*PASSIV,PTKZU_PASS)]:aux,xcomp,HD,aux:pass
+[HD,,(V*PASSIV,PTKZU-PASS)],OV:aux:pass,HD
+[HD,,(V*PASSIV,PTKZU-PASS)],VC-HD:aux:pass,HD
 HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER],OV:aux,xcomp,expl,HD
 HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER],VC-HD:aux,xcomp,expl,HD
 HD,(PRED,PREDWITHKOKOM),[OS-MOD,,PPER]:HD,xcomp,expl
@@ -42,8 +42,8 @@ HD,[OV,,(PTKZU,VVIZU)],[VC-HD,,VMAIN]:aux,xcomp,HD
 HD,[OV,,(LASSEN,PTKZU_LASS)],OV:aux,xcomp,HD
 HD,[VC-HD,,(LASSEN,PTKZU_LASS)],OV:aux,xcomp,HD
 [HD,,(LASSEN,PTKZU_LASS)],OV:HD,xcomp
-[HD,,(V*PASSIV,PTKZU_PASS)],OV:auxpass,HD
-[HD,,(V*PASSIV,PTKZU_PASS)],VC-HD:auxpass,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],OV:aux:pass,HD
+[HD,,(V*PASSIV,PTKZU_PASS)],VC-HD:aux:pass,HD
 HD,[OV,,(PTKZU,VVIZU)]:HD,xcomp
 HD,OV:aux,HD
 HD,VC-HD:aux,HD
@@ -64,7 +64,6 @@ HD,VC-HD:aux,HD
 ** - KOKOM where a preposition is already present - cc?
 ** - not appos if first element
 ** - reduce incorrect "cop" verbs
-** - dative/genitive NPs are "obj" if no accusative "NP"
 
 ** = nice to have
 
@@ -80,13 +79,13 @@ ON:subj
 OA:obj
 OD:iobj
 OG:iobj
-[OV,,(V*PASSIV,PTKZU_PASS)]:auxpass
+[OV,,(V*PASSIV,PTKZU_PASS)]:aux:pass
 [OV,,(LASSEN,PTKZU_LASS)]:xcomp
 [OV,,(PTKZU,VVIZU)]:xcomp
 OV:aux
 [,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)]:aux
 GEN:nmod:poss
-[VC-HD,,(V*PASSIV,PTKZU_PASS)]:auxpass
+[VC-HD,,(V*PASSIV,PTKZU_PASS)]:aux:pass
 [VC-HD,,(LASSEN,PTKZU_LASS)]:xcomp
 [VC-HD,,(PTKZU,VVIZU)]:xcomp
 [VC-HD,,VMAIN]:xcomp
