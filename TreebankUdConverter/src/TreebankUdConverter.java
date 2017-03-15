@@ -172,6 +172,14 @@ public class TreebankUdConverter
 			setHead(currentNode);
 		}
 		
+		System.out.println("STAGE 14.5");
+		
+		for (int i=0; i<dependencySentences.size(); i++)
+		{
+			DependencyNode currentNode = dependencySentences.get(i);
+			setObjects(currentNode);
+		}
+		
 		System.out.println("STAGE 15");
 		
 		ArrayList<HashMap<Integer, DependencyNode>> orderedSentences = new ArrayList<HashMap<Integer, DependencyNode>>();
@@ -1578,6 +1586,75 @@ public class TreebankUdConverter
 			subNodes.get(i).setHead(converted);
 			setHead(subNodes.get(i));
 		}
+		return converted;
+	}
+	
+	// Check for sentences that have indirect objects but no direct objects and change the "iobj" dependency to "obj"
+	private static DependencyNode setObjects(DependencyNode node)
+	{
+		DependencyNode converted = node;
+		ArrayList<DependencyNode> subNodes = converted.getSubNodes();
+		ArrayList<String> deps = new ArrayList<String>();
+		boolean foundObj = false;
+		boolean foundDObj = false;
+		boolean foundGObj = false;
+		boolean foundCop = false;
+		boolean foundAuxpass = false;
+		
+		DependencyNode obj = null;
+		DependencyNode gobj = null;
+		
+		for (int i=0; i<subNodes.size(); i++)
+		{
+			String currentRel = subNodes.get(i).getRel();
+			deps.add(subNodes.get(i).getRel());
+			if (currentRel.equals("obj"))
+			{
+				foundObj = true;
+				break;
+			}
+			/*else if (currentRel.equals("cop"))
+			{
+				foundCop = true;
+				break;
+			}
+			else if (currentRel.equals("aux:pass"))
+			{
+				foundAuxpass = true;
+				break;
+			}*/
+			else if (currentRel.equals("iobj"))
+			{
+				if (subNodes.get(i).getMorphCase().equals("Dat") && !foundDObj)
+				{
+					foundDObj = true;
+					obj = subNodes.get(i);
+				}
+				else if (subNodes.get(i).getMorphCase().equals("Gen") && !foundGObj)
+				{
+					foundGObj = true;
+					gobj = subNodes.get(i);
+				}
+			}
+		}
+		
+		if (!(foundObj)) //|| foundCop || foundAuxpass))
+		{
+			if (foundDObj)
+			{
+				obj.setRel("obj");
+			}
+			else if (foundGObj)
+			{
+				gobj.setRel("obj");
+			}
+		}
+		
+		for (int i=0; i<subNodes.size(); i++)
+		{
+			setObjects(subNodes.get(i));
+		}
+		
 		return converted;
 	}
 	

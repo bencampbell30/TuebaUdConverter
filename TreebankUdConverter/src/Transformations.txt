@@ -64,9 +64,7 @@ HD,VC-HD:aux,HD
 ** - KOKOM where a preposition is already present - cc?
 ** - not appos if first element
 ** - reduce incorrect "cop" verbs
-** - features?
-* - dative/genitive NPs are "obj" if no accusative "NP"
-* - include morphological feature info
+** - dative/genitive NPs are "obj" if no accusative "NP"
 
 ** = nice to have
 
@@ -146,7 +144,6 @@ APP,...:HD,(appos,...)
 [,,N*]:appos
 [,NX,]:appos
 
-25,72 - Should "als" phrases be "obl" or remain "nmod"?
 1194 - limitation with FKONJ
 2723 - "Aber" - dependency for cc when first word of sentence
 2897 - Weird annotation in source
