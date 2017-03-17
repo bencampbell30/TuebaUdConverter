@@ -123,6 +123,8 @@ public class DependencyNode implements Serializable
 	    String lemma = nodeData.get("lemma");
 	    String pos = nodeData.get("pos");
 	    String morph = nodeData.get("morph");
+	    String form = nodeData.get("form");
+	    
 	    this.pos = pos;
 	    
 	    if (morph != null)
@@ -345,7 +347,33 @@ public class DependencyNode implements Serializable
 	    {
 	    	lemma = nodeData.get("form");
 	    }
-	    this.lemma = lemma;
+	    
+	    if (lemma.equals("#refl"))
+	    {
+	    	if (form.equals("mich") || form.equals("mir"))
+	    	{
+	    		lemma = "ich";
+	    	}
+	    	else if (form.equals("dich") || form.equals("dir"))
+	    	{
+	    		lemma = "du";
+	    	}
+	    	else if (form.equals("uns"))
+	    	{
+	    		lemma = "wir";
+	    	}
+	    	else if (form.equals("euch"))
+	    	{
+	    		lemma = "ihr";
+	    	}
+	    	else if (form.equals("sich"))
+	    	{
+	    		lemma = "er|es|sie";
+	    	}
+	    	
+	    	this.lemma = lemma;
+	    }
+	    
 	    String number[] = nodeData.get("xml:id").split("_");
 	    wordNumber = Integer.parseInt(number[1]);
 	}

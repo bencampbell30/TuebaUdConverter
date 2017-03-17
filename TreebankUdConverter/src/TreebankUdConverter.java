@@ -28,9 +28,9 @@ public class TreebankUdConverter
 	
 	public static void main(String[] args) 
 	{
-		for (int i=0; i<10; i++)
+		for (int i=0; i<20; i++)
 		{
-			chunkedProcess(i*10000+1, (i+1)*10000);
+			chunkedProcess(i*5000+1, (i+1)*5000);
 		}
 		//chunkedProcess(1, 1000);
 	}
@@ -1734,7 +1734,7 @@ public class TreebankUdConverter
 					nodeArt.getNodeData().put("lemma", artLemma);
 					nodeArt.setLemma(artLemma);
 					nodeArt.getNodeData().put("form", art);
-					nodeArt.setPos("ART");
+					nodeArt.setPos("DET");
 					nodeArt.getNodeData().put("pos", "ART");
 					nodeArt.getNodeData().put("morph", currentNode.getNodeData().get("morph"));
 					nodeArt.setArtMorphInfo(currentNode.getNodeData().get("morph"));
@@ -2084,6 +2084,7 @@ public class TreebankUdConverter
 		ArrayList<ArrayList<String>> lines = new ArrayList<ArrayList<String>>();
 		boolean foundFirstRoot = false;
 		String firstRootNum = "";
+		boolean openDoubleQuote = false;
 		
 		for (int i=0; i<sentence.size(); i++)
 		{
@@ -2097,6 +2098,29 @@ public class TreebankUdConverter
 			String feats = "";
 			String head = "0";
 			String topoField = node.getTopoField();
+			
+			String nextPosTag = "";
+			String nextForm = "";
+			boolean spaceAfter = true;
+			
+			if ((form != null) && !openDoubleQuote && form.equals("\""))
+				openDoubleQuote = true;
+			else if ((form != null) && openDoubleQuote && form.equals("\""))
+				openDoubleQuote = false;
+			
+			if (i+1 < sentence.size())
+			{
+				nextPosTag = sentence.get(i+1).getPos();
+				nextForm = sentence.get(i+1).getNodeData().get("form");
+				
+				if ((nextPosTag != null && form != null) && 
+						(((nextPosTag.equals("PUNCT")) && (!nextForm.equals("(")) && (!nextForm.equals("[")) && (!(!openDoubleQuote && nextForm.equals("\"")))) ||
+						((form.equals("\"") || nextForm.equals("\"")) && openDoubleQuote) ||
+						(form.equals("/") || nextForm.equals("/")) ||
+						(form.equals("(") || nextForm.equals(")")) ||
+						(form.equals("[") || nextForm.equals("]"))))
+					spaceAfter = false;
+			}
 			
 			if (!node.getMorphCase().equals(""))
 			{
@@ -2155,6 +2179,12 @@ public class TreebankUdConverter
 				if (!feats.isEmpty())
 					feats = feats + "|";
 				feats = feats + "Polite=" + node.getPolite();
+			}
+			if (!node.getPoss().equals(""))
+			{
+				if (!feats.isEmpty())
+					feats = feats + "|";
+				feats = feats + "Poss=" + node.getPoss();
 			}
 			if (!node.getPronType().equals(""))
 			{
@@ -2219,15 +2249,15 @@ public class TreebankUdConverter
 			
 			if (upostag != null)
 			{
-				if(upostag.equals("PUNCT"))
-				{
-					misc = "SpaceAfter=Yes";
-				}
+				if (!topoField.isEmpty())
+					misc = "TopoField=" + topoField;
+			}
+			if (!spaceAfter)
+			{
+				if (topoField.isEmpty())
+					misc = "SpaceAfter=No";
 				else
-				{
-					if (!topoField.isEmpty())
-						misc = "TopoField=" + topoField;
-				}
+					misc = "SpaceAfter=No|" + misc;
 			}
 				
 			columns.add(wordIndex);
@@ -2279,7 +2309,7 @@ public class TreebankUdConverter
 		    		}
 		    		writer.write(word);
 		    		
-		    		if (!currentWord.get(9).equals("SpaceAfter=No"))
+		    		if (!currentWord.get(9).contains("SpaceAfter=No"))
 		    		{
 		    			writer.write(" ");
 		    		}
@@ -2288,6 +2318,13 @@ public class TreebankUdConverter
 		    	for (int j=1; j<currentSentence.size(); j++)
 		    	{
 		    		ArrayList<String> currentWord = currentSentence.get(j);
+		    		DependencyNode currentNode = currentNodeSentence.get(j);
+		    		if (currentNode.isApprArt())
+		    		{
+		    			String apprArtLine = currentNode.getWordNumber() + "-" + (currentNode.getWordNumber()+1) + "\t" + currentNode.getApprArtForm() + "\t_\t_\t_\t_\t_\t_\t_\t_";
+		    			writer.write(apprArtLine);
+		    			writer.write("\n");
+		    		}
 		    		for (int k=0; k<currentWord.size(); k++)
 			    	{
 			    		String currentFeature = currentWord.get(k);
