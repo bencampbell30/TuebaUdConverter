@@ -370,9 +370,9 @@ public class DependencyNode implements Serializable
 	    	{
 	    		lemma = "er|es|sie";
 	    	}
-	    	
-	    	this.lemma = lemma;
 	    }
+	    
+	    this.lemma = lemma;
 	    
 	    String number[] = nodeData.get("xml:id").split("_");
 	    wordNumber = Integer.parseInt(number[1]);

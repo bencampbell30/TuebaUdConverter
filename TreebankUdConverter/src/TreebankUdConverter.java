@@ -1598,8 +1598,6 @@ public class TreebankUdConverter
 		boolean foundObj = false;
 		boolean foundDObj = false;
 		boolean foundGObj = false;
-		boolean foundCop = false;
-		boolean foundAuxpass = false;
 		
 		DependencyNode obj = null;
 		DependencyNode gobj = null;
@@ -1613,16 +1611,6 @@ public class TreebankUdConverter
 				foundObj = true;
 				break;
 			}
-			/*else if (currentRel.equals("cop"))
-			{
-				foundCop = true;
-				break;
-			}
-			else if (currentRel.equals("aux:pass"))
-			{
-				foundAuxpass = true;
-				break;
-			}*/
 			else if (currentRel.equals("iobj"))
 			{
 				if (subNodes.get(i).getMorphCase().equals("Dat") && !foundDObj)
@@ -1638,7 +1626,7 @@ public class TreebankUdConverter
 			}
 		}
 		
-		if (!(foundObj)) //|| foundCop || foundAuxpass))
+		if (!foundObj)
 		{
 			if (foundDObj)
 			{
