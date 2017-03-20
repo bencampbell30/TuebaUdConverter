@@ -94,7 +94,13 @@ public class TreebankUdConverter
 		for (int i=0; i<sentenceNodesClipped.size(); i++)
 		{
 			TreeNode currentNode = sentenceNodesClipped.get(i);
-			transformFKONJ(currentNode);
+			boolean match = true;
+			
+			while (match)
+			{
+				match = transformFKONJ(currentNode);
+				removeKonj1(currentNode);
+			}
 		}
 		
 		System.out.println("STAGE 6");
@@ -102,25 +108,17 @@ public class TreebankUdConverter
 		for (int i=0; i<sentenceNodesClipped.size(); i++)
 		{
 			TreeNode currentNode = sentenceNodesClipped.get(i);
-			removeKonj1(currentNode);
+			setKonj2Head(currentNode);
 		}
 		
 		System.out.println("STAGE 7");
 		
 		for (int i=0; i<sentenceNodesClipped.size(); i++)
 		{
-			TreeNode currentNode = sentenceNodesClipped.get(i);
-			setKonj2Head(currentNode);
-		}
-		
-		System.out.println("STAGE 8");
-		
-		for (int i=0; i<sentenceNodesClipped.size(); i++)
-		{
 			sentenceNodesFunctionDetermined.add(functionDeterminer(sentenceNodesClipped.get(i)));
 		}
 		
-		System.out.println("STAGE 9");
+		System.out.println("STAGE 8");
 		
 		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
 		{
@@ -134,7 +132,7 @@ public class TreebankUdConverter
 			setMod(currentNode);
 		}
 		
-		System.out.println("STAGE 10");
+		System.out.println("STAGE 9");
 		
 		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
 		{
@@ -142,21 +140,21 @@ public class TreebankUdConverter
 			identifyCCompXComp(currentNode);
 		}
 		
-		System.out.println("STAGE 11");
+		System.out.println("STAGE 10");
 		
 		for (int i=0; i<sentenceNodesFunctionDetermined.size(); i++)
 		{
 			sentenceNodesTransformed.add(transformDependencies(sentenceNodesFunctionDetermined.get(i), true));
 		}
 		
-		System.out.println("STAGE 12");
+		System.out.println("STAGE 11");
 		
 		for (int i=0; i<sentenceNodesTransformed.size(); i++)
 		{
 			dependencySentences.add(extractDepStructure(sentenceNodesTransformed.get(i), true, null));
 		}
 		
-		System.out.println("STAGE 13");
+		System.out.println("STAGE 12");
 		
 		for (int i=0; i<dependencySentences.size(); i++)
 		{
@@ -164,7 +162,7 @@ public class TreebankUdConverter
 			convertPos(currentNode);
 		}
 		
-		System.out.println("STAGE 14");
+		System.out.println("STAGE 13");
 		
 		for (int i=0; i<dependencySentences.size(); i++)
 		{
@@ -172,7 +170,7 @@ public class TreebankUdConverter
 			setHead(currentNode);
 		}
 		
-		System.out.println("STAGE 14.5");
+		System.out.println("STAGE 14");
 		
 		for (int i=0; i<dependencySentences.size(); i++)
 		{
@@ -393,7 +391,7 @@ public class TreebankUdConverter
 				String nodeFunction = nodeData.get("func");
 				if ((nodeName.equals("VF") || nodeName.equals("LK") || nodeName.equals("MF") || nodeName.equals("MFE") || nodeName.equals("VC") || nodeName.equals("VCE") || nodeName.equals("NF")
 						 || nodeName.equals("LV") || nodeName.equals("C") || nodeName.equals("KOORD") || nodeName.equals("FKOORD") || nodeName.equals("PARORD") || 
-						 (nodeName.equals("FKONJ") && nodeFunction.equals("-"))) && !(nodeFunction.equals("KONJ")))
+						 (nodeName.equals("FKONJ") && nodeFunction.equals("-"))) && !(nodeFunction.equals("KONJ") || nodeFunction.equals("KONJ1") || nodeFunction.equals("KONJ2")))
 				{
 					hasExtrNodes = true;
 					ArrayList<TreeNode> subSubNodes = current.getSubNodes();
@@ -642,7 +640,7 @@ public class TreebankUdConverter
 	}
 	
 	// Deal with structures where there is a HD and KONJ at the same level
-	private static TreeNode transformFKONJ(TreeNode node)
+	private static boolean transformFKONJ(TreeNode node)
 	{
 		//Check structure
 		TreeNode transformed = node;
@@ -651,6 +649,7 @@ public class TreebankUdConverter
 		boolean hdFound = false;
 		boolean konj1 = false;
 		boolean konj2 = false;
+		boolean match = false;
 		
 		for (int i=0; i<subNodes.size(); i++)
 		{
@@ -677,7 +676,7 @@ public class TreebankUdConverter
 			}
 		}
 		
-		boolean match = konj1 && konj2 && hdFound;
+		match = konj1 && konj2 && hdFound;
 		konj1 = false;
 		
 		if (match)
@@ -702,10 +701,10 @@ public class TreebankUdConverter
 		
 		for (int i=0; i<subNodes.size(); i++)
 		{
-			transformFKONJ(subNodes.get(i));
+			match = match || transformFKONJ(subNodes.get(i));
 		}
 		
-		return node;
+		return match;
 	}
 	
 	private static TreeNode removeKonj1 (TreeNode node)
@@ -751,7 +750,7 @@ public class TreebankUdConverter
 		return konj1clipped;
 	}
 	
-	// Set a HD node for KONJ2 subnodes if not available
+	// Set a HD node for KONJ2 and KONJ subnodes if not available
 	private static TreeNode setKonj2Head (TreeNode node)
 	{
 		TreeNode headSet = node;
@@ -761,7 +760,7 @@ public class TreebankUdConverter
 		{
 			TreeNode current = subNodes.get(i);
 			String nodeFunction = current.getDependency();
-			if (nodeFunction.equals("KONJ2"))
+			if (nodeFunction.equals("KONJ2") || nodeFunction.equals("KONJ"))
 			{
 				boolean hasHD = false;
 				ArrayList<TreeNode> subSubNodes = current.getSubNodes();
@@ -810,17 +809,17 @@ public class TreebankUdConverter
 						}
 						if (!foundPred)
 						{
-							boolean foundKonj = false;
+							boolean foundKonjOrApp = false;
 							for (int j=0; j<subSubNodes.size(); j++)
 							{
 								TreeNode currentSubSub = subSubNodes.get(j);
-								if (currentSubSub.getDependency().equals("KONJ"))
+								if (currentSubSub.getDependency().equals("KONJ") || currentSubSub.getDependency().equals("APP"))
 								{
-									foundKonj = true;
+									foundKonjOrApp = true;
 									break;
 								}
 							}
-							if (!foundKonj && !subSubNodes.isEmpty())
+							if (!foundKonjOrApp && !subSubNodes.isEmpty() && nodeFunction.equals("KONJ2"))
 							{
 								subSubNodes.get(subSubNodes.size()-1).setDependency("HD");
 							}
@@ -835,6 +834,31 @@ public class TreebankUdConverter
 		}
 		return headSet;
 	}
+	
+	/*
+	 * ArrayList<TreeNode> subSubNodes = currentSubNode.getSubNodes();
+				TreeNode conjHd = null;
+				boolean foundHD = false;
+				boolean moreThanOne = false;
+				
+				for (int j=0; j<subSubNodes.size(); j++)
+				{
+					TreeNode currentSubSubNode = subSubNodes.get(j);
+					if (currentSubSubNode.getDependency().equals("KONJ"))
+					{
+						if (conjHd != null)
+							moreThanOne = true;
+						else
+							conjHd = currentSubSubNode;
+					}
+					else if (currentSubSubNode.getDependency().equals("HD"))
+					{
+						foundHD = true;
+					}
+				}
+				if (!foundHD && !moreThanOne && conjHd != null)
+					conjHd.setDependency("HD");
+	 */
 	
 	// Add ONK as child of ON, OAK as child of OA, etc...
 	private static TreeNode setConjunct(TreeNode node)
