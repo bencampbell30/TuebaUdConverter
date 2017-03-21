@@ -32,7 +32,7 @@ public class TreebankUdConverter
 		{
 			chunkedProcess(i*5000+1, (i+1)*5000);
 		}
-		//chunkedProcess(1, 1000);
+		//chunkedProcess(85717, 85717);
 	}
 	
 	private static void chunkedProcess (int start, int end)
@@ -834,31 +834,6 @@ public class TreebankUdConverter
 		}
 		return headSet;
 	}
-	
-	/*
-	 * ArrayList<TreeNode> subSubNodes = currentSubNode.getSubNodes();
-				TreeNode conjHd = null;
-				boolean foundHD = false;
-				boolean moreThanOne = false;
-				
-				for (int j=0; j<subSubNodes.size(); j++)
-				{
-					TreeNode currentSubSubNode = subSubNodes.get(j);
-					if (currentSubSubNode.getDependency().equals("KONJ"))
-					{
-						if (conjHd != null)
-							moreThanOne = true;
-						else
-							conjHd = currentSubSubNode;
-					}
-					else if (currentSubSubNode.getDependency().equals("HD"))
-					{
-						foundHD = true;
-					}
-				}
-				if (!foundHD && !moreThanOne && conjHd != null)
-					conjHd.setDependency("HD");
-	 */
 	
 	// Add ONK as child of ON, OAK as child of OA, etc...
 	private static TreeNode setConjunct(TreeNode node)

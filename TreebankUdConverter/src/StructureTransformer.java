@@ -57,6 +57,22 @@ public class StructureTransformer
 			}
 		}
 		
+		//HD,KONJ,...:HD,conj,... --> First KONJ becomes head
+		//*****************************************************
+		currentTemplate = instance.getHDKONJ_hdconj();
+		testEquivalence = checkStructureEquivalence(deps, currentTemplate);
+		
+		if (testEquivalence)
+		{
+			for (int i=0; i<deps.size(); i++)
+			{
+				if (isMatch(deps.get(i), currentTemplate.get(1)) && newDependencies.get(i).equals("REPLACEME"))
+				{
+					newDependencies.set(i, "conj");
+				}
+			}
+		}
+		
 		//[PRED,,N*],[PRED-MOD,SIMPX,]:[PRED,,N*],acl - 261
 		//*************************************************
 		currentTemplate = instance.getPREDPREDMOD_PREDacl();

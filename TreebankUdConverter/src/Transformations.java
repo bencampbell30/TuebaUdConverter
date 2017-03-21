@@ -5,7 +5,7 @@ public class Transformations
 	private static Transformations instance = null;
 	
 	//These relations need to be specifically handled in the code, ie. not automatically
-	private ArrayList<RelationTemplate> HDKONJKONJ_hdc1c2;
+	private ArrayList<RelationTemplate> HDKONJ_hdconj;
 	private ArrayList<RelationTemplate> KONJKONJ_hdconj;
 	private ArrayList<RelationTemplate> PREDPREDMOD_PREDacl;
 	private ArrayList<RelationTemplate> ONSIMPXVPASS_csubjpassVPASS;
@@ -698,10 +698,9 @@ public class Transformations
 		//Specifically handled templates
 		
 		//HD,KONJ,KONJ,...:HD,c1,c2,... ***
-		HDKONJKONJ_hdc1c2 = new ArrayList<RelationTemplate>();
-		HDKONJKONJ_hdc1c2.add(templateHD);
-		HDKONJKONJ_hdc1c2.add(templateKONJ);
-		HDKONJKONJ_hdc1c2.add(templateKONJ);
+		HDKONJ_hdconj = new ArrayList<RelationTemplate>();
+		HDKONJ_hdconj.add(templateHD);
+		HDKONJ_hdconj.add(templateKONJ);
 		
 		// KONJ,KONJ,...:HD,conj,... --> First KONJ becomes head
 		KONJKONJ_hdconj = new ArrayList<RelationTemplate>();
@@ -2177,9 +2176,9 @@ public class Transformations
 		return FMFM_HDforeign;
 	}
 
-	public ArrayList<RelationTemplate> getHDKONJKONJ_hdc1c2()
+	public ArrayList<RelationTemplate> getHDKONJ_hdconj()
 	{
-		return HDKONJKONJ_hdc1c2;
+		return HDKONJ_hdconj;
 	}
 
 	public ArrayList<RelationTemplate> getFM_foreign() 
