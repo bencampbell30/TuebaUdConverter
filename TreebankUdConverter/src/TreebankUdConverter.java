@@ -14,7 +14,8 @@ public class TreebankUdConverter
 {
 	private static ArrayList<DependencyNode> dependencySentences;
 	private static ArrayList<ArrayList<String>> treebankLines;
-	private static String path = "/Users/bcmpbell/Documents/tuebadz-10.0-exportXML-v2.xml";
+	private static String path = "";
+	private static String outPath = "";
 	private static ArrayList<TreeNode> sentenceNodes;
 	private static ArrayList<TreeNode> sentenceNodesFieldModified;
 	private static ArrayList<TreeNode> sentenceNodesClipped;
@@ -30,9 +31,11 @@ public class TreebankUdConverter
 	{
 		for (int i=0; i<20; i++)
 		{
+			path = args[0];
+			outPath = args[1];
 			chunkedProcess(i*5000+1, (i+1)*5000);
 		}
-		//chunkedProcess(85717, 85717);
+		//chunkedProcess(1, 1000);
 	}
 	
 	private static void chunkedProcess (int start, int end)
@@ -266,8 +269,7 @@ public class TreebankUdConverter
 		
 		System.out.println("STAGE 22");
 		
-		String directory = "/Users/bcmpbell/Documents";
-		printSentences(directory, start);
+		printSentences(outPath, start);
 		
 		System.out.println("Finished");
 	}
@@ -2266,7 +2268,7 @@ public class TreebankUdConverter
 	
 	private static void printSentences(String directory, int start)
 	{
-		String fileName = directory + "/convertedSentences.txt";
+		String fileName = directory + "convertedSentences.txt";
 		
 		BufferedWriter writer = null;
 		try
