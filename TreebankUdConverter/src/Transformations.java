@@ -544,9 +544,6 @@ public class Transformations
 		// [OV,,VVPP]
 		RelationTemplate templateOvVvpp = new RelationTemplate(arrayListOvFun, null, arrayListVerbVVPPPos, true,
 				false, true);
-		// [VC-HD,,VVPP]
-		RelationTemplate templateVcHdVvpp = new RelationTemplate(arrayListOvFun, null, arrayListVerbVVPPPos, true,
-				false, true);
 		// [VC-HD,,VMAIN]
 		RelationTemplate templateVcHdMain = new RelationTemplate(arrayListVcHdFun, null, arrayListVerbMainPos, true,
 				false, true);
@@ -558,8 +555,6 @@ public class Transformations
 				false, true);
 		// OA
 		RelationTemplate templateOA = new RelationTemplate(arrayListOaFun, null, null, true, false, false);
-		// (OA,OS,OSC)
-		RelationTemplate templateObject = new RelationTemplate(arrayListObjFun, null, null, true, false, false);
 		// (OS,OSC)
 		RelationTemplate templateClausalObject = new RelationTemplate(arrayListClausalObjectFun, null, null, true, false, false);
 		// OD
