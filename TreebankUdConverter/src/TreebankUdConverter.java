@@ -29,13 +29,13 @@ public class TreebankUdConverter
 	
 	public static void main(String[] args) 
 	{
+		path = args[0];
+		outPath = args[1];
 		for (int i=0; i<20; i++)
 		{
-			path = args[0];
-			outPath = args[1];
 			chunkedProcess(i*5000+1, (i+1)*5000);
 		}
-		//chunkedProcess(1, 1000);
+		//chunkedProcess(17298, 17298);
 	}
 	
 	private static void chunkedProcess (int start, int end)
