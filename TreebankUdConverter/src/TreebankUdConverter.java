@@ -35,7 +35,7 @@ public class TreebankUdConverter
 		{
 			chunkedProcess(i*5000+1, (i+1)*5000);
 		}
-		//chunkedProcess(17298, 17298);
+		//chunkedProcess(1, 1000);
 	}
 	
 	private static void chunkedProcess (int start, int end)
@@ -111,7 +111,7 @@ public class TreebankUdConverter
 		for (int i=0; i<sentenceNodesClipped.size(); i++)
 		{
 			TreeNode currentNode = sentenceNodesClipped.get(i);
-			setKonj2Head(currentNode);
+			setHeadHeuristic(currentNode);
 		}
 		
 		System.out.println("STAGE 7");
@@ -752,8 +752,8 @@ public class TreebankUdConverter
 		return konj1clipped;
 	}
 	
-	// Set a HD node for KONJ2 and KONJ subnodes if not available
-	private static TreeNode setKonj2Head (TreeNode node)
+	// Set a HD node for subnodes if not available
+	private static TreeNode setHeadHeuristic (TreeNode node)
 	{
 		TreeNode headSet = node;
 		ArrayList<TreeNode> subNodes = headSet.getSubNodes();
@@ -762,69 +762,66 @@ public class TreebankUdConverter
 		{
 			TreeNode current = subNodes.get(i);
 			String nodeFunction = current.getDependency();
-			if (nodeFunction.equals("KONJ2") || nodeFunction.equals("KONJ"))
+			boolean hasHD = false;
+			ArrayList<TreeNode> subSubNodes = current.getSubNodes();
+			ArrayList<TreeWord> subSubWords = current.getWords();
+			for (int j=0; j<subSubNodes.size(); j++)
 			{
-				boolean hasHD = false;
-				ArrayList<TreeNode> subSubNodes = current.getSubNodes();
-				ArrayList<TreeWord> subSubWords = current.getWords();
+				TreeNode currentSubSub = subSubNodes.get(j);
+				if (currentSubSub.getDependency().equals("HD") || currentSubSub.getDependency().equals("VC-HD"))
+				{
+					hasHD = true;
+				}
+			}
+			for (int j=0; j<subSubWords.size(); j++)
+			{
+				TreeWord currentSubWord = subSubWords.get(j);
+				if (currentSubWord.getDependency().equals("HD") || currentSubWord.getDependency().equals("VC-HD"))
+				{
+					hasHD = true;
+				}
+			}
+			if (!hasHD)
+			{
+				boolean foundOV = false;
 				for (int j=0; j<subSubNodes.size(); j++)
 				{
 					TreeNode currentSubSub = subSubNodes.get(j);
-					if (currentSubSub.getDependency().equals("HD") || currentSubSub.getDependency().equals("VC-HD"))
+					if (currentSubSub.getDependency().equals("OV"))
 					{
-						hasHD = true;
+						foundOV = true;
+						currentSubSub.setDependency("HD");
+						break;
 					}
 				}
-				for (int j=0; j<subSubWords.size(); j++)
+				if (!foundOV)
 				{
-					TreeWord currentSubWord = subSubWords.get(j);
-					if (currentSubWord.getDependency().equals("HD") || currentSubWord.getDependency().equals("VC-HD"))
-					{
-						hasHD = true;
-					}
-				}
-				if (!hasHD)
-				{
-					boolean foundOV = false;
+					boolean foundPred = false;
 					for (int j=0; j<subSubNodes.size(); j++)
 					{
 						TreeNode currentSubSub = subSubNodes.get(j);
-						if (currentSubSub.getDependency().equals("OV"))
+						if (currentSubSub.getDependency().equals("PRED"))
 						{
-							foundOV = true;
+							foundPred = true;
 							currentSubSub.setDependency("HD");
 							break;
 						}
 					}
-					if (!foundOV)
+					if (!foundPred)
 					{
-						boolean foundPred = false;
+						boolean foundKonjOrApp = false;
 						for (int j=0; j<subSubNodes.size(); j++)
 						{
 							TreeNode currentSubSub = subSubNodes.get(j);
-							if (currentSubSub.getDependency().equals("PRED"))
+							if (currentSubSub.getDependency().equals("KONJ") || currentSubSub.getDependency().equals("APP"))
 							{
-								foundPred = true;
-								currentSubSub.setDependency("HD");
+								foundKonjOrApp = true;
 								break;
 							}
 						}
-						if (!foundPred)
+						if (!foundKonjOrApp && !subSubNodes.isEmpty() && nodeFunction.equals("KONJ2"))
 						{
-							boolean foundKonjOrApp = false;
-							for (int j=0; j<subSubNodes.size(); j++)
-							{
-								TreeNode currentSubSub = subSubNodes.get(j);
-								if (currentSubSub.getDependency().equals("KONJ") || currentSubSub.getDependency().equals("APP"))
-								{
-									foundKonjOrApp = true;
-									break;
-								}
-							}
-							if (!foundKonjOrApp && !subSubNodes.isEmpty() && nodeFunction.equals("KONJ2"))
-							{
-								subSubNodes.get(subSubNodes.size()-1).setDependency("HD");
-							}
+							subSubNodes.get(subSubNodes.size()-1).setDependency("HD");
 						}
 					}
 				}
@@ -832,7 +829,7 @@ public class TreebankUdConverter
 		}
 		for (int j=0; j<subNodes.size(); j++)
 		{
-			setKonj2Head(subNodes.get(j));
+			setHeadHeuristic(subNodes.get(j));
 		}
 		return headSet;
 	}
@@ -1523,7 +1520,7 @@ public class TreebankUdConverter
 			ArrayList<DependencyNode> heads = headWordFinder(treeNode);
 			if (heads.size() > 1)
 			{
-				System.out.println("MULTPLE HEAD ERROR");
+				System.out.println("MULTIPLE HEAD ERROR");
 			}
 			else if (heads.size() == 1)
 			{
