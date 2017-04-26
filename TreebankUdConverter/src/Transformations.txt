@@ -151,6 +151,7 @@ APP,...:HD,(appos,...)
 30335 - "KONJ" function in first element should be "ON"
 79955 - error in source annotation, shouldn't be PTKZU
 50884 - error in source annotation, "gegen", others with similar errors
+56176 - conjunct not split properly
 63032 - error in source annotation, "könnte" should be outside of the "KONJ"
 83456 - participal adjective marked as verb in comparative - heuristic breaks
 85717 - triple conjunction should be under a subtree with function "OS"

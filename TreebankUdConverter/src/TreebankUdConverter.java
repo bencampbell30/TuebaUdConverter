@@ -438,7 +438,7 @@ public class TreebankUdConverter
 				{
 					subWords.get(0).setPos("PTKZU-LASS");
 				}
-				if (subWords.get(1).getWordData().get("lemma").contains("%passiv"))
+				else if (subWords.get(1).getWordData().get("lemma").contains("%passiv"))
 				{
 					subWords.get(0).setPos("PTKZU-PASS");
 				}
@@ -2088,6 +2088,43 @@ public class TreebankUdConverter
 			String nextPosTag = "";
 			String nextForm = "";
 			boolean spaceAfter = true;
+			boolean nummodTrunc = false;
+			
+  			if (!(lemma.contains("%")) && upostag != null && upostag.equals("AUX") && !(lemma.contains("sein")))
+  			{
+  				upostag = "VERB";
+  			}
+  			else if (lemma.contains("%"))
+			{
+  				if (xpostag.equals("TRUNC"))
+  				{
+  					String truncPos = lemma.substring(lemma.length()-2, lemma.length());
+  					if (truncPos.equals("%n"))
+  					{
+  						upostag = "NOUN";
+  					}
+  					else if (truncPos.equals("%a"))
+  					{
+  						upostag = "ADJ";
+  					}
+  					else if (truncPos.equals("%v"))
+  					{
+  						upostag = "VERB";
+  					}
+  					else if (truncPos.equals("%c"))
+  					{
+  						upostag = "NUM";
+  						nummodTrunc = true;
+  					}
+  					else if (truncPos.equals("%p"))
+  					{
+  						upostag = "ADP";
+  					}
+  				}
+				int index = lemma.indexOf("%");
+				if (index > 0)
+					lemma = lemma.substring(0, index);
+			}
 			
 			if ((form != null) && !openDoubleQuote && form.equals("\""))
 				openDoubleQuote = true;
@@ -2211,6 +2248,11 @@ public class TreebankUdConverter
 				head = Integer.toString(node.getHead().getWordNumber());
 			}
 			String depRel = node.getRel();
+			
+			if (nummodTrunc)
+			{
+				depRel = "nummod";
+			}
 			
 			if (depRel != null && foundFirstRoot && depRel.equals("root"))
 			{
