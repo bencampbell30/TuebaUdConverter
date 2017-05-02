@@ -396,6 +396,13 @@ public class Transformations
 		ArrayList<String> arrayListZuWordPos = new ArrayList<String>();
 		arrayListZuWordPos.add("PTKZU");
 		arrayListZuWordPos.add("VVIZU");
+		
+		// pos ZUWORD-ALL
+		ArrayList<String> arrayListZuWordAllPos = new ArrayList<String>();
+		arrayListZuWordAllPos.add("PTKZU");
+		arrayListZuWordAllPos.add("VVIZU");
+		arrayListZuWordAllPos.add("PTKZU-LASS");
+		arrayListZuWordAllPos.add("PTKZU-PASS");
 
 		// pos Verb Infinitive
 		ArrayList<String> arrayListVInfPos = new ArrayList<String>();
@@ -1000,7 +1007,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,(OS,OSC),[OV,,VMAIN]:aux,xcomp,obj,HD
+		//HD,PRED,(OS,OSC),[OV,,VMAIN]:aux,xcomp,ccomp,HD
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePredAll);
 		currentTemplate.add(templateClausalObject);
@@ -1008,7 +1015,7 @@ public class Transformations
 		
 		currentNewRelations.add("aux");
 		currentNewRelations.add("xcomp");
-		currentNewRelations.add("obj");
+		currentNewRelations.add("ccomp");
 		currentNewRelations.add("HD");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
@@ -1016,7 +1023,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,(OS,OSC),[VC-HD,,VMAIN]:aux,xcomp,obj,HD
+		//HD,PRED,(OS,OSC),[VC-HD,,VMAIN]:aux,xcomp,ccomp,HD
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePredAll);
 		currentTemplate.add(templateClausalObject);
@@ -1024,7 +1031,7 @@ public class Transformations
 		
 		currentNewRelations.add("aux");
 		currentNewRelations.add("xcomp");
-		currentNewRelations.add("obj");
+		currentNewRelations.add("ccomp");
 		currentNewRelations.add("HD");
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
@@ -1032,14 +1039,14 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[HD,,VMAIN],PRED,(OS,OSC):HD,xcomp,obj
+		//[HD,,VMAIN],PRED,(OS,OSC):HD,xcomp,ccomp
 		currentTemplate.add(templateHdVMain);
 		currentTemplate.add(templatePredAll);
 		currentTemplate.add(templateClausalObject);
 		
 		currentNewRelations.add("HD");
 		currentNewRelations.add("xcomp");
-		currentNewRelations.add("obj");
+		currentNewRelations.add("ccomp"); 
 		
 		autoProcessedMultipleTemplates.add(new TransformationPair(new ArrayList<RelationTemplate>(currentTemplate), new ArrayList<String>(currentNewRelations)));
 		
