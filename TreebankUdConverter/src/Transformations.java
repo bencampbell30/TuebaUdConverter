@@ -1093,10 +1093,10 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear(); 
 		
-		//HD,PRED,[OV,,PTKZU],[OV,,VVPP]:aux,xcomp,cop,HD
+		//HD,PRED,[OV,,(PTKZU,VVIZU)],[OV,,VVPP]:aux,xcomp,cop,HD
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePred);
-		currentTemplate.add(templateOVPtkZu);
+		currentTemplate.add(templateOVZu);
 		currentTemplate.add(templateOvVvpp);
 		
 		currentNewRelations.add("aux");
@@ -1109,10 +1109,10 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[HD,,VVFIN],PRED,[OV,,PTKZU]:HD,xcomp,cop
+		//[HD,,VVFIN],PRED,[OV,,(PTKZU,VVIZU)]:HD,xcomp,cop
 		currentTemplate.add(templateHdVvfin);
 		currentTemplate.add(templatePred);
-		currentTemplate.add(templateOVPtkZu);
+		currentTemplate.add(templateOVZu);
 						
 		currentNewRelations.add("HD");
 		currentNewRelations.add("xcomp");
@@ -1123,11 +1123,11 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,[OV,,PTKZU],OV:aux,HD,xcomp,cop
+		//HD,PRED,[OV,,(PTKZU,VVIZU)],OV:aux,HD,xcomp,cop
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePred);
 		currentTemplate.add(templateOV);
-		currentTemplate.add(templateOVPtkZu);
+		currentTemplate.add(templateOVZu);
 		
 		currentNewRelations.add("aux");
 		currentNewRelations.add("HD");
@@ -1139,10 +1139,10 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//HD,PRED,[OV,,PTKZU]:cop,HD,xcomp
+		//HD,PRED,[OV,,(PTKZU,VVIZU)]:cop,HD,xcomp
 		currentTemplate.add(templateHD);
 		currentTemplate.add(templatePred);
-		currentTemplate.add(templateOVPtkZu);
+		currentTemplate.add(templateOVZu);
 						
 		currentNewRelations.add("cop");
 		currentNewRelations.add("HD");

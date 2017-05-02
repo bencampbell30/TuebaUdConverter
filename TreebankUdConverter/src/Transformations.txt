@@ -30,10 +30,10 @@ HD,(PRED,PREDWITHKOKOM),(OS,OSC):HD,xcomp,ccomp
 HD,PREDWITHKOKOM,OV:aux,xcomp,HD
 HD,PREDWITHKOKOM,VC-HD:aux,xcomp,HD
 HD,PREDWITHKOKOM:HD,xcomp
-HD,PRED,[OV,,PTKZU],[OV,,VVPP]:aux,xcomp,cop,HD
-[HD,,VVFIN],PRED,[OV,,PTKZU]:HD,xcomp,cop
-HD,PRED,[OV,,PTKZU],OV:aux,HD,xcomp,cop
-HD,PRED,[OV,,PTKZU]:cop,HD,xcomp
+HD,PRED,[OV,,(PTKZU,VVIZU)],[OV,,VVPP]:aux,xcomp,cop,HD
+[HD,,VVFIN],PRED,[OV,,(PTKZU,VVIZU)]:HD,xcomp,cop
+HD,PRED,[OV,,(PTKZU,VVIZU)],OV:aux,HD,xcomp,cop
+HD,PRED,[OV,,(PTKZU,VVIZU)]:cop,HD,xcomp
 HD,PRED,OV:aux,HD,cop
 HD,PRED:cop,HD
 HD,[OV,,VMAIN],[OV,,VMAIN]:aux,xcomp,HD
