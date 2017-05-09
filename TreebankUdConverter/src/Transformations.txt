@@ -49,9 +49,9 @@ HD,[OV,,(PTKZU,VVIZU)]:HD,xcomp
 HD,OV:aux,HD
 HD,VC-HD:aux,HD
 
-[,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)],[,WORD,V*INF]:aux,HD
-[,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)],[,VXINF,]:aux,HD
-[,WORD,PTKZU],[,WORD,ADJ*]:aux,HD
+[,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)],[,WORD,V*INF]:mark,HD
+[,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)],[,VXINF,]:mark,HD
+[,WORD,PTKZU],[,WORD,ADJ*]:mark,HD
 [PRED-KOKOM,,KOKOM],[HD,,N*]:HD,nmod
 [PRED-KOKOM,,KOKOM],[HD,,ADJ*]:HD,amod
 (APPR,APPO),HD:case,HD
@@ -84,7 +84,7 @@ OG:iobj
 [OV,,(LASSEN,PTKZU_LASS)]:xcomp
 [OV,,(PTKZU,VVIZU)]:xcomp
 OV:aux
-[,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)]:aux
+[,WORD,(PTKZU,PTKZU_LASS,PTKZU_PASS)]:mark
 GEN:nmod:poss
 [VC-HD,,(V*PASSIV,PTKZU_PASS)]:aux:pass
 [VC-HD,,(LASSEN,PTKZU_LASS)]:xcomp
@@ -109,7 +109,7 @@ NEG_ADV:det:neg
 [V-MOD,ADJX,]:advmod
 [,ADJX,CARD]:nummod
 [,WORD,CARD]:nummod
-[,ADJX,PTKZU]:acl
+[,ADJX,(PTKZU, PTKZU_LASS, PTKZU_PASS, VVIZU)]:acl
 [,ADJX,]:amod
 [-,WORD,amod]:amod
 [,DP,]:det
@@ -150,7 +150,7 @@ APP,...:HD,(appos,...)
 9361 - "enden" - what dependency?
 30335 - "KONJ" function in first element should be "ON"
 79955 - error in source annotation, shouldn't be PTKZU
-50884 - error in source annotation, "gegen", others with similar errors
+50884 - error in source annotation, "gegen", others with similar errors - 56995
 56176 - conjunct not split properly
 63032 - error in source annotation, "könnte" should be outside of the "KONJ"
 83106 - "KONJ" broken up incorrectly

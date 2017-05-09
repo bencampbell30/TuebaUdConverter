@@ -540,8 +540,6 @@ public class Transformations
 		RelationTemplate templateOV = new RelationTemplate(arrayListOvFun, null, null, true, false, false);
 		// [OV,,(PTKZU,VVIZU)]
 		RelationTemplate templateOVZu = new RelationTemplate(arrayListOvFun, null, arrayListZuWordPos, true, false, true);
-		// [OV,,PTKZU]
-		RelationTemplate templateOVPtkZu = new RelationTemplate(arrayListOvFun, null, arrayListPtkZuPos, true, false, true);
 		// [OV,,(V*PASSIV,PTKZU-PASS)]
 		RelationTemplate templateOvPass = new RelationTemplate(arrayListOvFun, null, arrayListVerbPassivePos, true,
 				false, true);
@@ -673,7 +671,7 @@ public class Transformations
 		// [,WORD,CARD]
 		RelationTemplate templateWordCard = new RelationTemplate(null, arrayListWordNode, arrayListCard, false, true, true);
 		// [,ADJX,PTKZU]
-		RelationTemplate templatePtkZuAdjX = new RelationTemplate(null, arrayListAdjxNode, arrayListPtkZuPos, false, true, true);
+		RelationTemplate templatePtkZuAdjX = new RelationTemplate(null, arrayListAdjxNode, arrayListZuWordAllPos, false, true, true);
 		// [,ADJX,]
 		RelationTemplate templateAdjX = new RelationTemplate(null, arrayListAdjxNode, null, false, true, false);
 		// [-,WORD,ADJ*]
@@ -1897,7 +1895,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[,ADJX,PTKZU]:acl
+		//[,ADJX,(PTKZU, PTKZU_LASS, PTKZU_PASS, VVIZU)]:acl
 		currentTemplate.add(templatePtkZuAdjX);
 		
 		currentNewRelations.add("acl");
