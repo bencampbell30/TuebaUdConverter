@@ -318,11 +318,19 @@ public class Transformations
 		// pos Determiner Pronouns
 		ArrayList<String> arrayListDetPronPos = new ArrayList<String>();
 		arrayListDetPronPos.add("PDAT");
-		arrayListDetPronPos.add("PIDAT");
-		arrayListDetPronPos.add("PIS");
 		arrayListDetPronPos.add("PIAT");
+		arrayListDetPronPos.add("PIDAT");
 		arrayListDetPronPos.add("PWAT");
 		arrayListDetPronPos.add("PRELAT");
+		
+		// pos Determiner Pronouns
+		ArrayList<String> arrayListAllDetPronPos = new ArrayList<String>();
+		arrayListAllDetPronPos.add("PDAT");
+		arrayListAllDetPronPos.add("PIAT");
+		arrayListAllDetPronPos.add("PIS");
+		arrayListAllDetPronPos.add("PIDAT");
+		arrayListAllDetPronPos.add("PWAT");
+		arrayListAllDetPronPos.add("PRELAT");
 
 		// pos ART
 		ArrayList<String> arrayListArtPos = new ArrayList<String>();
@@ -518,10 +526,10 @@ public class Transformations
 		// [OS-MOD,,PPER]
 		RelationTemplate templateOsModPper = new RelationTemplate(arrayListOsModFun, null, arrayListPperPos,
 				true, false, true);
-		// [-,,(PDAT,PIDAT,PIS,PIAT,PWAT)]
+		// [-,,(PDAT,PIAT,PIDAT,PWAT,PRELAT)]
 		RelationTemplate templateDetPron = new RelationTemplate(arrayListBlank, null, arrayListDetPronPos,
 				true, false, true);
-		// [,WORD,(PDAT,PIDAT,PIS,PIAT,PWAT)]
+		// [,WORD,(PDAT,PIAT,PIDAT,PWAT,PRELAT)]
 		RelationTemplate templateWordDetPron = new RelationTemplate(null, arrayListWordNode, arrayListDetPronPos,
 				false, true, true);
 		// [(ON-MOD, OA-MOD, OD-MOD, OG-MOD),SIMPX,]
@@ -658,8 +666,8 @@ public class Transformations
 		RelationTemplate templateNX = new RelationTemplate(null, arrayListNxNode, null, false, true, false);
 		// [-,NX,]
 		RelationTemplate templateBlankNX = new RelationTemplate(arrayListBlank, arrayListNxNode, null, true, true, false);
-		// [-,NX,(PDAT,PIDAT,PIS,PIAT,PWAT)]
-		RelationTemplate templateBlankNXPron = new RelationTemplate(arrayListBlank, arrayListNxNode, arrayListDetPronPos, true, true, true);
+		// [-,NX,(PDAT,PIAT,PIS,PIDAT,PWAT,PRELAT)]
+		RelationTemplate templateBlankNXPron = new RelationTemplate(arrayListBlank, arrayListNxNode, arrayListAllDetPronPos, true, true, true);
 		// [MOD*,,]
 		RelationTemplate templateAllMod = new RelationTemplate(arrayListAllModFun, null, null, true, false, false);
 		// [OAD*,,]
@@ -2015,7 +2023,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[,WORD,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
+		//[,WORD,(PDAT,PIAT,PIDAT,PWAT,PRELAT)]:det
 		currentTemplate.add(templateWordDetPron);
 		
 		currentNewRelations.add("det");
@@ -2025,7 +2033,7 @@ public class Transformations
 		currentTemplate.clear();
 		currentNewRelations.clear();
 		
-		//[-,,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
+		//[-,,(PDAT,PIAT,PIDAT,PWAT,PRELAT)]:det
 		currentTemplate.add(templateDetPron);
 		
 		currentNewRelations.add("det");

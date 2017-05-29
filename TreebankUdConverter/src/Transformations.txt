@@ -121,8 +121,8 @@ VPT:compound:prt
 [,WORD,PTKVZ]:mark
 ES:expl
 [(ON-MOD, OS-MOD),,PPER]:expl
-[,WORD,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
-[-,,(PDAT,PIDAT,PIS,PIAT,PWAT)]:det
+[,WORD,(PDAT,PIAT,PWAT,PRELAT)]:det
+[-,,(PDAT,PIAT,PIDAT,PWAT,PRELAT)]:det
 (ONK,OAK,ODK,...):conj
 [,P-SIMPX,]:parataxis
 [MOD*,NX,]:obl
