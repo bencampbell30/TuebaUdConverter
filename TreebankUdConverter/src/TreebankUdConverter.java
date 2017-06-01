@@ -31,6 +31,8 @@ public class TreebankUdConverter
 	{
 		path = args[0];
 		outPath = args[1];
+		//path = "/Users/bcmpbell/Documents/TestSentence.txt";
+		
 		for (int i=0; i<20; i++)
 		{
 			chunkedProcess(i*5000+1, (i+1)*5000);
@@ -2071,6 +2073,19 @@ public class TreebankUdConverter
 		boolean foundFirstRoot = false;
 		String firstRootNum = "";
 		boolean openDoubleQuote = false;
+		boolean allPunctuation = true;
+		
+		//Check for all punctuation sentence
+		for (int i=0; i<sentence.size(); i++)
+		{
+			DependencyNode node = sentence.get(i);
+			String upostag = node.getPos();
+			if (upostag != null && !(upostag.equals("PUNCT")))
+			{
+				allPunctuation = false;
+				break;
+			}
+		}
 		
 		for (int i=0; i<sentence.size(); i++)
 		{
@@ -2286,6 +2301,20 @@ public class TreebankUdConverter
 					misc = "SpaceAfter=No";
 				else
 					misc = "SpaceAfter=No|" + misc;
+			}
+			
+			if (allPunctuation)
+			{
+				if (wordIndex.equals("1"))
+				{
+					depRel = "root";
+					head = "0";
+				}
+				else
+				{
+					depRel = "punct";
+					head = "1";
+				}
 			}
 				
 			columns.add(wordIndex);
