@@ -35,7 +35,7 @@ PTKNEG - PART
 PTKVZ - ADP
 PTKANT - INTJ
 PTKA - ADV
-TRUNC - PART
+TRUNC - *
 VVFIN - VERB
 VVIMP - VERB
 VVINF - VERB
@@ -52,3 +52,5 @@ XY - X
 $, - PUNCT
 $. - PUNCT
 $( - PUNCT
+
+* - set later in code
