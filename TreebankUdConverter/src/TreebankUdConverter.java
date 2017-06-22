@@ -33,7 +33,7 @@ public class TreebankUdConverter
 		outPath = args[1];
 		//path = "/Users/bcmpbell/Documents/TestSentence.txt";
 		
-		for (int i=0; i<20; i++)
+		for (int i=0; i<21; i++)
 		{
 			chunkedProcess(i*5000+1, (i+1)*5000);
 		}
