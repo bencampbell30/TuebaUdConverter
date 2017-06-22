@@ -323,7 +323,7 @@ public class Transformations
 		arrayListDetPronPos.add("PWAT");
 		arrayListDetPronPos.add("PRELAT");
 		
-		// pos Determiner Pronouns
+		// pos All Determiner Pronouns
 		ArrayList<String> arrayListAllDetPronPos = new ArrayList<String>();
 		arrayListAllDetPronPos.add("PDAT");
 		arrayListAllDetPronPos.add("PIAT");
