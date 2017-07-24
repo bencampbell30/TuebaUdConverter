@@ -2,6 +2,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DependencyNode implements Serializable
 {
@@ -18,27 +20,33 @@ public class DependencyNode implements Serializable
 	private int wordNumber = 0;
 	private String lemma = "";
 	boolean apprArt = false;
-	String apprArtForm = "";
-	String pronType = "";
-	String morphCase = "";
-	String number = "";
-	String gender = "";
-	String mood = "";
-	String tense = "";
-	String person = "";
-	String verbForm = "";
-	String definite = "";
-	String polarity = "";
-	String poss = "";
-	String polite = "";
-	String foreign = "";
-	String reflex = "";
-	String voice = "";
-	String numtype = "";
-	String topoField = "";
-	TreeWord word;
+	private String apprArtForm = "";
+	private String pronType = "";
+	private String morphCase = "";
+	private String number = "";
+	private String gender = "";
+	private String mood = "";
+	private String tense = "";
+	private String person = "";
+	private String verbForm = "";
+	private String definite = "";
+	private String polarity = "";
+	private String poss = "";
+	private String polite = "";
+	private String foreign = "";
+	private String reflex = "";
+	private String voice = "";
+	private String numtype = "";
+	private String topoField = "";
+	private String namedEntity = "";
+	private String totalNamedEntity = "";
+	private String morph = "";
+	private String typo = "";
+	private String wsd = "";
+	private boolean discourse = false;
+	private TreeWord word;
 
-	public DependencyNode(String wLine, DependencyNode wHead, String wRel, TreeWord word) 
+	public DependencyNode(String wLine, DependencyNode wHead, String wRel, TreeWord word, String ne) 
 	{
 		line = wLine;
 		rel = wRel;
@@ -47,6 +55,7 @@ public class DependencyNode implements Serializable
 		if (!(wRel.equals("N/A")))
 			extractNodeData(line);
 		this.word = word;
+		namedEntity = ne;
 	}
 	
 	public void setRel(String wRel)
@@ -110,20 +119,33 @@ public class DependencyNode implements Serializable
 		line = line.replace("/>", "");
 		line = line.replace(">", "");
 		line = line.replace("\"=\"", "\"EQUALS_SIGN\"");
+		ArrayList<String> matchList = new ArrayList<String>();
+		Pattern regex = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'");
+		Matcher regexMatcher = regex.matcher(line);
 		line = line.replaceFirst("(comment=)\"(.*)\"", "");
-		StringTokenizer st = new StringTokenizer(line);
-		st.nextToken(); //get rid of node/sentence marker
-	    while (st.hasMoreTokens()) 
+	    while (regexMatcher.find()) 
 	    {
-	    	String current = st.nextToken();
-	    	String[] keyValue = current.split("=");
-	    	keyValue[1] = keyValue[1].substring(1, keyValue[1].length()-1);
-			nodeData.put(keyValue[0], keyValue[1].replace("EQUALS_SIGN", "="));
+	    	matchList.add(regexMatcher.group());
+	    }
+	    for (int i=1; i<matchList.size(); i++) 
+	    {
+	    	String current = matchList.get(i);
+	    	String key = current.split("=")[0];
+	    	i++;
+	    	String value = matchList.get(i);
+	    	value = value.substring(1, value.length()-1);
+			nodeData.put(key, value.replace("EQUALS_SIGN", "="));
 	    }
 	    String lemma = nodeData.get("lemma");
 	    String pos = nodeData.get("pos");
 	    String morph = nodeData.get("morph");
 	    String form = nodeData.get("form");
+	    String typo = nodeData.get("comment");
+	    String wsd = nodeData.get("wsd-lexunits");
+	    
+	    this.morph = morph;
+	    this.typo = typo;
+	    this.wsd = wsd;
 	    
 	    this.pos = pos;
 	    
@@ -538,5 +560,57 @@ public class DependencyNode implements Serializable
 
 	public void setTopoField(String topoField) {
 		this.topoField = topoField;
+	}
+
+	public String getNamedEntity() 
+	{
+		return namedEntity;
+	}
+
+	public void setNamedEntity(String namedEntity) 
+	{
+		this.namedEntity = namedEntity;
+	}
+
+	public String getTotalNamedEntity() 
+	{
+		return totalNamedEntity;
+	}
+
+	public void setTotalNamedEntity(String totalNamedEntity) 
+	{
+		this.totalNamedEntity = totalNamedEntity;
+	}
+
+	public String getMorph() {
+		return morph;
+	}
+
+	public void setMorph(String morph) {
+		this.morph = morph;
+	}
+
+	public String getTypo() {
+		return typo;
+	}
+
+	public void setTypo(String typo) {
+		this.typo = typo;
+	}
+
+	public boolean isDiscourse() {
+		return discourse;
+	}
+
+	public void setDiscourse(boolean discourse) {
+		this.discourse = discourse;
+	}
+
+	public String getWsd() {
+		return wsd;
+	}
+
+	public void setWsd(String wsd) {
+		this.wsd = wsd;
 	}
 }

@@ -15,14 +15,16 @@ public class TreeNode implements Serializable
 	private HashMap<String, String> nodeData = new HashMap<String, String>();
 	private String dependency = null;
 	private String category = null;
+	private String namedEntity = "";
+	private String totalNamedEntity = "";
 	
-	public TreeNode(String wWord) 
+	public TreeNode(String wWord, String ne) 
 	{
 		line = wWord;
 		subNodes = new ArrayList<TreeNode>();
 		words = new ArrayList<TreeWord>();
 		extractNodeData(line);
-			
+		namedEntity = ne;
 	}
 
 	public void addSubNode(TreeNode node)
@@ -96,5 +98,25 @@ public class TreeNode implements Serializable
 	    }
 	    dependency = nodeData.get("func");
 	    category = nodeData.get("cat");
+	}
+
+	public String getNamedEntity() 
+	{
+		return namedEntity;
+	}
+
+	public void setNamedEntity(String namedEntity) {
+		
+		this.namedEntity = namedEntity;
+	}
+
+	public String getTotalNamedEntity() 
+	{
+		return totalNamedEntity;
+	}
+
+	public void setTotalNamedEntity(String totalNamedEntity)
+	{
+		this.totalNamedEntity = totalNamedEntity;
 	}
 }

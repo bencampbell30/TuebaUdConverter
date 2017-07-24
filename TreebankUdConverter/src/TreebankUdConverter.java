@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 public class TreebankUdConverter 
 {
@@ -26,6 +27,8 @@ public class TreebankUdConverter
 	private static StructureTransformer structureTransformerInstance;
 	private static PosConverter posConverterInstance;
 	private static int sentenceIndex = 0;
+	private static String currentArticleID = "";
+	private static HashMap<Integer, String> newArticleMap;
 	
 	public static void main(String[] args) 
 	{
@@ -52,11 +55,12 @@ public class TreebankUdConverter
 		conllSentences = new ArrayList<ArrayList<ArrayList<String>>>();
 		structureTransformerInstance = StructureTransformer.getInstance();
 		posConverterInstance = PosConverter.getInstance();
+		newArticleMap = new HashMap<Integer, String>();
 		
 		for (int i=0; i<treebankLines.size(); i++)
 		{
 			sentenceIndex = 0;
-			TreeNode currentSentence = treeBuilder(treebankLines.get(i), i);
+			TreeNode currentSentence = treeBuilder(treebankLines.get(i), i, "");
 			sentenceNodes.add(currentSentence);
 			System.out.println(i);
 		}
@@ -66,6 +70,20 @@ public class TreebankUdConverter
 		for (int i=0; i<sentenceNodes.size(); i++)
 		{
 			addTopoFieldInfo(sentenceNodes.get(i), "");
+		}
+		
+		System.out.println("STAGE 1.5");
+		
+		for (int i=0; i<sentenceNodes.size(); i++)
+		{
+			addNamedEntityInfo(sentenceNodes.get(i), "");
+		}
+		
+		System.out.println("STAGE 1.75");
+		
+		for (int i=0; i<sentenceNodes.size(); i++)
+		{
+			addDiscourseInfo(sentenceNodes.get(i), false);
 		}
 		
 		System.out.println("STAGE 2");
@@ -276,27 +294,80 @@ public class TreebankUdConverter
 		System.out.println("Finished");
 	}
 	
-	private static TreeNode treeBuilder(ArrayList<String> sentence, int currentSentence)
+	private static TreeNode treeBuilder(ArrayList<String> sentence, int currentSentence, String namedEntity)
 	{
 		boolean finished = false;
 		String currentLine = sentence.get(sentenceIndex);
-		TreeNode current = new TreeNode(currentLine);
+		if (currentLine.contains("<text"))
+		{
+			HashMap<String, String> textData = new HashMap<String, String>();
+			currentLine = currentLine.replace("<", "");
+			currentLine = currentLine.replace("/>", "");
+			currentLine = currentLine.replace(">", "");
+			StringTokenizer st = new StringTokenizer(currentLine);
+			st.nextToken(); //get rid of node/sentence marker
+		    while (st.hasMoreTokens()) 
+		    {
+		    	String currentPair = st.nextToken();
+		    	String[] keyValue = currentPair.split("=");
+		    	keyValue[1] = keyValue[1].substring(1, keyValue[1].length()-1);
+		    	textData.put(keyValue[0], keyValue[1]);
+		    	currentArticleID = textData.get("origin");
+		    }
+		    sentenceIndex++;
+		    currentLine = sentence.get(sentenceIndex);
+		    newArticleMap.put(currentSentence, currentArticleID);
+		}
+		String currentLevelNe = namedEntity;
+		TreeNode current = new TreeNode(currentLine, currentLevelNe);
+		String lowerLevelNe = "";
+		String neId = "";
+		
 		while (!finished)
 		{
 			sentenceIndex++;
 			currentLine = sentence.get(sentenceIndex);
-			
+				
 			if (currentLine.contains("<node") || currentLine.contains("<sentence"))
 			{
-				current.addSubNode(treeBuilder(treebankLines.get(currentSentence), currentSentence));
+				String ne = "";
+				if (!lowerLevelNe.equals(""))
+					ne = lowerLevelNe + "_" + neId;
+				current.addSubNode(treeBuilder(treebankLines.get(currentSentence), currentSentence, ne));
+			}
+			else if (currentLine.contains("</ne>"))
+			{
+				lowerLevelNe = "";
+				neId = "";
 			}
 			else if (currentLine.contains("<word"))
 			{
-				current.addWord(new TreeWord(currentLine));
+				String ne = "";
+				if (!lowerLevelNe.equals(""))
+					ne = lowerLevelNe + "_" + neId;
+				current.addWord(new TreeWord(currentLine, ne));
 			}
 			else if (currentLine.contains("</node") || currentLine.contains("</sentence"))
 			{
 				finished = true;
+			}
+			else if (currentLine.contains("<ne"))
+			{
+				HashMap<String, String> neData = new HashMap<String, String>();
+				currentLine = currentLine.replace("<", "");
+				currentLine = currentLine.replace("/>", "");
+				currentLine = currentLine.replace(">", "");
+				StringTokenizer st = new StringTokenizer(currentLine);
+				st.nextToken(); //get rid of node/sentence marker
+			    while (st.hasMoreTokens()) 
+			    {
+			    	String currentPair = st.nextToken();
+			    	String[] keyValue = currentPair.split("=");
+			    	keyValue[1] = keyValue[1].substring(1, keyValue[1].length()-1);
+			    	neData.put(keyValue[0], keyValue[1]);
+			    }
+			    lowerLevelNe = neData.get("type");
+			    neId = neData.get("xml:id").split("_")[1];
 			}
 		}
 		return current;
@@ -328,6 +399,75 @@ public class TreebankUdConverter
 					fieldChain = nodeName;
 			}
 			addTopoFieldInfo(currentSubNode, fieldChain);
+		}
+	}
+	
+	//Add discourse information to word nodes
+		private static void addDiscourseInfo(TreeNode node, boolean dm)
+		{
+			ArrayList<TreeNode> subNodes = node.getSubNodes();
+			ArrayList<TreeWord> words = node.getWords();
+			boolean isDiscourse = dm;
+			
+			for (int i=0; i<words.size(); i++)
+			{
+				TreeWord currentWord = words.get(i);
+				currentWord.setDiscourse(isDiscourse);
+			}
+			for (int i=0; i<subNodes.size(); i++)
+			{
+				TreeNode currentSubNode = subNodes.get(i);
+				String nodeName = currentSubNode.getCategory();
+				
+				if (nodeName.equals("DM") || dm)
+				{
+					isDiscourse = true;
+				}
+				else
+				{
+					isDiscourse = false;
+				}
+				addDiscourseInfo(currentSubNode, isDiscourse);
+			}
+		}
+	
+	//Recursively get Named Entity information
+	private static void addNamedEntityInfo(TreeNode node, String currentNeChain)
+	{
+		ArrayList<TreeNode> subNodes = node.getSubNodes();
+		ArrayList<TreeWord> words = node.getWords();
+		
+		for (int i=0; i<words.size(); i++)
+		{
+			TreeWord currentWord = words.get(i);
+			String namedEntity = currentWord.getNamedEntity();
+			String neChain = currentNeChain;
+			
+			if (!neChain.isEmpty())
+			{
+				if (!namedEntity.isEmpty())
+					neChain = neChain + "-" + namedEntity;
+			}
+			else
+				neChain = namedEntity;
+			
+			currentWord.setTotalNamedEntity(neChain);
+		}
+		for (int i=0; i<subNodes.size(); i++)
+		{
+			TreeNode currentSubNode = subNodes.get(i);
+			String namedEntity = currentSubNode.getNamedEntity();
+			String neChain = currentNeChain;
+			
+			if (!neChain.isEmpty())
+			{
+				if (!namedEntity.isEmpty())
+					neChain = neChain + "-" + namedEntity;
+			}
+			else
+				neChain = namedEntity;
+			
+			addNamedEntityInfo(currentSubNode, neChain);
 		}
 	}
 	
@@ -1493,7 +1633,7 @@ public class TreebankUdConverter
 		
 		if (start)
 		{
-			current = new DependencyNode("ROOT", null, "N/A", null);
+			current = new DependencyNode("ROOT", null, "N/A", null, "");
 			current.setSubNodes(headWordFinder(treeNode));
 			ArrayList<DependencyNode> rootDependents = current.getSubNodes();
 			
@@ -1718,7 +1858,7 @@ public class TreebankUdConverter
 					currentNode.setApprArt(true);
 					currentNode.setApprArtForm(form);
 					
-					DependencyNode nodeArt = new DependencyNode(currentNode.getLine(), currentNode.getHead(), "det", null);
+					DependencyNode nodeArt = new DependencyNode(currentNode.getLine(), currentNode.getHead(), "det", null, "");
 					nodeArt.getNodeData().put("lemma", artLemma);
 					nodeArt.setLemma(artLemma);
 					nodeArt.getNodeData().put("form", art);
@@ -2099,11 +2239,16 @@ public class TreebankUdConverter
 			String feats = "";
 			String head = "0";
 			String topoField = node.getTopoField();
+			String namedEntity = node.getTotalNamedEntity();
+			String morph = node.getMorph();
+			String typo = node.getTypo();
+			String wsd = node.getWsd();
 			
 			String nextPosTag = "";
 			String nextForm = "";
 			boolean spaceAfter = true;
 			boolean nummodTrunc = false;
+			boolean discourse = node.isDiscourse();
 			
   			if (!(lemma.contains("%")) && upostag != null && upostag.equals("AUX") && !(lemma.contains("sein")))
   			{
@@ -2290,17 +2435,55 @@ public class TreebankUdConverter
 			String deps = "_";
 			String misc = "_";
 			
-			if (upostag != null)
+			if (!topoField.isEmpty())
+				misc = "TopoField=" + topoField;
+			
+			if (discourse)
 			{
-				if (!topoField.isEmpty())
-					misc = "TopoField=" + topoField;
+				if (misc.equals("_"))
+					misc = "DM=Yes";
+				else
+					misc = "DM=Yes" + "|" + misc;
 			}
+			
+			if (morph != null && !morph.isEmpty())
+			{
+				if (misc.equals("_"))
+					misc = "Morph=" + morph;
+				else
+					misc = "Morph=" + morph + "|" + misc;
+			}
+			
+			if (!namedEntity.isEmpty())
+			{
+				if (misc.equals("_"))
+					misc = "NE=" + namedEntity;
+				else
+					misc = "NE=" + namedEntity + "|" + misc;
+			}
+			
+			if (wsd != null && !wsd.isEmpty())
+			{
+				if (misc.equals("_"))
+					misc = "WSD" + wsd;
+				else
+					misc = "WSD=" + wsd + "|" + misc;
+			}
+			
 			if (!spaceAfter)
 			{
-				if (topoField.isEmpty())
+				if (misc.equals("_"))
 					misc = "SpaceAfter=No";
 				else
 					misc = "SpaceAfter=No|" + misc;
+			}
+			
+			if (typo != null && !typo.isEmpty())
+			{
+				if (misc.equals("_"))
+					misc = "Corr=" + typo;
+				else
+					misc = "Corr=" + typo + "|" + misc;
 			}
 			
 			if (allPunctuation)
@@ -2345,6 +2528,11 @@ public class TreebankUdConverter
 		    
 		    for (int i=0; i<conllSentences.size(); i++)
 		    {
+		    	if (newArticleMap.get(i) != null)
+		    	{
+		    		writer.write("# newdoc id = " + newArticleMap.get(i));
+		    		writer.write("\n");
+		    	}
 		    	ArrayList<ArrayList<String>> currentSentence = conllSentences.get(i);
 		    	writer.write("# sent_id = s" + Integer.toString(i + start));
 		    	System.out.println(Integer.toString(i + start));
@@ -2519,7 +2707,8 @@ public class TreebankUdConverter
 				{
 					break;
 				}
-				else if (!(sCurrentLine.contains("<text") || sCurrentLine.contains("</text>")))
+				//else if (!(sCurrentLine.contains("</text>") || sCurrentLine.contains("<text")))
+				else if (!(sCurrentLine.contains("</text>")))
 				{
 					currentSentence.add(sCurrentLine);
 					if (sCurrentLine.contains("</sentence"))
