@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
 public class TreeWord implements Serializable
 {	
 	private static final long serialVersionUID = 7756858844217202501L;
@@ -22,37 +25,22 @@ public class TreeWord implements Serializable
 	private String wsd = "";
 	private boolean discourse = false;
 	
-	public TreeWord(String wLine, String ne) 
+	public TreeWord(NamedNodeMap nodeMap, String ne, String wLine) 
 	{
 		line = wLine;
-		getWordData(line);
+		getWordData(nodeMap);
 		namedEntity = ne;
-		depNode = new DependencyNode(wLine, null, "", this, ne);
+		depNode = new DependencyNode(wLine, null, "", this, ne, nodeMap);
 	}
 	
-	private void getWordData(String line)
+	private void getWordData(NamedNodeMap nodeMap)
 	{
-		line = line.replace("<", "");
-		line = line.replace("/>", "");
-		line = line.replace(">", "");
-		line = line.replace("\"=\"", "\"EQUALS_SIGN\"");
-		ArrayList<String> matchList = new ArrayList<String>();
-		Pattern regex = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'");
-		Matcher regexMatcher = regex.matcher(line);
-		line = line.replaceFirst("(comment=)\"(.*)\"", "");
-	    while (regexMatcher.find()) 
-	    {
-	    	matchList.add(regexMatcher.group());
-	    }
-	    for (int i=1; i<matchList.size(); i++) 
-	    {
-	    	String current = matchList.get(i);
-	    	String key = current.split("=")[0];
-	    	i++;
-	    	String value = matchList.get(i);
-	    	value = value.substring(1, value.length()-1);
-			wordData.put(key, value.replace("EQUALS_SIGN", "="));
-	    }
+		for (int i=0; i<nodeMap.getLength(); i++)
+		{
+			Node current = nodeMap.item(i);
+			wordData.put(current.getNodeName(), current.getNodeValue());
+		}
+	    
 	    dependency = wordData.get("func");
 	    String lemma = wordData.get("lemma");
 	    String pos = wordData.get("pos");

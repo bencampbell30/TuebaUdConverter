@@ -3,6 +3,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
 public class TreeNode implements Serializable
 {
 	/**
@@ -18,12 +21,12 @@ public class TreeNode implements Serializable
 	private String namedEntity = "";
 	private String totalNamedEntity = "";
 	
-	public TreeNode(String wWord, String ne) 
+	public TreeNode(NamedNodeMap nodeMap, String ne, String wLine) 
 	{
-		line = wWord;
+		line = wLine;
 		subNodes = new ArrayList<TreeNode>();
 		words = new ArrayList<TreeWord>();
-		extractNodeData(line);
+		extractNodeData(nodeMap);
 		namedEntity = ne;
 	}
 
@@ -82,20 +85,13 @@ public class TreeNode implements Serializable
 		return category;
 	}
 	
-	private void extractNodeData(String line)
+	private void extractNodeData(NamedNodeMap nodeMap)
 	{
-		line = line.replace("<", "");
-		line = line.replace("/>", "");
-		line = line.replace(">", "");
-		StringTokenizer st = new StringTokenizer(line);
-		st.nextToken(); //get rid of node/sentence marker
-	    while (st.hasMoreTokens()) 
-	    {
-	    	String current = st.nextToken();
-	    	String[] keyValue = current.split("=");
-	    	keyValue[1] = keyValue[1].replace("\"", "");
-			nodeData.put(keyValue[0], keyValue[1]);
-	    }
+		for (int i=0; i<nodeMap.getLength(); i++)
+		{
+			Node current = nodeMap.item(i);
+			nodeData.put(current.getNodeName(), current.getNodeValue());
+		}
 	    dependency = nodeData.get("func");
 	    category = nodeData.get("cat");
 	}

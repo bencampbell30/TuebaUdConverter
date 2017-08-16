@@ -5,6 +5,9 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
 public class DependencyNode implements Serializable
 {
 	/**
@@ -46,14 +49,14 @@ public class DependencyNode implements Serializable
 	private boolean discourse = false;
 	private TreeWord word;
 
-	public DependencyNode(String wLine, DependencyNode wHead, String wRel, TreeWord word, String ne) 
+	public DependencyNode(String wLine, DependencyNode wHead, String wRel, TreeWord word, String ne, NamedNodeMap nodeMap) 
 	{
 		line = wLine;
 		rel = wRel;
 		head = wHead;
 		dependents = new ArrayList<DependencyNode>();
-		if (!(wRel.equals("N/A")))
-			extractNodeData(line);
+		if (!(wRel.equals("N/A")) && nodeMap != null)
+			extractNodeData(nodeMap);
 		this.word = word;
 		namedEntity = ne;
 	}
@@ -113,29 +116,14 @@ public class DependencyNode implements Serializable
 		return nodeData;
 	}
 	
-	private void extractNodeData(String line)
+	private void extractNodeData(NamedNodeMap nodeMap)
 	{
-		line = line.replace("<", "");
-		line = line.replace("/>", "");
-		line = line.replace(">", "");
-		line = line.replace("\"=\"", "\"EQUALS_SIGN\"");
-		ArrayList<String> matchList = new ArrayList<String>();
-		Pattern regex = Pattern.compile("[^\\s\"']+|\"[^\"]*\"|'[^']*'");
-		Matcher regexMatcher = regex.matcher(line);
-		line = line.replaceFirst("(comment=)\"(.*)\"", "");
-	    while (regexMatcher.find()) 
-	    {
-	    	matchList.add(regexMatcher.group());
-	    }
-	    for (int i=1; i<matchList.size(); i++) 
-	    {
-	    	String current = matchList.get(i);
-	    	String key = current.split("=")[0];
-	    	i++;
-	    	String value = matchList.get(i);
-	    	value = value.substring(1, value.length()-1);
-			nodeData.put(key, value.replace("EQUALS_SIGN", "="));
-	    }
+		for (int i=0; i<nodeMap.getLength(); i++)
+		{
+			Node current = nodeMap.item(i);
+			nodeData.put(current.getNodeName(), current.getNodeValue());
+		}
+
 	    String lemma = nodeData.get("lemma");
 	    String pos = nodeData.get("pos");
 	    String morph = nodeData.get("morph");

@@ -1,7 +1,7 @@
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,12 +9,25 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.StringTokenizer;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.stax.StAXSource;
+
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class TreebankUdConverter 
 {
 	private static ArrayList<DependencyNode> dependencySentences;
-	private static ArrayList<ArrayList<String>> treebankLines;
 	private static String path = "";
 	private static String outPath = "";
 	private static ArrayList<TreeNode> sentenceNodes;
@@ -26,26 +39,19 @@ public class TreebankUdConverter
 	private static ArrayList<ArrayList<ArrayList<String>>> conllSentences;
 	private static StructureTransformer structureTransformerInstance;
 	private static PosConverter posConverterInstance;
-	private static int sentenceIndex = 0;
-	private static String currentArticleID = "";
-	private static HashMap<Integer, String> newArticleMap;
+	private static int sentenceIndex = 1;
+	private static String articleId;
 	
 	public static void main(String[] args) 
 	{
 		path = args[0];
 		outPath = args[1];
-		//path = "/Users/bcmpbell/Documents/TestSentence.txt";
-		
-		for (int i=0; i<21; i++)
-		{
-			chunkedProcess(i*5000+1, (i+1)*5000);
-		}
-		//chunkedProcess(1, 1000);
+		//path = "/Users/bcmpbell/Documents/TestSentence2.txt";
+		readExportFile();
 	}
 	
-	private static void chunkedProcess (int start, int end)
+	private static void chunkedProcess (TreeNode text, boolean append)
 	{
-		treebankLines = readExportFile(path, start, end);
 		sentenceNodes = new ArrayList<TreeNode>();
 		sentenceNodesFieldModified = new ArrayList<TreeNode>();
 		sentenceNodesClipped = new ArrayList<TreeNode>();
@@ -55,31 +61,23 @@ public class TreebankUdConverter
 		conllSentences = new ArrayList<ArrayList<ArrayList<String>>>();
 		structureTransformerInstance = StructureTransformer.getInstance();
 		posConverterInstance = PosConverter.getInstance();
-		newArticleMap = new HashMap<Integer, String>();
 		
-		for (int i=0; i<treebankLines.size(); i++)
-		{
-			sentenceIndex = 0;
-			TreeNode currentSentence = treeBuilder(treebankLines.get(i), i, "");
-			sentenceNodes.add(currentSentence);
-			System.out.println(i);
-		}
-		
-		System.out.println("STAGE 1");
+		sentenceNodes = text.getSubNodes();
+		articleId = text.getNodeData().get("origin");
 		
 		for (int i=0; i<sentenceNodes.size(); i++)
 		{
 			addTopoFieldInfo(sentenceNodes.get(i), "");
 		}
 		
-		System.out.println("STAGE 1.5");
+		System.out.println("STAGE 1");
 		
 		for (int i=0; i<sentenceNodes.size(); i++)
 		{
 			addNamedEntityInfo(sentenceNodes.get(i), "");
 		}
 		
-		System.out.println("STAGE 1.75");
+		System.out.println("STAGE 1.5");
 		
 		for (int i=0; i<sentenceNodes.size(); i++)
 		{
@@ -87,8 +85,6 @@ public class TreebankUdConverter
 		}
 		
 		System.out.println("STAGE 2");
-		
-		sentenceIndex = 0;
 		
 		for (int i=0; i<sentenceNodes.size(); i++)
 		{
@@ -289,88 +285,10 @@ public class TreebankUdConverter
 		
 		System.out.println("STAGE 22");
 		
-		printSentences(outPath, start);
+		printSentences(outPath, append, sentenceIndex);
+		sentenceIndex = sentenceIndex + sentenceNodes.size();
 		
 		System.out.println("Finished");
-	}
-	
-	private static TreeNode treeBuilder(ArrayList<String> sentence, int currentSentence, String namedEntity)
-	{
-		boolean finished = false;
-		String currentLine = sentence.get(sentenceIndex);
-		if (currentLine.contains("<text"))
-		{
-			HashMap<String, String> textData = new HashMap<String, String>();
-			currentLine = currentLine.replace("<", "");
-			currentLine = currentLine.replace("/>", "");
-			currentLine = currentLine.replace(">", "");
-			StringTokenizer st = new StringTokenizer(currentLine);
-			st.nextToken(); //get rid of node/sentence marker
-		    while (st.hasMoreTokens()) 
-		    {
-		    	String currentPair = st.nextToken();
-		    	String[] keyValue = currentPair.split("=");
-		    	keyValue[1] = keyValue[1].substring(1, keyValue[1].length()-1);
-		    	textData.put(keyValue[0], keyValue[1]);
-		    	currentArticleID = textData.get("origin");
-		    }
-		    sentenceIndex++;
-		    currentLine = sentence.get(sentenceIndex);
-		    newArticleMap.put(currentSentence, currentArticleID);
-		}
-		String currentLevelNe = namedEntity;
-		TreeNode current = new TreeNode(currentLine, currentLevelNe);
-		String lowerLevelNe = "";
-		String neId = "";
-		
-		while (!finished)
-		{
-			sentenceIndex++;
-			currentLine = sentence.get(sentenceIndex);
-				
-			if (currentLine.contains("<node") || currentLine.contains("<sentence"))
-			{
-				String ne = "";
-				if (!lowerLevelNe.equals(""))
-					ne = lowerLevelNe + "_" + neId;
-				current.addSubNode(treeBuilder(treebankLines.get(currentSentence), currentSentence, ne));
-			}
-			else if (currentLine.contains("</ne>"))
-			{
-				lowerLevelNe = "";
-				neId = "";
-			}
-			else if (currentLine.contains("<word"))
-			{
-				String ne = "";
-				if (!lowerLevelNe.equals(""))
-					ne = lowerLevelNe + "_" + neId;
-				current.addWord(new TreeWord(currentLine, ne));
-			}
-			else if (currentLine.contains("</node") || currentLine.contains("</sentence"))
-			{
-				finished = true;
-			}
-			else if (currentLine.contains("<ne"))
-			{
-				HashMap<String, String> neData = new HashMap<String, String>();
-				currentLine = currentLine.replace("<", "");
-				currentLine = currentLine.replace("/>", "");
-				currentLine = currentLine.replace(">", "");
-				StringTokenizer st = new StringTokenizer(currentLine);
-				st.nextToken(); //get rid of node/sentence marker
-			    while (st.hasMoreTokens()) 
-			    {
-			    	String currentPair = st.nextToken();
-			    	String[] keyValue = currentPair.split("=");
-			    	keyValue[1] = keyValue[1].substring(1, keyValue[1].length()-1);
-			    	neData.put(keyValue[0], keyValue[1]);
-			    }
-			    lowerLevelNe = neData.get("type");
-			    neId = neData.get("xml:id").split("_")[1];
-			}
-		}
-		return current;
 	}
 	
 	//Add topo field information to word nodes
@@ -1633,7 +1551,7 @@ public class TreebankUdConverter
 		
 		if (start)
 		{
-			current = new DependencyNode("ROOT", null, "N/A", null, "");
+			current = new DependencyNode("ROOT", null, "N/A", null, "", null);
 			current.setSubNodes(headWordFinder(treeNode));
 			ArrayList<DependencyNode> rootDependents = current.getSubNodes();
 			
@@ -1858,13 +1776,15 @@ public class TreebankUdConverter
 					currentNode.setApprArt(true);
 					currentNode.setApprArtForm(form);
 					
-					DependencyNode nodeArt = new DependencyNode(currentNode.getLine(), currentNode.getHead(), "det", null, "");
+					DependencyNode nodeArt = new DependencyNode(currentNode.getLine(), currentNode.getHead(), "det", null, "", null);
 					nodeArt.getNodeData().put("lemma", artLemma);
 					nodeArt.setLemma(artLemma);
 					nodeArt.getNodeData().put("form", art);
 					nodeArt.setPos("DET");
 					nodeArt.getNodeData().put("pos", "ART");
 					nodeArt.getNodeData().put("morph", currentNode.getNodeData().get("morph"));
+					nodeArt.setMorph(currentNode.getNodeData().get("morph"));
+					nodeArt.setTypo(currentNode.getNodeData().get("comment"));
 					nodeArt.setArtMorphInfo(currentNode.getNodeData().get("morph"));
 					nodeArt.setTopoField(currentNode.getTopoField());
 					
@@ -2517,25 +2437,21 @@ public class TreebankUdConverter
 		return lines;
 	}
 	
-	private static void printSentences(String directory, int start)
+	private static void printSentences(String directory, boolean append, int start)
 	{
 		String fileName = directory + "convertedSentences.txt";
 		
 		BufferedWriter writer = null;
 		try
 		{
-		    writer = new BufferedWriter(new FileWriter(fileName, (start > 1)));
+		    writer = new BufferedWriter(new FileWriter(fileName, (append)));
+		    writer.write("# newdoc id = " + articleId);
+    		writer.write("\n");
 		    
 		    for (int i=0; i<conllSentences.size(); i++)
 		    {
-		    	if (newArticleMap.get(i) != null)
-		    	{
-		    		writer.write("# newdoc id = " + newArticleMap.get(i));
-		    		writer.write("\n");
-		    	}
 		    	ArrayList<ArrayList<String>> currentSentence = conllSentences.get(i);
 		    	writer.write("# sent_id = s" + Integer.toString(i + start));
-		    	System.out.println(Integer.toString(i + start));
 		    	writer.write("\n");
 		    	writer.write("# text = ");
 		    	
@@ -2546,6 +2462,7 @@ public class TreebankUdConverter
 		    		ArrayList<String> currentWord = currentSentence.get(j);
 		    		DependencyNode currentNode = currentNodeSentence.get(j);
 		    		String word = currentWord.get(1);
+		    		word.replaceAll("&", "&amp;");
 		    		if (currentNode.isApprArt())
 		    		{
 		    			word = currentNode.getApprArtForm();
@@ -2678,65 +2595,146 @@ public class TreebankUdConverter
 		return heads;
 	}
 	
-	private static ArrayList<ArrayList<String>> readExportFile(String path, int start, int end)
+	private static void readExportFile()
 	{
-		BufferedReader br = null;
-		ArrayList<ArrayList<String>> sentences = new ArrayList<ArrayList<String>>();
-
 		try
 		{
+			XMLInputFactory xif = XMLInputFactory.newInstance();
+	        XMLStreamReader xsr = xif.createXMLStreamReader(new FileReader(path));
+	        xsr.nextTag();
 
-			String sCurrentLine;
-
-			br = new BufferedReader(new FileReader(path));
-			ArrayList<String> currentSentence = new ArrayList<String>();
-			
-			if (start == 1)
-			{
-				while (!((sCurrentLine = br.readLine()).contains("<body")));
-			}
-			else
-			{
-				while (!((sCurrentLine = br.readLine()).contains("<sentence xml:id=\"s" + Integer.toString(start) + "\">")));
-				currentSentence.add(sCurrentLine);
-			}
-			
-			while ((sCurrentLine = br.readLine()) != null) 
-			{
-				if (sCurrentLine.contains("</body>") || sCurrentLine.contains("<sentence xml:id=\"s" + Integer.toString(end + 1) + "\">"))
-				{
-					break;
-				}
-				//else if (!(sCurrentLine.contains("</text>") || sCurrentLine.contains("<text")))
-				else if (!(sCurrentLine.contains("</text>")))
-				{
-					currentSentence.add(sCurrentLine);
-					if (sCurrentLine.contains("</sentence"))
-					{
-						sentences.add(currentSentence);
-						currentSentence = new ArrayList<String>();
-					}
-				}
-			}
-
+	        TransformerFactory tf = TransformerFactory.newInstance();
+	        Transformer t = tf.newTransformer();
+	        int sentenceCount = 0;
+	        
+	        while(xsr.nextTag() == XMLStreamConstants.START_ELEMENT) 
+	        {
+	        	String localName = xsr.getLocalName();
+	            System.out.println(localName);
+	            System.out.println();
+	            boolean append = false;
+	            
+	            if (localName.equals("body"))
+	            {
+	            	while(xsr.nextTag() == XMLStreamConstants.START_ELEMENT) 
+	                {
+	                	DOMResult result = new DOMResult();
+	                    t.transform(new StAXSource(xsr), result);
+	                    Node domNode = result.getNode();
+	                    Node firstChild = domNode.getFirstChild();
+	                    chunkedProcess(analyzeText(firstChild, "", null), append);
+	                    append = true;
+	                    System.out.println(sentenceCount);
+	                }
+	            	break;
+	            }
+	            DOMResult result = new DOMResult();
+	            t.transform(new StAXSource(xsr), result);
+	            result.getNode(); // prevent crash
+	        }
 		} 
-		catch (IOException e) 
+		catch (XMLStreamException e) 
+		{
+			e.printStackTrace();
+		}
+		catch (FileNotFoundException e) 
 		{
 			e.printStackTrace();
 		} 
-		finally 
+		catch (TransformerConfigurationException e) 
 		{
-			try 
+			e.printStackTrace();
+		} 
+		catch (TransformerException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	private static TreeNode analyzeText(Node firstChild, String ne, TreeNode treeNode)
+	{
+		String namedEntity = "";
+		TreeNode topLevelNode = null;
+		
+		if (firstChild != null)
+		{
+			if (firstChild.getNodeName().equals("ne"))
 			{
-				if (br != null)br.close();
-			} 
-			catch (IOException ex) 
+				String neType = firstChild.getAttributes().getNamedItem("type").getNodeValue();
+				String neId = firstChild.getAttributes().getNamedItem("xml:id").getNodeValue().split("_")[1];
+				namedEntity = neType + "_" + neId;
+				
+				NodeList nodeList = firstChild.getChildNodes();
+		        for (int i=0; i<nodeList.getLength(); i++)
+		        {
+		        	Node currentNode = nodeList.item(i);
+		        	analyzeText(currentNode, namedEntity, treeNode);
+		        }
+			}
+			else if (firstChild.getNodeName().equals("node") || firstChild.getNodeName().equals("sentence") || firstChild.getNodeName().equals("text"))
 			{
-				ex.printStackTrace();
+				NamedNodeMap nodeMap = firstChild.getAttributes();
+				String text = "";
+				for (int i=0; i<nodeMap.getLength(); i++)
+				{
+					Node current = nodeMap.item(i);
+					if (!text.equals(""))
+					{
+						text = text + " " + current.getNodeName() + "=" + "\"" + current.getNodeValue() + "\"";
+					}
+					else
+					{
+						text = current.getNodeName() + "=" + "\"" + current.getNodeValue() + "\"";
+					}
+				}
+				
+				text = "<node " + text + ">";
+				topLevelNode = new TreeNode(nodeMap, ne, text);
+				if (treeNode != null)
+				{
+					treeNode.addSubNode(topLevelNode);
+				}
+				
+				NodeList nodeList = firstChild.getChildNodes();
+		        for (int i=0; i<nodeList.getLength(); i++)
+		        {
+		        	Node currentNode = nodeList.item(i);
+		        	analyzeText(currentNode, namedEntity, topLevelNode);
+		        }
+			}
+			else if (firstChild.getNodeName().equals("word"))
+			{
+				NamedNodeMap nodeMap = firstChild.getAttributes();
+				String text = "";
+				for (int i=0; i<nodeMap.getLength(); i++)
+				{
+					Node current = nodeMap.item(i);
+					String addedText = "";
+					
+					if (!current.getNodeValue().contains("\""))
+					{
+						addedText =  current.getNodeName() + "=" + "\"" + current.getNodeValue() + "\"";
+					}
+					else
+					{
+						addedText = current.getNodeName() + "=" + "'" + current.getNodeValue() + "'";
+					}
+					if (!text.equals(""))
+					{
+						text = text + " " + addedText;
+					}
+					else
+					{
+						text = addedText;
+					}
+				}
+				
+				text = "<word " + text + "/>";
+				TreeWord word = new TreeWord(nodeMap, ne, text);
+				treeNode.addWord(word);
 			}
 		}
-		
-		return sentences;
+		return topLevelNode;
 	}
 	
 	private static TreeNode makeDeepCopy(TreeNode node)
