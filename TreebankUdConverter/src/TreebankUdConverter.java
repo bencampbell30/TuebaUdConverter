@@ -1794,6 +1794,9 @@ public class TreebankUdConverter
 					currentNode.setRel("case");
 					currentNode.setPos("ADP");
 					currentNode.getNodeData().put("pos", "APPR");
+					currentNode.setMorph(currentNode.getNodeData().get("morph").substring(0, 1));
+					currentNode.setNumber("");
+					currentNode.setGender("");
 					
 					newSentence.add(i+1, nodeArt);
 				}
@@ -2605,7 +2608,6 @@ public class TreebankUdConverter
 
 	        TransformerFactory tf = TransformerFactory.newInstance();
 	        Transformer t = tf.newTransformer();
-	        int sentenceCount = 0;
 	        
 	        while(xsr.nextTag() == XMLStreamConstants.START_ELEMENT) 
 	        {
@@ -2624,7 +2626,6 @@ public class TreebankUdConverter
 	                    Node firstChild = domNode.getFirstChild();
 	                    chunkedProcess(analyzeText(firstChild, "", null), append);
 	                    append = true;
-	                    System.out.println(sentenceCount);
 	                }
 	            	break;
 	            }

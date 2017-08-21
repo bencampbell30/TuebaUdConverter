@@ -481,13 +481,25 @@ public class DependencyNode implements Serializable
 	public String getPronType() {
 		return pronType;
 	}
+	
+	public void setMorphCase(String morphCase) {
+		this.morphCase = morphCase;
+	}
 
 	public String getMorphCase() {
 		return morphCase;
 	}
+	
+	public void setNumber(String number) {
+		this.number = number;
+	}
 
 	public String getNumber() {
 		return number;
+	}
+	
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public String getGender() {
