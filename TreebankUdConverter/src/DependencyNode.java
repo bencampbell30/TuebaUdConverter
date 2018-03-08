@@ -360,26 +360,37 @@ public class DependencyNode implements Serializable
 	    
 	    if (lemma.equals("#refl"))
 	    {
-	    	if (form.equals("mich") || form.equals("mir"))
+	    	// misspellings present in texts in 10.0: micht, sind
+	    	if (form.matches("(?i)micht?") || form.matches("(?i)mir"))
 	    	{
 	    		lemma = "ich";
 	    	}
-	    	else if (form.equals("dich") || form.equals("dir"))
+	    	else if (form.matches("(?i)dich") || form.matches("(?i)dir"))
 	    	{
 	    		lemma = "du";
 	    	}
-	    	else if (form.equals("uns"))
+	    	else if (form.matches("(?i)uns"))
 	    	{
 	    		lemma = "wir";
 	    	}
-	    	else if (form.equals("euch"))
+	    	else if (form.matches("(?i)euch"))
 	    	{
 	    		lemma = "ihr";
 	    	}
-	    	else if (form.equals("sich"))
+	    	else if (form.matches("(?i)sich") || form.matches("sind"))
 	    	{
 	    		lemma = "er|es|sie";
 	    	}
+	    	else if (form.matches("(?i)einander"))
+	    	{
+	    		lemma = "einander";
+	    	}
+	    }
+
+	    // for one case in 10.0, this does not generalize
+	    if (lemma.equals("#refl_es"))
+	    {
+	    	lemma = "er|es|sie_es";
 	    }
 	    
 	    this.lemma = lemma;
