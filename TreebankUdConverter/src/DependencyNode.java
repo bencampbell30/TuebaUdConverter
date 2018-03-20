@@ -266,11 +266,11 @@ public class DependencyNode implements Serializable
 				}
 		    	else if (morph.substring(2, 3).equals("n"))
 				{
-		    		gender = "Fem";
+		    		gender = "Neut";
 				}
 		    	else if (morph.substring(2, 3).equals("f"))
 				{
-		    		gender = "Neut";
+		    		gender = "Fem";
 				}
 	    	}
 	    }
@@ -425,11 +425,11 @@ public class DependencyNode implements Serializable
 		}
     	else if (morph.substring(2, 3).equals("n"))
 		{
-    		gender = "Fem";
+    		gender = "Neut";
 		}
     	else if (morph.substring(2, 3).equals("f"))
 		{
-    		gender = "Neut";
+    		gender = "Fem";
 		}
 	}
 	
