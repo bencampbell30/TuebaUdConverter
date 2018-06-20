@@ -2440,14 +2440,12 @@ public class TreebankUdConverter
 		return lines;
 	}
 	
-	private static void printSentences(String directory, boolean append, int start)
+	private static void printSentences(String path, boolean append, int start)
 	{
-		String fileName = directory + "convertedSentences.txt";
-		
 		BufferedWriter writer = null;
 		try
 		{
-		    writer = new BufferedWriter(new FileWriter(fileName, (append)));
+		    writer = new BufferedWriter(new FileWriter(path, (append)));
 		    writer.write("# newdoc id = " + articleId);
     		writer.write("\n");
 		    
