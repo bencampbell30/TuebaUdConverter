@@ -2447,7 +2447,7 @@ public class TreebankUdConverter
 		{
 		    writer = new BufferedWriter(new FileWriter(path, (append)));
 		    writer.write("# newdoc id = " + articleId);
-    		writer.write("\n");
+    			writer.write("\n");
 		    
 		    for (int i=0; i<conllSentences.size(); i++)
 		    {
