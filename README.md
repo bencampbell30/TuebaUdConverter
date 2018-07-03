@@ -16,7 +16,7 @@ The details of the conversion process is described in the paper:
 
 The latest release of the TüBa-D/Z distribution (release 11)
 already includes a `.conllu` file created using this tool.
-The application can still be useful for converting earlier versions of the treebank,
+This application is useful for converting earlier versions of the treebank,
 as well as serving as a detailed documentation of the conversion process.
 
 ## Usage
@@ -26,7 +26,7 @@ using [Maven](https://maven.apache.org/).
 For example,
 ```
 cd TreebankUdConverter
-mvn package
+mvn clean package
 ```
 should produce a jar file `TreebankUdConverter-0.0.1-SNAPSHOT.jar`
 in the directory `target`.
@@ -37,8 +37,11 @@ The `TuebaUdConverter` program takes two arguments:
 - The second is the path of the generated output file.
 
 For example (assuming the xml version of the treebank is copied to the same
-directory):
+directory),
 
 ```
 java -jar TreebankUdConverter-0.0.1-SNAPSHOT.jar tuebadz-10.0-exportXML-v2.xml output.conllu
 ```
+
+should convert the release 10 of the TüBa-D/Z treebank to UD,
+and store the resulting CoNLL-U file as `output.conlllu`.
