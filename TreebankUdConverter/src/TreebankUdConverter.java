@@ -46,7 +46,6 @@ public class TreebankUdConverter
 	{
 		path = args[0];
 		outPath = args[1];
-		//path = "/Users/bcmpbell/Documents/TestSentence2.txt";
 		readExportFile();
 	}
 	
@@ -1552,7 +1551,18 @@ public class TreebankUdConverter
 		if (start)
 		{
 			current = new DependencyNode("ROOT", null, "N/A", null, "", null);
-			current.setSubNodes(headWordFinder(treeNode));
+			
+			for (int i=0; i<subNodes.size(); i++)
+			{
+				TreeNode currentSubNode = subNodes.get(i);
+				current.getSubNodes().addAll(headWordFinder(currentSubNode));
+			}
+			for (int i=0; i<words.size(); i++)
+			{
+				TreeWord currentSubNode = words.get(i);
+				current.getSubNodes().add(currentSubNode.getDepNode());
+			}
+			
 			ArrayList<DependencyNode> rootDependents = current.getSubNodes();
 			
 			//Set dependency relation for all immediate children of the root to "root"
