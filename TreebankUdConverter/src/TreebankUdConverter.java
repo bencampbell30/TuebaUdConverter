@@ -298,33 +298,6 @@ public class TreebankUdConverter
 		System.out.println("Finished");
 	}
 	
-	private static void correctOblAdvmodDependencies(ArrayList<DependencyNode> sentence)
-	{
-		for (int i=0; i<sentence.size(); i++)
-		{
-			DependencyNode currentNode = sentence.get(i);
-			
-			if ((currentNode.getRel() != null) && currentNode.getRel().equals("obl"))
-			{
-				DependencyNode head = currentNode.getHead();
-				String pos = head.getPos();
-				if (pos.equals("PNOUN") || pos.equals("NOUN") || pos.equals("PRON"))
-				{
-					currentNode.setRel("nmod");
-				}
-			}
-			else if ((currentNode.getRel() != null) && currentNode.getRel().equals("amod"))
-			{
-				DependencyNode head = currentNode.getHead();
-				String pos = head.getPos();
-				if (pos.equals("VERB") || pos.equals("ADJ") || pos.equals("ADV") || pos.equals("PART") || pos.equals("AUX"))
-				{
-					currentNode.setRel("advmod");
-				}
-			}
-		}
-	}
-	
 	//Add topo field information to word nodes
 	private static void addTopoFieldInfo(TreeNode node, String currentFieldChain)
 	{
@@ -2173,6 +2146,33 @@ public class TreebankUdConverter
 		}
 		
 		return head;
+	}
+	
+	private static void correctOblAdvmodDependencies(ArrayList<DependencyNode> sentence)
+	{
+		for (int i=0; i<sentence.size(); i++)
+		{
+			DependencyNode currentNode = sentence.get(i);
+			
+			if ((currentNode.getRel() != null) && currentNode.getRel().equals("obl"))
+			{
+				DependencyNode head = currentNode.getHead();
+				String pos = head.getPos();
+				if (pos.equals("PNOUN") || pos.equals("NOUN") || pos.equals("PRON"))
+				{
+					currentNode.setRel("nmod");
+				}
+			}
+			else if ((currentNode.getRel() != null) && currentNode.getRel().equals("amod"))
+			{
+				DependencyNode head = currentNode.getHead();
+				String pos = head.getPos();
+				if (pos.equals("VERB") || pos.equals("ADJ") || pos.equals("ADV") || pos.equals("AUX"))
+				{
+					currentNode.setRel("advmod");
+				}
+			}
+		}
 	}
 	
 	private static ArrayList<ArrayList<String>> convertNodesToText(ArrayList<DependencyNode> sentence)
