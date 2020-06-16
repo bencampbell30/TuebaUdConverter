@@ -169,7 +169,7 @@ public class TreebankUdConverter
 		
 		for (int i=0; i<sentenceNodesTransformed.size(); i++)
 		{
-			dependencySentences.add(extractDepStructure(sentenceNodesTransformed.get(i), true, null));
+			dependencySentences.add(extractDepStructure(sentenceNodesTransformed.get(i), true));
 		}
 		
 		System.out.println("STAGE 12");
@@ -278,16 +278,51 @@ public class TreebankUdConverter
 		for (int i=0; i<arrayOrderedSentences.size(); i++)
 		{
 			ArrayList<DependencyNode> currentSentence = arrayOrderedSentences.get(i);
+			correctOblAdvmodDependencies(currentSentence);
+		}
+		
+		System.out.println("STAGE 22");
+		
+		for (int i=0; i<arrayOrderedSentences.size(); i++)
+		{
+			ArrayList<DependencyNode> currentSentence = arrayOrderedSentences.get(i);
 			ArrayList<ArrayList<String>> sentence = convertNodesToText(currentSentence);
 			conllSentences.add(sentence);
 		}
 		
-		System.out.println("STAGE 22");
+		System.out.println("STAGE 23");
 		
 		printSentences(outPath, append, sentenceIndex);
 		sentenceIndex = sentenceIndex + sentenceNodes.size();
 		
 		System.out.println("Finished");
+	}
+	
+	private static void correctOblAdvmodDependencies(ArrayList<DependencyNode> sentence)
+	{
+		for (int i=0; i<sentence.size(); i++)
+		{
+			DependencyNode currentNode = sentence.get(i);
+			
+			if ((currentNode.getRel() != null) && currentNode.getRel().equals("obl"))
+			{
+				DependencyNode head = currentNode.getHead();
+				String pos = head.getPos();
+				if (pos.equals("PNOUN") || pos.equals("NOUN") || pos.equals("PRON"))
+				{
+					currentNode.setRel("nmod");
+				}
+			}
+			else if ((currentNode.getRel() != null) && currentNode.getRel().equals("amod"))
+			{
+				DependencyNode head = currentNode.getHead();
+				String pos = head.getPos();
+				if (pos.equals("VERB") || pos.equals("ADJ") || pos.equals("ADV") || pos.equals("PART") || pos.equals("AUX"))
+				{
+					currentNode.setRel("advmod");
+				}
+			}
+		}
 	}
 	
 	//Add topo field information to word nodes
@@ -1541,7 +1576,7 @@ public class TreebankUdConverter
 		return transformedNode;
 	}
 	
-	private static DependencyNode extractDepStructure(TreeNode treeNode, boolean start, DependencyNode headNode)
+	private static DependencyNode extractDepStructure(TreeNode treeNode, boolean start)
 	{
 		DependencyNode current = null;
 		ArrayList<TreeNode> subNodes = treeNode.getSubNodes();
@@ -1582,7 +1617,7 @@ public class TreebankUdConverter
 			for (int i=0; i<subNodes.size(); i++)
 			{
 				TreeNode currentSubNode = subNodes.get(i);
-				extractDepStructure(currentSubNode, false, current);
+				extractDepStructure(currentSubNode, false);
 			}
 		}
 		else
@@ -1601,11 +1636,11 @@ public class TreebankUdConverter
 					ArrayList<DependencyNode> currentSubNodeHeads = headWordFinder(currentSubNode);
 					if (!((currentSubNodeHeads.size() > 1) || (currentSubNodeHeads.contains(current))))
 					{
-						current.addDependent(extractDepStructure(currentSubNode, false, current));
+						current.addDependent(extractDepStructure(currentSubNode, false));
 					}
 					else
 					{
-						extractDepStructure(currentSubNode, false, current);
+						extractDepStructure(currentSubNode, false);
 					}
 				}
 				for (int i=0; i<words.size(); i++)
