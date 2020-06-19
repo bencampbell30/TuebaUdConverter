@@ -2158,9 +2158,23 @@ public class TreebankUdConverter
 			{
 				DependencyNode head = currentNode.getHead();
 				String pos = head.getPos();
+				String xpostag = head.getNodeData().get("pos");
+				
 				if (pos.equals("PNOUN") || pos.equals("NOUN") || pos.equals("PRON"))
 				{
 					currentNode.setRel("nmod");
+				}
+				else if (xpostag != null && xpostag.equals("TRUNC"))
+				{
+					String lemma = head.getLemma();
+					if (lemma != null && lemma.contains("%"))
+					{
+						String truncPos = lemma.substring(lemma.length()-2, lemma.length());
+	  					if (truncPos.equals("%n"))
+	  					{
+	  						currentNode.setRel("nmod");
+	  					}
+					}
 				}
 			}
 			else if ((currentNode.getRel() != null) && currentNode.getRel().equals("amod"))
